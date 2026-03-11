@@ -1,0 +1,632 @@
+station,full_path,start_month,end_month,total_months,months_available,coverage,missing_months,largest_gap,issue
+warburton_airfield,2026-03-10/tables/wa/warburton_airfield,2009-01,2026-03,207,207,100.0,0,0,No
+murray_bridge_(pallamana_aerodrome),2026-03-10/tables/sa/murray_bridge_(pallamana_aerodrome),2009-01,2026-03,207,207,100.0,0,0,No
+bundaberg_aero,2026-03-10/tables/qld/bundaberg_aero,2009-01,2026-03,207,207,100.0,0,0,No
+butlers_gorge,2026-03-10/tables/tas/butlers_gorge,2009-01,2026-03,207,207,100.0,0,0,No
+hobart_airport,2026-03-10/tables/tas/hobart_airport,2009-01,2026-03,207,207,100.0,0,0,No
+leinster_aero,2026-03-10/tables/wa/leinster_aero,2009-01,2026-03,207,207,100.0,0,0,No
+north_island,2026-03-10/tables/wa/north_island,2009-01,2026-03,207,207,100.0,0,0,No
+brisbane,2026-03-10/tables/qld/brisbane,2009-01,2026-03,207,207,100.0,0,0,No
+mackay_mo,2026-03-10/tables/qld/mackay_mo,2009-01,2026-03,207,207,100.0,0,0,No
+giles_meteorological_office,2026-03-10/tables/wa/giles_meteorological_office,2009-01,2026-03,207,207,100.0,0,0,No
+coolangatta,2026-03-10/tables/qld/coolangatta,2009-01,2026-03,207,207,100.0,0,0,No
+hughenden_airport,2026-03-10/tables/qld/hughenden_airport,2009-01,2026-03,207,207,100.0,0,0,No
+normanton_airport,2026-03-10/tables/qld/normanton_airport,2009-01,2026-03,207,207,100.0,0,0,No
+kalgoorlie-boulder_airport,2026-03-10/tables/wa/kalgoorlie-boulder_airport,2009-01,2026-03,207,207,100.0,0,0,No
+beerburrum_forest_station,2026-03-10/tables/qld/beerburrum_forest_station,2009-01,2026-03,207,207,100.0,0,0,No
+badgingarra_research_stn,2026-03-10/tables/wa/badgingarra_research_stn,2009-01,2026-03,207,207,100.0,0,0,No
+sunshine_coast_airport,2026-03-10/tables/qld/sunshine_coast_airport,2009-01,2026-03,207,207,100.0,0,0,No
+applethorpe,2026-03-10/tables/qld/applethorpe,2009-01,2026-03,207,207,100.0,0,0,No
+mareeba_airport,2026-03-10/tables/qld/mareeba_airport,2009-01,2026-03,207,207,100.0,0,0,No
+longreach_aero,2026-03-10/tables/qld/longreach_aero,2009-01,2026-03,207,207,100.0,0,0,No
+ballera_gas_field,2026-03-10/tables/qld/ballera_gas_field,2009-01,2026-03,207,207,100.0,0,0,No
+weipa_aero,2026-03-10/tables/qld/weipa_aero,2009-01,2026-03,207,207,100.0,0,0,No
+julia_creek_airport,2026-03-10/tables/qld/julia_creek_airport,2009-01,2026-03,207,207,100.0,0,0,No
+yeppoon_the_esplanade,2026-03-10/tables/qld/yeppoon_the_esplanade,2009-01,2026-03,207,207,100.0,0,0,No
+gladstone_airport,2026-03-10/tables/qld/gladstone_airport,2009-01,2026-03,207,207,100.0,0,0,No
+low_isles_lighthouse,2026-03-10/tables/qld/low_isles_lighthouse,2009-01,2026-03,207,207,100.0,0,0,No
+mount_isa_aero,2026-03-10/tables/qld/mount_isa_aero,2009-01,2026-03,207,207,100.0,0,0,No
+tewantin_rsl_park,2026-03-10/tables/qld/tewantin_rsl_park,2009-01,2026-03,207,207,100.0,0,0,No
+gayndah_airport,2026-03-10/tables/qld/gayndah_airport,2009-01,2026-03,207,207,100.0,0,0,No
+terrey_hills,2026-03-10/tables/nsw/terrey_hills,2009-01,2026-03,207,207,100.0,0,0,No
+khancoban,2026-03-10/tables/nsw/khancoban,2009-01,2026-03,207,207,100.0,0,0,No
+coonabarabran_airport,2026-03-10/tables/nsw/coonabarabran_airport,2009-01,2026-03,207,207,100.0,0,0,No
+launceston_airport,2026-03-10/tables/tas/launceston_airport,2009-01,2026-03,207,207,100.0,0,0,No
+cape_moreton_lighthouse,2026-03-10/tables/qld/cape_moreton_lighthouse,2009-01,2026-03,207,207,100.0,0,0,No
+miles_constance_street,2026-03-10/tables/qld/miles_constance_street,2009-01,2026-03,207,207,100.0,0,0,No
+samuel_hill_aero,2026-03-10/tables/qld/samuel_hill_aero,2009-01,2026-03,207,207,100.0,0,0,No
+brisbane_aero,2026-03-10/tables/qld/brisbane_aero,2009-01,2026-03,207,207,100.0,0,0,No
+georgetown_airport,2026-03-10/tables/qld/georgetown_airport,2009-01,2026-03,207,207,100.0,0,0,No
+cooktown_airport,2026-03-10/tables/qld/cooktown_airport,2009-01,2026-03,207,207,100.0,0,0,No
+richmond_airport,2026-03-10/tables/qld/richmond_airport,2009-01,2026-03,207,207,100.0,0,0,No
+dalby_airport,2026-03-10/tables/qld/dalby_airport,2009-01,2026-03,207,207,100.0,0,0,No
+gympie,2026-03-10/tables/qld/gympie,2009-01,2026-03,207,207,100.0,0,0,No
+archerfield_airport,2026-03-10/tables/qld/archerfield_airport,2009-01,2026-03,207,207,100.0,0,0,No
+trepell_airport,2026-03-10/tables/qld/trepell_airport,2009-01,2026-03,207,207,100.0,0,0,No
+hervey_bay_airport,2026-03-10/tables/qld/hervey_bay_airport,2009-01,2026-03,207,207,100.0,0,0,No
+south_johnstone_exp_stn,2026-03-10/tables/qld/south_johnstone_exp_stn,2009-01,2026-03,207,207,100.0,0,0,No
+beaudesert_drumley_street,2026-03-10/tables/qld/beaudesert_drumley_street,2009-01,2026-03,207,207,100.0,0,0,No
+alva_beach,2026-03-10/tables/qld/alva_beach,2009-01,2026-03,207,207,100.0,0,0,No
+cairns_aero,2026-03-10/tables/qld/cairns_aero,2009-01,2026-03,207,207,100.0,0,0,No
+proserpine_airport,2026-03-10/tables/qld/proserpine_airport,2009-01,2026-03,207,207,100.0,0,0,No
+tunnack_fire_station,2026-03-10/tables/tas/tunnack_fire_station,2009-01,2026-03,207,207,100.0,0,0,No
+burketown_airport,2026-03-10/tables/qld/burketown_airport,2009-01,2026-03,207,207,100.0,0,0,No
+townsville_aero,2026-03-10/tables/qld/townsville_aero,2009-01,2026-03,207,207,100.0,0,0,No
+cloncurry_airport,2026-03-10/tables/qld/cloncurry_airport,2009-01,2026-03,207,207,100.0,0,0,No
+whyalla_aero,2026-03-10/tables/sa/whyalla_aero,2009-01,2026-03,207,207,100.0,0,0,No
+oakey_aero,2026-03-10/tables/qld/oakey_aero,2009-01,2026-03,207,207,100.0,0,0,No
+roma_airport,2026-03-10/tables/qld/roma_airport,2009-01,2026-03,207,207,100.0,0,0,No
+blackall_airport,2026-03-10/tables/qld/blackall_airport,2009-01,2026-03,207,207,100.0,0,0,No
+loxton_research_centre,2026-03-10/tables/sa/loxton_research_centre,2009-01,2026-03,207,207,100.0,0,0,No
+newdegate_research_station,2026-03-10/tables/wa/newdegate_research_station,2009-01,2026-03,207,207,100.0,0,0,No
+coober_pedy_airport,2026-03-10/tables/sa/coober_pedy_airport,2009-01,2026-03,207,207,100.0,0,0,No
+cape_naturaliste,2026-03-10/tables/wa/cape_naturaliste,2009-01,2026-03,207,207,100.0,0,0,No
+marree_aero,2026-03-10/tables/sa/marree_aero,2009-01,2026-03,207,207,100.0,0,0,No
+roseworthy,2026-03-10/tables/sa/roseworthy,2009-01,2026-03,207,207,100.0,0,0,No
+munglinup_west,2026-03-10/tables/wa/munglinup_west,2009-01,2026-03,207,207,100.0,0,0,No
+stenhouse_bay,2026-03-10/tables/sa/stenhouse_bay,2009-01,2026-03,207,207,100.0,0,0,No
+flinders_island_airport,2026-03-10/tables/tas/flinders_island_airport,2009-01,2026-03,207,207,100.0,0,0,No
+padthaway_south,2026-03-10/tables/sa/padthaway_south,2009-01,2026-03,207,207,100.0,0,0,No
+clare_high_school,2026-03-10/tables/sa/clare_high_school,2009-01,2026-03,207,207,100.0,0,0,No
+keith_(munkora),2026-03-10/tables/sa/keith_(munkora),2009-01,2026-03,207,207,100.0,0,0,No
+cleve_aerodrome,2026-03-10/tables/sa/cleve_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+perth_metro,2026-03-10/tables/wa/perth_metro,2009-01,2026-03,207,207,100.0,0,0,No
+kadina,2026-03-10/tables/sa/kadina,2009-01,2026-03,207,207,100.0,0,0,No
+tarcoola_aero,2026-03-10/tables/sa/tarcoola_aero,2009-01,2026-03,207,207,100.0,0,0,No
+leonora_aero,2026-03-10/tables/wa/leonora_aero,2009-01,2026-03,207,207,100.0,0,0,No
+noarlunga,2026-03-10/tables/sa/noarlunga,2009-01,2026-03,207,207,100.0,0,0,No
+parafield_airport,2026-03-10/tables/sa/parafield_airport,2009-01,2026-03,207,207,100.0,0,0,No
+lady_elliot_island,2026-03-10/tables/qld/lady_elliot_island,2009-01,2026-03,207,207,100.0,0,0,No
+amberley_amo,2026-03-10/tables/qld/amberley_amo,2009-01,2026-03,207,207,100.0,0,0,No
+st_george_airport,2026-03-10/tables/qld/st_george_airport,2009-01,2026-03,207,207,100.0,0,0,No
+winton_airport,2026-03-10/tables/qld/winton_airport,2009-01,2026-03,207,207,100.0,0,0,No
+thargomindah_airport,2026-03-10/tables/qld/thargomindah_airport,2009-01,2026-03,207,207,100.0,0,0,No
+coen_airport,2026-03-10/tables/qld/coen_airport,2009-01,2026-03,207,207,100.0,0,0,No
+mandurah,2026-03-10/tables/wa/mandurah,2009-01,2026-03,207,207,100.0,0,0,No
+the_monument_airport,2026-03-10/tables/qld/the_monument_airport,2009-01,2026-03,207,207,100.0,0,0,No
+warwick,2026-03-10/tables/qld/warwick,2009-01,2026-03,207,207,100.0,0,0,No
+kingaroy_airport,2026-03-10/tables/qld/kingaroy_airport,2009-01,2026-03,207,207,100.0,0,0,No
+esperance,2026-03-10/tables/wa/esperance,2009-01,2026-03,207,207,100.0,0,0,No
+swanbourne,2026-03-10/tables/wa/swanbourne,2009-01,2026-03,207,207,100.0,0,0,No
+mackay_aero,2026-03-10/tables/qld/mackay_aero,2009-01,2026-03,207,207,100.0,0,0,No
+gooseberry_hill,2026-03-10/tables/wa/gooseberry_hill,2009-01,2026-03,207,207,100.0,0,0,No
+gold_coast_seaway,2026-03-10/tables/qld/gold_coast_seaway,2009-01,2026-03,207,207,100.0,0,0,No
+toowoomba_airport,2026-03-10/tables/qld/toowoomba_airport,2009-01,2026-03,207,207,100.0,0,0,No
+emerald_airport,2026-03-10/tables/qld/emerald_airport,2009-01,2026-03,207,207,100.0,0,0,No
+horn_island,2026-03-10/tables/qld/horn_island,2009-01,2026-03,207,207,100.0,0,0,No
+hamilton_island_airport,2026-03-10/tables/qld/hamilton_island_airport,2009-01,2026-03,207,207,100.0,0,0,No
+charleville_aero,2026-03-10/tables/qld/charleville_aero,2009-01,2026-03,207,207,100.0,0,0,No
+birdsville_airport,2026-03-10/tables/qld/birdsville_airport,2009-01,2026-03,207,207,100.0,0,0,No
+rockhampton_aero,2026-03-10/tables/qld/rockhampton_aero,2009-01,2026-03,207,207,100.0,0,0,No
+maryborough,2026-03-10/tables/qld/maryborough,2009-01,2026-03,207,207,100.0,0,0,No
+kowanyama_airport,2026-03-10/tables/qld/kowanyama_airport,2009-01,2026-03,207,207,100.0,0,0,No
+st_lawrence,2026-03-10/tables/qld/st_lawrence,2009-01,2026-03,207,207,100.0,0,0,No
+williamson,2026-03-10/tables/qld/williamson,2009-01,2026-03,207,207,100.0,0,0,No
+liawenee,2026-03-10/tables/tas/liawenee,2009-01,2026-03,207,207,100.0,0,0,No
+wagga_wagga_amo,2026-03-10/tables/nsw/wagga_wagga_amo,2009-01,2026-03,207,207,100.0,0,0,No
+evans_head_raaf_bombing_range,2026-03-10/tables/nsw/evans_head_raaf_bombing_range,2009-01,2026-03,207,207,100.0,0,0,No
+hay_airport,2026-03-10/tables/nsw/hay_airport,2009-01,2026-03,207,207,100.0,0,0,No
+paterson_(tocal),2026-03-10/tables/nsw/paterson_(tocal),2009-01,2026-03,207,207,100.0,0,0,No
+strahan_aerodrome,2026-03-10/tables/tas/strahan_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+maatsuyker_island_lighthouse,2026-03-10/tables/tas/maatsuyker_island_lighthouse,2009-01,2026-03,207,207,100.0,0,0,No
+ulladulla,2026-03-10/tables/nsw/ulladulla,2009-01,2026-03,207,207,100.0,0,0,No
+launceston_(ti_tree_bend),2026-03-10/tables/tas/launceston_(ti_tree_bend),2009-01,2026-03,207,207,100.0,0,0,No
+friendly_beaches,2026-03-10/tables/tas/friendly_beaches,2009-01,2026-03,207,207,100.0,0,0,No
+campania_(kincora),2026-03-10/tables/tas/campania_(kincora),2009-01,2026-03,207,207,100.0,0,0,No
+grove_(research_station),2026-03-10/tables/tas/grove_(research_station),2009-01,2026-03,207,207,100.0,0,0,No
+bourke_airport,2026-03-10/tables/nsw/bourke_airport,2009-01,2026-03,207,207,100.0,0,0,No
+armidale_airport,2026-03-10/tables/nsw/armidale_airport,2009-01,2026-03,207,207,100.0,0,0,No
+devonport_airport,2026-03-10/tables/tas/devonport_airport,2009-01,2026-03,207,207,100.0,0,0,No
+coonamble_airport,2026-03-10/tables/nsw/coonamble_airport,2009-01,2026-03,207,207,100.0,0,0,No
+campbelltown_(mount_annan),2026-03-10/tables/nsw/campbelltown_(mount_annan),2009-01,2026-03,207,207,100.0,0,0,No
+wilcannia_aerodrome,2026-03-10/tables/nsw/wilcannia_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+tuggeranong_(isabella_plains),2026-03-10/tables/nsw/tuggeranong_(isabella_plains),2009-01,2026-03,207,207,100.0,0,0,No
+taree_airport,2026-03-10/tables/nsw/taree_airport,2009-01,2026-03,207,207,100.0,0,0,No
+mount_ginini,2026-03-10/tables/nsw/mount_ginini,2009-01,2026-03,207,207,100.0,0,0,No
+cobar_airport,2026-03-10/tables/nsw/cobar_airport,2009-01,2026-03,207,207,100.0,0,0,No
+merriwa_(roscommon),2026-03-10/tables/nsw/merriwa_(roscommon),2009-01,2026-03,207,207,100.0,0,0,No
+albury_airport,2026-03-10/tables/nsw/albury_airport,2009-01,2026-03,207,207,100.0,0,0,No
+byron_bay_(cape_byron),2026-03-10/tables/nsw/byron_bay_(cape_byron),2009-01,2026-03,207,207,100.0,0,0,No
+orange_airport,2026-03-10/tables/nsw/orange_airport,2009-01,2026-03,207,207,100.0,0,0,No
+kempsey_airport,2026-03-10/tables/nsw/kempsey_airport,2009-01,2026-03,207,207,100.0,0,0,No
+temora_airport,2026-03-10/tables/nsw/temora_airport,2009-01,2026-03,207,207,100.0,0,0,No
+mangrove_mountain,2026-03-10/tables/nsw/mangrove_mountain,2009-01,2026-03,207,207,100.0,0,0,No
+swan_island,2026-03-10/tables/tas/swan_island,2009-01,2026-03,207,207,100.0,0,0,No
+scotts_peak_dam,2026-03-10/tables/tas/scotts_peak_dam,2009-01,2026-03,207,207,100.0,0,0,No
+warra,2026-03-10/tables/tas/warra,2009-01,2026-03,207,207,100.0,0,0,No
+cessnock_airport,2026-03-10/tables/nsw/cessnock_airport,2009-01,2026-03,207,207,100.0,0,0,No
+scone_airport,2026-03-10/tables/nsw/scone_airport,2009-01,2026-03,207,207,100.0,0,0,No
+newcastle_nobbys_signal_station,2026-03-10/tables/nsw/newcastle_nobbys_signal_station,2009-01,2026-03,207,207,100.0,0,0,No
+grafton_airport,2026-03-10/tables/nsw/grafton_airport,2009-01,2026-03,207,207,100.0,0,0,No
+hartz_mountain_(keoghs_pimple),2026-03-10/tables/tas/hartz_mountain_(keoghs_pimple),2009-01,2026-03,207,207,100.0,0,0,No
+williamtown_raaf,2026-03-10/tables/nsw/williamtown_raaf,2009-01,2026-03,207,207,100.0,0,0,No
+casino_airport,2026-03-10/tables/nsw/casino_airport,2009-01,2026-03,207,207,100.0,0,0,No
+ivanhoe_aerodrome,2026-03-10/tables/nsw/ivanhoe_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+bankstown_airport,2026-03-10/tables/nsw/bankstown_airport,2009-01,2026-03,207,207,100.0,0,0,No
+badgerys_creek,2026-03-10/tables/nsw/badgerys_creek,2009-01,2026-03,207,207,100.0,0,0,No
+fowlers_gap,2026-03-10/tables/nsw/fowlers_gap,2009-01,2026-03,207,207,100.0,0,0,No
+murrurundi_gap,2026-03-10/tables/nsw/murrurundi_gap,2009-01,2026-03,207,207,100.0,0,0,No
+montague_island_lighthouse,2026-03-10/tables/nsw/montague_island_lighthouse,2009-01,2026-03,207,207,100.0,0,0,No
+jervis_bay_(point_perpendicular),2026-03-10/tables/nsw/jervis_bay_(point_perpendicular),2009-01,2026-03,207,207,100.0,0,0,No
+white_cliffs,2026-03-10/tables/nsw/white_cliffs,2009-01,2026-03,207,207,100.0,0,0,No
+ballina_airport,2026-03-10/tables/nsw/ballina_airport,2009-01,2026-03,207,207,100.0,0,0,No
+goulburn_airport,2026-03-10/tables/nsw/goulburn_airport,2009-01,2026-03,207,207,100.0,0,0,No
+narrabri_airport,2026-03-10/tables/nsw/narrabri_airport,2009-01,2026-03,207,207,100.0,0,0,No
+young_airport,2026-03-10/tables/nsw/young_airport,2009-01,2026-03,207,207,100.0,0,0,No
+camden_airport,2026-03-10/tables/nsw/camden_airport,2009-01,2026-03,207,207,100.0,0,0,No
+glen_innes_airport,2026-03-10/tables/nsw/glen_innes_airport,2009-01,2026-03,207,207,100.0,0,0,No
+trangie_research_station,2026-03-10/tables/nsw/trangie_research_station,2009-01,2026-03,207,207,100.0,0,0,No
+west_wyalong_airport,2026-03-10/tables/nsw/west_wyalong_airport,2009-01,2026-03,207,207,100.0,0,0,No
+tibooburra_airport,2026-03-10/tables/nsw/tibooburra_airport,2009-01,2026-03,207,207,100.0,0,0,No
+canberra_airport,2026-03-10/tables/nsw/canberra_airport,2009-01,2026-03,207,207,100.0,0,0,No
+green_cape,2026-03-10/tables/nsw/green_cape,2009-01,2026-03,207,207,100.0,0,0,No
+dubbo_airport,2026-03-10/tables/nsw/dubbo_airport,2009-01,2026-03,207,207,100.0,0,0,No
+canterbury_racecourse,2026-03-10/tables/nsw/canterbury_racecourse,2009-01,2026-03,207,207,100.0,0,0,No
+horsley_park_equestrian_centre,2026-03-10/tables/nsw/horsley_park_equestrian_centre,2009-01,2026-03,207,207,100.0,0,0,No
+yamba_pilot_station,2026-03-10/tables/nsw/yamba_pilot_station,2009-01,2026-03,207,207,100.0,0,0,No
+kiama_(bombo_headland),2026-03-10/tables/nsw/kiama_(bombo_headland),2009-01,2026-03,207,207,100.0,0,0,No
+mount_boyce,2026-03-10/tables/nsw/mount_boyce,2009-01,2026-03,207,207,100.0,0,0,No
+norah_head,2026-03-10/tables/nsw/norah_head,2009-01,2026-03,207,207,100.0,0,0,No
+merimbula_airport,2026-03-10/tables/nsw/merimbula_airport,2009-01,2026-03,207,207,100.0,0,0,No
+cooranbong_(lake_macquarie),2026-03-10/tables/nsw/cooranbong_(lake_macquarie),2009-01,2026-03,207,207,100.0,0,0,No
+cooma_airport,2026-03-10/tables/nsw/cooma_airport,2009-01,2026-03,207,207,100.0,0,0,No
+tasman_island,2026-03-10/tables/tas/tasman_island,2009-01,2026-03,207,207,100.0,0,0,No
+bathurst_airport,2026-03-10/tables/nsw/bathurst_airport,2009-01,2026-03,207,207,100.0,0,0,No
+smithton_aerodrome,2026-03-10/tables/tas/smithton_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+griffith_airport,2026-03-10/tables/nsw/griffith_airport,2009-01,2026-03,207,207,100.0,0,0,No
+narrandera_airport,2026-03-10/tables/nsw/narrandera_airport,2009-01,2026-03,207,207,100.0,0,0,No
+grafton_research_stn,2026-03-10/tables/nsw/grafton_research_stn,2009-01,2026-03,207,207,100.0,0,0,No
+moree_aero,2026-03-10/tables/nsw/moree_aero,2009-01,2026-03,207,207,100.0,0,0,No
+richmond_raaf,2026-03-10/tables/nsw/richmond_raaf,2009-01,2026-03,207,207,100.0,0,0,No
+maria_island_(point_lesueur),2026-03-10/tables/tas/maria_island_(point_lesueur),2009-01,2026-03,207,207,100.0,0,0,No
+cape_bruny_(cape_bruny),2026-03-10/tables/tas/cape_bruny_(cape_bruny),2009-01,2026-03,207,207,100.0,0,0,No
+braidwood_racecourse,2026-03-10/tables/nsw/braidwood_racecourse,2009-01,2026-03,207,207,100.0,0,0,No
+tamworth_airport,2026-03-10/tables/nsw/tamworth_airport,2009-01,2026-03,207,207,100.0,0,0,No
+nullo_mountain,2026-03-10/tables/nsw/nullo_mountain,2009-01,2026-03,207,207,100.0,0,0,No
+ouse_fire_station,2026-03-10/tables/tas/ouse_fire_station,2009-01,2026-03,207,207,100.0,0,0,No
+cobar_mo,2026-03-10/tables/nsw/cobar_mo,2009-01,2026-03,207,207,100.0,0,0,No
+wynyard_airport,2026-03-10/tables/tas/wynyard_airport,2009-01,2026-03,207,207,100.0,0,0,No
+king_island_airport,2026-03-10/tables/tas/king_island_airport,2009-01,2026-03,207,207,100.0,0,0,No
+broken_hill_airport,2026-03-10/tables/nsw/broken_hill_airport,2009-01,2026-03,207,207,100.0,0,0,No
+sydney_airport_amo,2026-03-10/tables/nsw/sydney_airport_amo,2009-01,2026-03,207,207,100.0,0,0,No
+penrith_lakes,2026-03-10/tables/nsw/penrith_lakes,2009-01,2026-03,207,207,100.0,0,0,No
+condobolin_airport,2026-03-10/tables/nsw/condobolin_airport,2009-01,2026-03,207,207,100.0,0,0,No
+deniliquin_airport,2026-03-10/tables/nsw/deniliquin_airport,2009-01,2026-03,207,207,100.0,0,0,No
+bombala,2026-03-10/tables/nsw/bombala,2009-01,2026-03,207,207,100.0,0,0,No
+yanco_agricultural_institute,2026-03-10/tables/nsw/yanco_agricultural_institute,2009-01,2026-03,207,207,100.0,0,0,No
+mudgee_airport,2026-03-10/tables/nsw/mudgee_airport,2009-01,2026-03,207,207,100.0,0,0,No
+low_head,2026-03-10/tables/tas/low_head,2009-01,2026-03,207,207,100.0,0,0,No
+st_helens_aerodrome,2026-03-10/tables/tas/st_helens_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+parkes_airport,2026-03-10/tables/nsw/parkes_airport,2009-01,2026-03,207,207,100.0,0,0,No
+sheffield_school_farm,2026-03-10/tables/tas/sheffield_school_farm,2009-01,2026-03,207,207,100.0,0,0,No
+cabramurra_smhea,2026-03-10/tables/nsw/cabramurra_smhea,2009-01,2026-03,207,207,100.0,0,0,No
+scottsdale_(west_minstone_road),2026-03-10/tables/tas/scottsdale_(west_minstone_road),2009-01,2026-03,207,207,100.0,0,0,No
+moss_vale,2026-03-10/tables/nsw/moss_vale,2009-01,2026-03,207,207,100.0,0,0,No
+bellambi,2026-03-10/tables/nsw/bellambi,2009-01,2026-03,207,207,100.0,0,0,No
+bushy_park_(bushy_park_estates),2026-03-10/tables/tas/bushy_park_(bushy_park_estates),2009-01,2026-03,207,207,100.0,0,0,No
+forbes_airport,2026-03-10/tables/nsw/forbes_airport,2009-01,2026-03,207,207,100.0,0,0,No
+gunnedah_airport,2026-03-10/tables/nsw/gunnedah_airport,2009-01,2026-03,207,207,100.0,0,0,No
+moomba_airport,2026-03-10/tables/sa/moomba_airport,2009-01,2026-03,207,207,100.0,0,0,No
+geraldton_airport,2026-03-10/tables/wa/geraldton_airport,2009-01,2026-03,207,207,100.0,0,0,No
+edinburgh_raaf,2026-03-10/tables/sa/edinburgh_raaf,2009-01,2026-03,207,207,100.0,0,0,No
+mildura_airport,2026-03-10/tables/vic/mildura_airport,2009-01,2026-03,207,207,100.0,0,0,No
+swan_hill_aerodrome,2026-03-10/tables/vic/swan_hill_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+dwellingup,2026-03-10/tables/wa/dwellingup,2009-01,2026-03,207,207,100.0,0,0,No
+casterton,2026-03-10/tables/vic/casterton,2009-01,2026-03,207,207,100.0,0,0,No
+hopetoun_airport,2026-03-10/tables/vic/hopetoun_airport,2009-01,2026-03,207,207,100.0,0,0,No
+mount_nowa_nowa,2026-03-10/tables/vic/mount_nowa_nowa,2009-01,2026-03,207,207,100.0,0,0,No
+norseman_aero,2026-03-10/tables/wa/norseman_aero,2009-01,2026-03,207,207,100.0,0,0,No
+bendigo_airport,2026-03-10/tables/vic/bendigo_airport,2009-01,2026-03,207,207,100.0,0,0,No
+port_fairy,2026-03-10/tables/vic/port_fairy,2009-01,2026-03,207,207,100.0,0,0,No
+ballarat_aerodrome,2026-03-10/tables/vic/ballarat_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+manjimup,2026-03-10/tables/wa/manjimup,2009-01,2026-03,207,207,100.0,0,0,No
+gabo_island_lighthouse,2026-03-10/tables/vic/gabo_island_lighthouse,2009-01,2026-03,207,207,100.0,0,0,No
+yarram_airport,2026-03-10/tables/vic/yarram_airport,2009-01,2026-03,207,207,100.0,0,0,No
+shepparton_airport,2026-03-10/tables/vic/shepparton_airport,2009-01,2026-03,207,207,100.0,0,0,No
+melbourne_airport,2026-03-10/tables/vic/melbourne_airport,2009-01,2026-03,207,207,100.0,0,0,No
+avalon_airport,2026-03-10/tables/vic/avalon_airport,2009-01,2026-03,207,207,100.0,0,0,No
+longerenong,2026-03-10/tables/vic/longerenong,2009-01,2026-03,207,207,100.0,0,0,No
+learmonth_airport,2026-03-10/tables/wa/learmonth_airport,2009-01,2026-03,207,207,100.0,0,0,No
+cerberus,2026-03-10/tables/vic/cerberus,2009-01,2026-03,207,207,100.0,0,0,No
+pound_creek,2026-03-10/tables/vic/pound_creek,2009-01,2026-03,207,207,100.0,0,0,No
+forrest,2026-03-10/tables/wa/forrest,2009-01,2026-03,207,207,100.0,0,0,No
+laverton_aero,2026-03-10/tables/wa/laverton_aero,2009-01,2026-03,207,207,100.0,0,0,No
+shark_bay_airport,2026-03-10/tables/wa/shark_bay_airport,2009-01,2026-03,207,207,100.0,0,0,No
+orbost,2026-03-10/tables/vic/orbost,2009-01,2026-03,207,207,100.0,0,0,No
+tennant_creek_airport,2026-03-10/tables/nt/tennant_creek_airport,2009-01,2026-03,207,207,100.0,0,0,No
+middle_point,2026-03-10/tables/nt/middle_point,2009-01,2026-03,207,207,100.0,0,0,No
+lake_grace,2026-03-10/tables/wa/lake_grace,2009-01,2026-03,207,207,100.0,0,0,No
+broome_airport,2026-03-10/tables/wa/broome_airport,2009-01,2026-03,207,207,100.0,0,0,No
+carnarvon_airport,2026-03-10/tables/wa/carnarvon_airport,2009-01,2026-03,207,207,100.0,0,0,No
+paraburdoo_aero,2026-03-10/tables/wa/paraburdoo_aero,2009-01,2026-03,207,207,100.0,0,0,No
+rottnest_island,2026-03-10/tables/wa/rottnest_island,2009-01,2026-03,207,207,100.0,0,0,No
+eucla,2026-03-10/tables/wa/eucla,2009-01,2026-03,207,207,100.0,0,0,No
+fitzroy_crossing_aero,2026-03-10/tables/wa/fitzroy_crossing_aero,2009-01,2026-03,207,207,100.0,0,0,No
+dalwallinu,2026-03-10/tables/wa/dalwallinu,2009-01,2026-03,207,207,100.0,0,0,No
+jabiru_airport,2026-03-10/tables/nt/jabiru_airport,2009-01,2026-03,207,207,100.0,0,0,No
+alice_springs_airport,2026-03-10/tables/nt/alice_springs_airport,2009-01,2026-03,207,207,100.0,0,0,No
+jandakot_aero,2026-03-10/tables/wa/jandakot_aero,2009-01,2026-03,207,207,100.0,0,0,No
+darwin_airport,2026-03-10/tables/nt/darwin_airport,2009-01,2026-03,207,207,100.0,0,0,No
+tindal_raaf,2026-03-10/tables/nt/tindal_raaf,2009-01,2026-03,207,207,100.0,0,0,No
+north_walpole,2026-03-10/tables/wa/north_walpole,2009-01,2026-03,207,207,100.0,0,0,No
+perth_airport,2026-03-10/tables/wa/perth_airport,2009-01,2026-03,207,207,100.0,0,0,No
+cape_otway_lighthouse,2026-03-10/tables/vic/cape_otway_lighthouse,2009-01,2026-03,207,207,100.0,0,0,No
+walpeup_research,2026-03-10/tables/vic/walpeup_research,2009-01,2026-03,207,207,100.0,0,0,No
+eildon_fire_tower,2026-03-10/tables/vic/eildon_fire_tower,2009-01,2026-03,207,207,100.0,0,0,No
+curtin_aero,2026-03-10/tables/wa/curtin_aero,2009-01,2026-03,207,207,100.0,0,0,No
+aireys_inlet,2026-03-10/tables/vic/aireys_inlet,2009-01,2026-03,207,207,100.0,0,0,No
+hamilton_airport,2026-03-10/tables/vic/hamilton_airport,2009-01,2026-03,207,207,100.0,0,0,No
+edenhope_airport,2026-03-10/tables/vic/edenhope_airport,2009-01,2026-03,207,207,100.0,0,0,No
+cape_nelson_lighthouse,2026-03-10/tables/vic/cape_nelson_lighthouse,2009-01,2026-03,207,207,100.0,0,0,No
+mount_moornapa,2026-03-10/tables/vic/mount_moornapa,2009-01,2026-03,207,207,100.0,0,0,No
+nhill_aerodrome,2026-03-10/tables/vic/nhill_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+mangalore_airport,2026-03-10/tables/vic/mangalore_airport,2009-01,2026-03,207,207,100.0,0,0,No
+morwell_(latrobe_valley_airport),2026-03-10/tables/vic/morwell_(latrobe_valley_airport),2009-01,2026-03,207,207,100.0,0,0,No
+bairnsdale_airport,2026-03-10/tables/vic/bairnsdale_airport,2009-01,2026-03,207,207,100.0,0,0,No
+wallan_(kilmore_gap),2026-03-10/tables/vic/wallan_(kilmore_gap),2009-01,2026-03,207,207,100.0,0,0,No
+colac_(mount_gellibrand),2026-03-10/tables/vic/colac_(mount_gellibrand),2009-01,2026-03,207,207,100.0,0,0,No
+pearce_raaf,2026-03-10/tables/wa/pearce_raaf,2009-01,2026-03,207,207,100.0,0,0,No
+kununurra_aero,2026-03-10/tables/wa/kununurra_aero,2009-01,2026-03,207,207,100.0,0,0,No
+cunderdin_airfield,2026-03-10/tables/wa/cunderdin_airfield,2009-01,2026-03,207,207,100.0,0,0,No
+wyndham_aero,2026-03-10/tables/wa/wyndham_aero,2009-01,2026-03,207,207,100.0,0,0,No
+horsham_aerodrome,2026-03-10/tables/vic/horsham_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+busselton_aero,2026-03-10/tables/wa/busselton_aero,2009-01,2026-03,207,207,100.0,0,0,No
+omeo,2026-03-10/tables/vic/omeo,2009-01,2026-03,207,207,100.0,0,0,No
+laverton_raaf,2026-03-10/tables/vic/laverton_raaf,2009-01,2026-03,207,207,100.0,0,0,No
+westmere,2026-03-10/tables/vic/westmere,2009-01,2026-03,207,207,100.0,0,0,No
+rutherglen_research,2026-03-10/tables/vic/rutherglen_research,2009-01,2026-03,207,207,100.0,0,0,No
+essendon_airport,2026-03-10/tables/vic/essendon_airport,2009-01,2026-03,207,207,100.0,0,0,No
+mortlake_racecourse,2026-03-10/tables/vic/mortlake_racecourse,2009-01,2026-03,207,207,100.0,0,0,No
+gelantipy,2026-03-10/tables/vic/gelantipy,2009-01,2026-03,207,207,100.0,0,0,No
+mallacoota,2026-03-10/tables/vic/mallacoota,2009-01,2026-03,207,207,100.0,0,0,No
+onslow_airport,2026-03-10/tables/wa/onslow_airport,2009-01,2026-03,207,207,100.0,0,0,No
+charlton,2026-03-10/tables/vic/charlton,2009-01,2026-03,207,207,100.0,0,0,No
+warrnambool_airport_ndb,2026-03-10/tables/vic/warrnambool_airport_ndb,2009-01,2026-03,207,207,100.0,0,0,No
+falls_creek,2026-03-10/tables/vic/falls_creek,2009-01,2026-03,207,207,100.0,0,0,No
+moorabbin_airport,2026-03-10/tables/vic/moorabbin_airport,2009-01,2026-03,207,207,100.0,0,0,No
+telfer_aero,2026-03-10/tables/wa/telfer_aero,2009-01,2026-03,207,207,100.0,0,0,No
+yarrawonga,2026-03-10/tables/vic/yarrawonga,2009-01,2026-03,207,207,100.0,0,0,No
+collie_east,2026-03-10/tables/wa/collie_east,2009-01,2026-03,207,207,100.0,0,0,No
+redesdale,2026-03-10/tables/vic/redesdale,2009-01,2026-03,207,207,100.0,0,0,No
+wangaratta_aero,2026-03-10/tables/vic/wangaratta_aero,2009-01,2026-03,207,207,100.0,0,0,No
+pyrenees_(ben_nevis),2026-03-10/tables/vic/pyrenees_(ben_nevis),2009-01,2026-03,207,207,100.0,0,0,No
+coldstream,2026-03-10/tables/vic/coldstream,2009-01,2026-03,207,207,100.0,0,0,No
+rhyll,2026-03-10/tables/vic/rhyll,2009-01,2026-03,207,207,100.0,0,0,No
+wilsons_promontory_lighthouse,2026-03-10/tables/vic/wilsons_promontory_lighthouse,2009-01,2026-03,207,207,100.0,0,0,No
+stawell_aerodrome,2026-03-10/tables/vic/stawell_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+scoresby_research_institute,2026-03-10/tables/vic/scoresby_research_institute,2009-01,2026-03,207,207,100.0,0,0,No
+dinner_plain_(mount_hotham_airport),2026-03-10/tables/vic/dinner_plain_(mount_hotham_airport),2009-01,2026-03,207,207,100.0,0,0,No
+bunbury,2026-03-10/tables/wa/bunbury,2009-01,2026-03,207,207,100.0,0,0,No
+katanning,2026-03-10/tables/wa/katanning,2009-01,2026-03,207,207,100.0,0,0,No
+hobart_(ellerslie_road),2026-03-10/tables/tas/hobart_(ellerslie_road),2009-01,2026-03,207,207,100.0,0,0,No
+garden_island_hsf,2026-03-10/tables/wa/garden_island_hsf,2009-01,2026-03,207,207,100.0,0,0,No
+gingin_aero,2026-03-10/tables/wa/gingin_aero,2009-01,2026-03,207,207,100.0,0,0,No
+naracoorte_aerodrome,2026-03-10/tables/sa/naracoorte_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+morawa_airport,2026-03-10/tables/wa/morawa_airport,2009-01,2026-03,207,207,100.0,0,0,No
+cape_leeuwin,2026-03-10/tables/wa/cape_leeuwin,2009-01,2026-03,207,207,100.0,0,0,No
+minlaton_aero,2026-03-10/tables/sa/minlaton_aero,2009-01,2026-03,207,207,100.0,0,0,No
+halls_creek_airport,2026-03-10/tables/wa/halls_creek_airport,2009-01,2026-03,207,207,100.0,0,0,No
+north_shields_(port_lincoln),2026-03-10/tables/sa/north_shields_(port_lincoln),2009-01,2026-03,207,207,100.0,0,0,No
+cummins_aero,2026-03-10/tables/sa/cummins_aero,2009-01,2026-03,207,207,100.0,0,0,No
+ceduna_amo,2026-03-10/tables/sa/ceduna_amo,2009-01,2026-03,207,207,100.0,0,0,No
+derby_aero,2026-03-10/tables/wa/derby_aero,2009-01,2026-03,207,207,100.0,0,0,No
+kingscote_aero,2026-03-10/tables/sa/kingscote_aero,2009-01,2026-03,207,207,100.0,0,0,No
+meekatharra_airport,2026-03-10/tables/wa/meekatharra_airport,2009-01,2026-03,207,207,100.0,0,0,No
+mount_gambier_aero,2026-03-10/tables/sa/mount_gambier_aero,2009-01,2026-03,207,207,100.0,0,0,No
+gove_airport,2026-03-10/tables/nt/gove_airport,2009-01,2026-03,207,207,100.0,0,0,No
+parawa_(second_valley_forest),2026-03-10/tables/sa/parawa_(second_valley_forest),2009-01,2026-03,207,207,100.0,0,0,No
+mount_lofty,2026-03-10/tables/sa/mount_lofty,2009-01,2026-03,207,207,100.0,0,0,No
+coonawarra,2026-03-10/tables/sa/coonawarra,2009-01,2026-03,207,207,100.0,0,0,No
+esperance_aero,2026-03-10/tables/wa/esperance_aero,2009-01,2026-03,207,207,100.0,0,0,No
+oodnadatta_airport,2026-03-10/tables/sa/oodnadatta_airport,2009-01,2026-03,207,207,100.0,0,0,No
+albany_airport,2026-03-10/tables/wa/albany_airport,2009-01,2026-03,207,207,100.0,0,0,No
+victoria_river_downs,2026-03-10/tables/nt/victoria_river_downs,2009-01,2026-03,207,207,100.0,0,0,No
+cape_jaffa_(the_limestone),2026-03-10/tables/sa/cape_jaffa_(the_limestone),2009-01,2026-03,207,207,100.0,0,0,No
+edithburgh,2026-03-10/tables/sa/edithburgh,2009-01,2026-03,207,207,100.0,0,0,No
+karratha_aero,2026-03-10/tables/wa/karratha_aero,2009-01,2026-03,207,207,100.0,0,0,No
+wudinna_aero,2026-03-10/tables/sa/wudinna_aero,2009-01,2026-03,207,207,100.0,0,0,No
+cape_willoughby,2026-03-10/tables/sa/cape_willoughby,2009-01,2026-03,207,207,100.0,0,0,No
+barrow_island_airport,2026-03-10/tables/wa/barrow_island_airport,2009-01,2026-03,207,207,100.0,0,0,No
+lameroo_(austin_plains),2026-03-10/tables/sa/lameroo_(austin_plains),2009-01,2026-03,207,207,100.0,0,0,No
+port_augusta_aero,2026-03-10/tables/sa/port_augusta_aero,2009-01,2026-03,207,207,100.0,0,0,No
+cape_borda,2026-03-10/tables/sa/cape_borda,2009-01,2026-03,207,207,100.0,0,0,No
+strathalbyn_racecourse,2026-03-10/tables/sa/strathalbyn_racecourse,2009-01,2026-03,207,207,100.0,0,0,No
+adelaide_airport,2026-03-10/tables/sa/adelaide_airport,2009-01,2026-03,207,207,100.0,0,0,No
+woomera_aerodrome,2026-03-10/tables/sa/woomera_aerodrome,2009-01,2026-03,207,207,100.0,0,0,No
+renmark_aero,2026-03-10/tables/sa/renmark_aero,2009-01,2026-03,207,207,100.0,0,0,No
+nullarbor,2026-03-10/tables/sa/nullarbor,2009-01,2026-03,207,207,100.0,0,0,No
+bickley,2026-03-10/tables/wa/bickley,2009-01,2026-03,207,207,100.0,0,0,No
+robe_airfield,2026-03-10/tables/sa/robe_airfield,2009-01,2026-03,207,207,100.0,0,0,No
+roxby_downs_(olympic_dam_aerodrome),2026-03-10/tables/sa/roxby_downs_(olympic_dam_aerodrome),2009-01,2026-03,207,207,100.0,0,0,No
+leigh_creek_airport,2026-03-10/tables/sa/leigh_creek_airport,2009-01,2026-03,207,207,100.0,0,0,No
+port_hedland_airport,2026-03-10/tables/wa/port_hedland_airport,2009-01,2026-03,207,207,100.0,0,0,No
+kuitpo_forest_reserve,2026-03-10/tables/sa/kuitpo_forest_reserve,2009-01,2026-03,207,207,100.0,0,0,No
+hindmarsh_island,2026-03-10/tables/sa/hindmarsh_island,2009-01,2026-03,207,207,100.0,0,0,No
+bridgetown,2026-03-10/tables/wa/bridgetown,2009-01,2026-03,207,207,100.0,0,0,No
+snowtown_(rayville_park),2026-03-10/tables/sa/snowtown_(rayville_park),2009-01,2026-03,207,206,99.51690821256038,1,1,No
+camooweal_township,2026-03-10/tables/qld/camooweal_township,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+wandering,2026-03-10/tables/wa/wandering,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+southern_cross_airfield,2026-03-10/tables/wa/southern_cross_airfield,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+cowra_airport,2026-03-10/tables/nsw/cowra_airport,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+hunters_hill,2026-03-10/tables/vic/hunters_hill,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+century_mine,2026-03-10/tables/qld/century_mine,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+moruya_airport,2026-03-10/tables/nsw/moruya_airport,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+mount_buller,2026-03-10/tables/vic/mount_buller,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+thredbo,2026-03-10/tables/nsw/thredbo,2009-01,2026-02,206,206,100.0,0,0,Station Stopped
+combienbar,2026-03-10/tables/vic/combienbar,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+cape_flattery,2026-03-10/tables/qld/cape_flattery,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+jacup,2026-03-10/tables/wa/jacup,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+ernabella_(pukatja),2026-03-10/tables/sa/ernabella_(pukatja),2009-01,2026-02,206,206,100.0,0,0,Station Stopped
+groote_eylandt_airport,2026-03-10/tables/nt/groote_eylandt_airport,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+bega,2026-03-10/tables/nsw/bega,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+palmerville,2026-03-10/tables/qld/palmerville,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+mount_magnet_aero,2026-03-10/tables/wa/mount_magnet_aero,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+yunta_airstrip,2026-03-10/tables/sa/yunta_airstrip,2009-01,2026-03,207,206,99.51690821256038,1,1,No
+marble_bar,2026-03-10/tables/wa/marble_bar,2009-01,2026-03,207,205,99.03381642512076,2,1,No
+hopetoun_north,2026-03-10/tables/wa/hopetoun_north,2009-01,2026-03,207,205,99.03381642512076,2,1,No
+scherger_raaf,2026-03-10/tables/qld/scherger_raaf,2009-01,2026-03,207,205,99.03381642512076,2,1,No
+inverell_research_centre,2026-03-10/tables/nsw/inverell_research_centre,2009-01,2026-03,207,205,99.03381642512076,2,1,No
+walgett_airport,2026-03-10/tables/nsw/walgett_airport,2009-01,2026-03,207,205,99.03381642512076,2,2,No
+university_of_queensland_gatton,2026-03-10/tables/qld/university_of_queensland_gatton,2009-01,2026-03,207,205,99.03381642512076,2,2,No
+neptune_island,2026-03-10/tables/sa/neptune_island,2009-01,2026-03,207,205,99.03381642512076,2,1,No
+lockhart_river_airport,2026-03-10/tables/qld/lockhart_river_airport,2009-01,2026-03,207,205,99.03381642512076,2,2,No
+newman_aero,2026-03-10/tables/wa/newman_aero,2009-01,2026-03,207,205,99.03381642512076,2,2,No
+mardie,2026-03-10/tables/wa/mardie,2009-03,2026-03,205,205,100.0,0,0,No
+kalumburu,2026-03-10/tables/wa/kalumburu,2009-01,2026-03,207,205,99.03381642512076,2,1,No
+rocky_gully,2026-03-10/tables/wa/rocky_gully,2009-01,2026-03,207,205,99.03381642512076,2,2,No
+truscott,2026-03-10/tables/wa/truscott,2009-01,2026-03,207,205,99.03381642512076,2,1,No
+dartmoor,2026-03-10/tables/vic/dartmoor,2009-03,2026-03,205,205,100.0,0,0,No
+grampians_(mount_william),2026-03-10/tables/vic/grampians_(mount_william),2009-01,2026-03,207,204,98.55072463768117,3,3,No
+double_island_point_lighthouse,2026-03-10/tables/qld/double_island_point_lighthouse,2009-01,2026-03,207,204,98.55072463768117,3,3,No
+roebourne_aero,2026-03-10/tables/wa/roebourne_aero,2009-02,2026-03,206,204,99.02912621359224,2,1,No
+troughton_island,2026-03-10/tables/wa/troughton_island,2009-01,2026-03,207,204,98.55072463768117,3,2,No
+luncheon_hill_(forestry),2026-03-10/tables/tas/luncheon_hill_(forestry),2009-01,2026-03,207,203,98.06763285024155,4,4,No
+delamere_weapons_range,2026-03-10/tables/nt/delamere_weapons_range,2009-01,2026-03,207,203,98.06763285024155,4,2,No
+salmon_gums_resstn,2026-03-10/tables/wa/salmon_gums_resstn,2009-01,2026-03,207,203,98.06763285024155,4,2,No
+mount_baw_baw,2026-03-10/tables/vic/mount_baw_baw,2009-01,2026-03,207,203,98.06763285024155,4,2,No
+thevenard_island,2026-03-10/tables/wa/thevenard_island,2009-01,2026-03,207,203,98.06763285024155,4,4,No
+mount_hotham,2026-03-10/tables/vic/mount_hotham,2009-01,2026-03,207,202,97.58454106280193,5,2,No
+lismore_airport,2026-03-10/tables/nsw/lismore_airport,2009-01,2026-03,207,202,97.58454106280193,5,4,No
+woolshed,2026-03-10/tables/qld/woolshed,2009-01,2026-03,207,202,97.58454106280193,5,5,No
+gladstone_radar,2026-03-10/tables/qld/gladstone_radar,2009-01,2026-03,207,202,97.58454106280193,5,4,No
+argyle_aerodrome,2026-03-10/tables/wa/argyle_aerodrome,2009-01,2025-09,201,201,100.0,0,0,Station Stopped
+redcliffe,2026-03-10/tables/qld/redcliffe,2009-01,2025-08,200,200,100.0,0,0,Station Stopped
+east_sale_airport,2026-03-10/tables/vic/east_sale_airport,2009-01,2026-03,207,199,96.1352657004831,8,8,No
+kanagulk,2026-03-10/tables/vic/kanagulk,2009-01,2025-07,199,199,100.0,0,0,Station Stopped
+territory_grape_farm,2026-03-10/tables/nt/territory_grape_farm,2009-01,2026-03,207,199,96.1352657004831,8,3,No
+thangool_airport,2026-03-10/tables/qld/thangool_airport,2009-10,2026-03,198,198,100.0,0,0,No
+jervois,2026-03-10/tables/nt/jervois,2009-01,2026-03,207,197,95.16908212560386,10,3,No
+bulman,2026-03-10/tables/nt/bulman,2009-02,2026-03,206,197,95.63106796116504,9,8,No
+legendre_island,2026-03-10/tables/wa/legendre_island,2009-10,2026-03,198,195,98.48484848484848,3,2,No
+mount_read,2026-03-10/tables/tas/mount_read,2009-01,2026-03,207,193,93.23671497584542,14,4,No
+clermont_airport,2026-03-10/tables/qld/clermont_airport,2010-04,2026-03,192,192,100.0,0,0,No
+centre_island,2026-03-10/tables/nt/centre_island,2009-01,2026-03,207,192,92.7536231884058,15,11,No
+ngayawili,2026-03-10/tables/nt/ngayawili,2009-01,2026-03,207,192,92.7536231884058,15,5,No
+perisher_valley,2026-03-10/tables/nsw/perisher_valley,2010-05,2026-03,191,191,100.0,0,0,No
+central_arnhem_plateau,2026-03-10/tables/nt/central_arnhem_plateau,2009-01,2026-03,207,191,92.27053140096618,16,3,No
+ayr_dpi_research_stn,2026-03-10/tables/qld/ayr_dpi_research_stn,2009-01,2026-03,207,191,92.27053140096618,16,7,No
+shannon,2026-03-10/tables/wa/shannon,2009-01,2026-03,207,191,92.27053140096618,16,8,No
+rolleston_airport,2026-03-10/tables/qld/rolleston_airport,2010-07,2026-03,189,189,100.0,0,0,No
+tatura_inst_sustainable_ag,2026-03-10/tables/vic/tatura_inst_sustainable_ag,2010-08,2026-03,188,188,100.0,0,0,No
+nowra_ran_air_station,2026-03-10/tables/nsw/nowra_ran_air_station,2010-09,2026-03,187,187,100.0,0,0,No
+lochington,2026-03-10/tables/qld/lochington,2010-10,2026-03,186,186,100.0,0,0,No
+red_rocks_point,2026-03-10/tables/wa/red_rocks_point,2009-12,2026-03,196,186,94.89795918367348,10,6,No
+rabbit_flat,2026-03-10/tables/nt/rabbit_flat,2009-09,2026-03,199,186,93.46733668341709,13,10,No
+minnipa_pirsa,2026-03-10/tables/sa/minnipa_pirsa,2010-12,2026-03,184,184,100.0,0,0,No
+ferny_creek,2026-03-10/tables/vic/ferny_creek,2011-03,2026-03,181,181,100.0,0,0,No
+mccluer_island,2026-03-10/tables/nt/mccluer_island,2009-01,2025-11,203,180,88.66995073891626,23,9,Station Stopped
+sydney_(observatory_hill),2026-03-10/tables/nsw/sydney_(observatory_hill),2009-01,2026-03,207,179,86.47342995169082,28,28,No
+breakwater_(geelong_racecourse),2026-03-10/tables/vic/breakwater_(geelong_racecourse),2011-06,2026-03,178,178,100.0,0,0,No
+port_macquarie_airport,2026-03-10/tables/nsw/port_macquarie_airport,2009-01,2026-03,207,176,85.02415458937197,31,31,No
+sydney_olympic_park_(archery_centre),2026-03-10/tables/nsw/sydney_olympic_park_(archery_centre),2011-08,2026-03,176,176,100.0,0,0,No
+parndana_cfs,2026-03-10/tables/sa/parndana_cfs,2011-09,2026-03,175,175,100.0,0,0,No
+cape_sorell,2026-03-10/tables/tas/cape_sorell,2011-06,2026-03,178,174,97.75280898876404,4,4,No
+portland_(cashmore_airport),2026-03-10/tables/vic/portland_(cashmore_airport),2009-01,2023-05,173,173,100.0,0,0,Station Stopped
+point_stuart,2026-03-10/tables/nt/point_stuart,2009-01,2026-03,207,172,83.09178743961353,35,14,No
+moranbah_airport,2026-03-10/tables/qld/moranbah_airport,2012-02,2026-03,170,170,100.0,0,0,No
+viewbank,2026-03-10/tables/vic/viewbank,2012-03,2026-03,169,169,100.0,0,0,No
+kyabram,2026-03-10/tables/vic/kyabram,2012-03,2026-03,169,169,100.0,0,0,No
+low_rocky_point,2026-03-10/tables/tas/low_rocky_point,2012-03,2026-03,169,169,100.0,0,0,No
+dunalley_(stroud_point),2026-03-10/tables/tas/dunalley_(stroud_point),2012-04,2026-03,168,168,100.0,0,0,No
+cressy_research_station,2026-03-10/tables/tas/cressy_research_station,2009-01,2022-10,166,166,100.0,0,0,Station Stopped
+bradshaw,2026-03-10/tables/nt/bradshaw,2009-02,2026-03,206,165,80.09708737864078,41,37,No
+mandora,2026-03-10/tables/wa/mandora,2012-08,2026-03,164,164,100.0,0,0,No
+sheoaks,2026-03-10/tables/vic/sheoaks,2009-01,2022-08,164,164,100.0,0,0,Station Stopped
+holsworthy_aerodrome,2026-03-10/tables/nsw/holsworthy_aerodrome,2012-09,2026-03,163,163,100.0,0,0,No
+urandangi_aerodrome,2026-03-10/tables/qld/urandangi_aerodrome,2012-09,2026-03,163,163,100.0,0,0,No
+dennes_point,2026-03-10/tables/tas/dennes_point,2012-09,2026-03,163,163,100.0,0,0,No
+cape_grim,2026-03-10/tables/tas/cape_grim,2010-12,2024-05,162,162,100.0,0,0,Station Stopped
+larapuna_(eddystone_point),2026-03-10/tables/tas/larapuna_(eddystone_point),2012-10,2026-03,162,162,100.0,0,0,No
+murganella_airstrip,2026-03-10/tables/nt/murganella_airstrip,2012-10,2026-03,162,161,99.38271604938271,1,1,No
+oenpelli_airport,2026-03-10/tables/nt/oenpelli_airport,2012-09,2026-03,163,160,98.15950920245399,3,1,No
+croker_island_airport,2026-03-10/tables/nt/croker_island_airport,2012-09,2026-03,163,158,96.93251533742331,5,3,No
+fingal_(legge_street),2026-03-10/tables/tas/fingal_(legge_street),2009-01,2021-11,155,155,100.0,0,0,Station Stopped
+blackwater_airport,2026-03-10/tables/qld/blackwater_airport,2013-05,2026-03,155,155,100.0,0,0,No
+witchcliffe,2026-03-10/tables/wa/witchcliffe,2009-01,2021-10,154,154,100.0,0,0,Station Stopped
+nerriga,2026-03-10/tables/nsw/nerriga,2013-06,2026-03,154,154,100.0,0,0,No
+gosford,2026-03-10/tables/nsw/gosford,2013-06,2026-03,154,154,100.0,0,0,No
+cairns_racecourse,2026-03-10/tables/qld/cairns_racecourse,2013-08,2026-03,152,152,100.0,0,0,No
+new_may_downs,2026-03-10/tables/qld/new_may_downs,2013-09,2026-03,151,151,100.0,0,0,No
+lake_julius,2026-03-10/tables/qld/lake_julius,2013-08,2026-03,152,151,99.3421052631579,1,1,No
+corner_inlet_(yanakie),2026-03-10/tables/vic/corner_inlet_(yanakie),2013-01,2025-07,151,151,100.0,0,0,Station Stopped
+mornington_island_airport,2026-03-10/tables/qld/mornington_island_airport,2013-10,2026-03,150,150,100.0,0,0,No
+melbourne_(olympic_park),2026-03-10/tables/vic/melbourne_(olympic_park),2014-01,2026-03,147,147,100.0,0,0,No
+cape_grim_baps_(comparison),2026-03-10/tables/tas/cape_grim_baps_(comparison),2010-12,2023-03,148,147,99.32432432432432,1,1,No
+walungurru_airport,2026-03-10/tables/nt/walungurru_airport,2014-02,2026-03,146,146,100.0,0,0,No
+nambour_daff_-_hillside,2026-03-10/tables/qld/nambour_daff_-_hillside,2014-02,2026-03,146,146,100.0,0,0,No
+port_keats_airport,2026-03-10/tables/nt/port_keats_airport,2014-02,2026-03,146,146,100.0,0,0,No
+milingimbi_airport,2026-03-10/tables/nt/milingimbi_airport,2014-02,2026-03,146,146,100.0,0,0,No
+maningrida_airport,2026-03-10/tables/nt/maningrida_airport,2014-02,2026-03,146,146,100.0,0,0,No
+warruwi_airport,2026-03-10/tables/nt/warruwi_airport,2014-02,2026-03,146,146,100.0,0,0,No
+daly_waters_airstrip,2026-03-10/tables/nt/daly_waters_airstrip,2014-02,2026-03,146,146,100.0,0,0,No
+lajamanu_airport,2026-03-10/tables/nt/lajamanu_airport,2014-02,2026-03,146,146,100.0,0,0,No
+yulara_airport,2026-03-10/tables/nt/yulara_airport,2014-02,2026-03,146,146,100.0,0,0,No
+noonamah_airstrip,2026-03-10/tables/nt/noonamah_airstrip,2014-02,2026-03,146,146,100.0,0,0,No
+pirlangimpi_airport,2026-03-10/tables/nt/pirlangimpi_airport,2014-02,2026-03,146,146,100.0,0,0,No
+batchelor_airport,2026-03-10/tables/nt/batchelor_airport,2014-02,2026-03,146,146,100.0,0,0,No
+mcarthur_river_mine_airport,2026-03-10/tables/nt/mcarthur_river_mine_airport,2014-02,2026-03,146,146,100.0,0,0,No
+ngukurr_airport,2026-03-10/tables/nt/ngukurr_airport,2014-02,2026-03,146,146,100.0,0,0,No
+borroloola_airport,2026-03-10/tables/nt/borroloola_airport,2014-02,2026-03,146,145,99.31506849315068,1,1,No
+dum_in_mirrie_airstrip,2026-03-10/tables/nt/dum_in_mirrie_airstrip,2014-02,2026-03,146,142,97.26027397260275,4,2,No
+carters_bore,2026-03-10/tables/qld/carters_bore,2014-07,2026-03,141,141,100.0,0,0,No
+bedout_island,2026-03-10/tables/wa/bedout_island,2011-02,2026-03,182,141,77.47252747252747,41,23,Coverage
+adelaide_(kent_town),2026-03-10/tables/sa/adelaide_(kent_town),2009-01,2020-07,139,139,100.0,0,0,Station Stopped
+coldstream_comparison,2026-03-10/tables/vic/coldstream_comparison,2009-07,2020-11,137,137,100.0,0,0,Station Stopped
+coffs_harbour_airport,2026-03-10/tables/nsw/coffs_harbour_airport,2015-02,2026-03,134,134,100.0,0,0,No
+bowen_airport,2026-03-10/tables/qld/bowen_airport,2015-03,2026-03,133,133,100.0,0,0,No
+albion_park_(wollongong_airport),2026-03-10/tables/nsw/albion_park_(wollongong_airport),2009-01,2019-11,131,131,100.0,0,0,Station Stopped
+lucinda_point,2026-03-10/tables/qld/lucinda_point,2009-01,2026-03,207,129,62.31884057971014,78,51,Coverage
+mount_crawford,2026-03-10/tables/sa/mount_crawford,2015-10,2026-03,126,126,100.0,0,0,No
+kunanyi_(mount_wellington_pinnacle),2026-03-10/tables/tas/kunanyi_(mount_wellington_pinnacle),2015-10,2026-03,126,126,100.0,0,0,No
+darwin_ntc,2026-03-10/tables/nt/darwin_ntc,2012-08,2024-05,142,122,85.91549295774648,20,17,Station Stopped
+nuriootpa_pirsa,2026-03-10/tables/sa/nuriootpa_pirsa,2016-02,2026-03,122,122,100.0,0,0,No
+ooralea_racecourse_(mackay_turf_club),2026-03-10/tables/qld/ooralea_racecourse_(mackay_turf_club),2016-06,2026-03,118,118,100.0,0,0,No
+innisfail_aerodrome,2026-03-10/tables/qld/innisfail_aerodrome,2016-06,2026-03,118,118,100.0,0,0,No
+maitland_airport,2026-03-10/tables/nsw/maitland_airport,2016-07,2026-03,117,117,100.0,0,0,No
+windorah_airport,2026-03-10/tables/qld/windorah_airport,2016-08,2026-03,116,116,100.0,0,0,No
+frankston,2026-03-10/tables/vic/frankston,2009-01,2018-08,116,116,100.0,0,0,Station Stopped
+kellalac_(warracknabeal_airport),2026-03-10/tables/vic/kellalac_(warracknabeal_airport),2016-12,2026-03,112,112,100.0,0,0,No
+west_roebuck,2026-03-10/tables/wa/west_roebuck,2009-01,2018-03,111,111,100.0,0,0,No
+rundle_island,2026-03-10/tables/qld/rundle_island,2009-01,2018-03,111,109,98.1981981981982,2,2,No
+millendon_(swan_valley),2026-03-10/tables/wa/millendon_(swan_valley),2017-05,2026-03,107,107,100.0,0,0,No
+adelaide_(west_terrace___ngayirdapira),2026-03-10/tables/sa/adelaide_(west_terrace___ngayirdapira),2017-06,2026-03,106,106,100.0,0,0,No
+douglas_river_research_farm,2026-03-10/tables/nt/douglas_river_research_farm,2017-07,2026-03,105,105,100.0,0,0,No
+coffin_bay_(point_avoid),2026-03-10/tables/sa/coffin_bay_(point_avoid),2017-07,2026-03,105,105,100.0,0,0,No
+mount_bundey_south_(defence),2026-03-10/tables/nt/mount_bundey_south_(defence),2017-10,2026-03,102,102,100.0,0,0,No
+townsville-_fanning_river_(defence),2026-03-10/tables/qld/townsville-_fanning_river_(defence),2017-10,2026-03,102,102,100.0,0,0,No
+mount_stuart_(defence),2026-03-10/tables/qld/mount_stuart_(defence),2017-10,2026-03,102,102,100.0,0,0,No
+kapooka_(defence),2026-03-10/tables/nsw/kapooka_(defence),2017-10,2026-03,102,102,100.0,0,0,No
+mount_bundey_north_(defence),2026-03-10/tables/nt/mount_bundey_north_(defence),2017-10,2026-03,102,102,100.0,0,0,No
+douglas_river,2026-03-10/tables/nt/douglas_river,2009-01,2017-07,103,102,99.02912621359224,1,1,Station Stopped
+townsville-_air_weapons_range_(defence),2026-03-10/tables/qld/townsville-_air_weapons_range_(defence),2017-10,2026-03,102,102,100.0,0,0,No
+coulta_(coles_point),2026-03-10/tables/sa/coulta_(coles_point),2009-01,2017-05,101,101,100.0,0,0,Station Stopped
+wiluna_aero,2026-03-10/tables/wa/wiluna_aero,2017-11,2026-03,101,101,100.0,0,0,No
+marrangaroo_(defence),2026-03-10/tables/nsw/marrangaroo_(defence),2017-12,2026-03,100,100,100.0,0,0,No
+kangaroo_flats_(defence),2026-03-10/tables/nt/kangaroo_flats_(defence),2017-10,2026-03,102,100,98.0392156862745,2,2,No
+jimna_forestry,2026-03-10/tables/qld/jimna_forestry,2009-01,2017-04,100,99,99.0,1,1,Station Stopped
+sydney_harbour_(wedding_cake_west),2026-03-10/tables/nsw/sydney_harbour_(wedding_cake_west),2010-02,2018-03,98,98,100.0,0,0,No
+cultana_(defence),2026-03-10/tables/sa/cultana_(defence),2018-02,2026-03,98,98,100.0,0,0,No
+tin_can_bay_(defence),2026-03-10/tables/qld/tin_can_bay_(defence),2018-03,2026-03,97,97,100.0,0,0,No
+greenbank_(defence),2026-03-10/tables/qld/greenbank_(defence),2018-03,2026-03,97,97,100.0,0,0,No
+redland_(alexandra_hills),2026-03-10/tables/qld/redland_(alexandra_hills),2018-03,2026-03,97,97,100.0,0,0,No
+canungra_(defence),2026-03-10/tables/qld/canungra_(defence),2018-03,2026-03,97,97,100.0,0,0,No
+coconut_island,2026-03-10/tables/qld/coconut_island,2009-01,2018-03,111,94,84.68468468468468,17,10,No
+lancelin_(defence),2026-03-10/tables/wa/lancelin_(defence),2018-07,2026-03,93,93,100.0,0,0,No
+bradshaw_-_angallari_valley_(defence),2026-03-10/tables/nt/bradshaw_-_angallari_valley_(defence),2018-08,2026-03,92,92,100.0,0,0,No
+karijini_north,2026-03-10/tables/wa/karijini_north,2018-08,2026-03,92,92,100.0,0,0,No
+jervis_bay_nsw_(jervis_bay_airfield),2026-03-10/tables/nsw/jervis_bay_nsw_(jervis_bay_airfield),2018-10,2026-03,90,90,100.0,0,0,No
+bradshaw_-_koolendong_valley_(defence),2026-03-10/tables/nt/bradshaw_-_koolendong_valley_(defence),2018-10,2026-03,90,90,100.0,0,0,No
+puckapunyal_lyon_hill_(defence),2026-03-10/tables/vic/puckapunyal_lyon_hill_(defence),2018-10,2026-03,90,90,100.0,0,0,No
+puckapunyal_west_(defence),2026-03-10/tables/vic/puckapunyal_west_(defence),2018-10,2026-03,90,90,100.0,0,0,No
+yampi_sound_(defence),2026-03-10/tables/wa/yampi_sound_(defence),2018-10,2026-03,90,90,100.0,0,0,No
+wanaaring_(borrona_downs),2026-03-10/tables/nsw/wanaaring_(borrona_downs),2018-11,2026-03,89,89,100.0,0,0,No
+nuriootpa_viticultural,2026-03-10/tables/sa/nuriootpa_viticultural,2009-01,2016-02,86,86,100.0,0,0,Station Stopped
+portland_ntc,2026-03-10/tables/vic/portland_ntc,2011-04,2018-03,84,84,100.0,0,0,No
+holsworthy_defence,2026-03-10/tables/nsw/holsworthy_defence,2019-05,2026-03,83,83,100.0,0,0,No
+mount_wellington,2026-03-10/tables/tas/mount_wellington,2009-01,2015-10,82,82,100.0,0,0,Station Stopped
+mount_crawford_(mt_crawford),2026-03-10/tables/sa/mount_crawford_(mt_crawford),2009-01,2015-10,82,82,100.0,0,0,Station Stopped
+coffs_harbour_mo,2026-03-10/tables/nsw/coffs_harbour_mo,2009-01,2015-08,80,80,100.0,0,0,Station Stopped
+albion_park_(shellharbour_airport),2026-03-10/tables/nsw/albion_park_(shellharbour_airport),2019-11,2026-03,77,77,100.0,0,0,No
+toolara_(kelly),2026-03-10/tables/qld/toolara_(kelly),2009-01,2015-01,73,73,100.0,0,0,Station Stopped
+melbourne_regional_office,2026-03-10/tables/vic/melbourne_regional_office,2009-01,2015-01,73,73,100.0,0,0,Station Stopped
+holsworthy_control_range,2026-03-10/tables/nsw/holsworthy_control_range,2009-01,2014-09,69,69,100.0,0,0,Station Stopped
+frankston_(ballam_park),2026-03-10/tables/vic/frankston_(ballam_park),2020-07,2026-03,69,69,100.0,0,0,No
+port_kembla_ntc,2026-03-10/tables/nsw/port_kembla_ntc,2012-07,2018-03,69,69,100.0,0,0,No
+rosslyn_bay_ntc,2026-03-10/tables/qld/rosslyn_bay_ntc,2012-07,2018-03,69,69,100.0,0,0,No
+cape_don,2026-03-10/tables/nt/cape_don,2009-01,2015-01,73,66,90.41095890410958,7,4,Station Stopped
+yulara_aero,2026-03-10/tables/nt/yulara_aero,2009-01,2014-02,62,62,100.0,0,0,Station Stopped
+mcarthur_river_mine,2026-03-10/tables/nt/mcarthur_river_mine,2009-01,2014-02,62,62,100.0,0,0,Station Stopped
+nambour_dpi_-_hillside,2026-03-10/tables/qld/nambour_dpi_-_hillside,2009-01,2014-02,62,62,100.0,0,0,Station Stopped
+batchelor_aero,2026-03-10/tables/nt/batchelor_aero,2009-01,2014-02,62,62,100.0,0,0,Station Stopped
+borroloola,2026-03-10/tables/nt/borroloola,2009-01,2014-02,62,62,100.0,0,0,Station Stopped
+warruwi,2026-03-10/tables/nt/warruwi,2009-01,2014-02,62,61,98.38709677419355,1,1,Station Stopped
+milingimbi,2026-03-10/tables/nt/milingimbi,2009-01,2014-02,62,61,98.38709677419355,1,1,Station Stopped
+maningrida_aero,2026-03-10/tables/nt/maningrida_aero,2009-01,2014-02,62,61,98.38709677419355,1,1,Station Stopped
+pirlangimpi,2026-03-10/tables/nt/pirlangimpi,2009-01,2014-02,62,60,96.7741935483871,2,2,Station Stopped
+hillarys_boat_harbour_ntc,2026-03-10/tables/wa/hillarys_boat_harbour_ntc,2013-05,2018-03,59,59,100.0,0,0,Not enough data
+cape_ferguson_ntc,2026-03-10/tables/qld/cape_ferguson_ntc,2013-05,2018-03,59,59,100.0,0,0,Not enough data
+spring_bay_ntc,2026-03-10/tables/tas/spring_bay_ntc,2013-05,2018-03,59,59,100.0,0,0,Not enough data
+broome_ntc,2026-03-10/tables/wa/broome_ntc,2013-05,2018-03,59,59,100.0,0,0,Not enough data
+mornington_island,2026-03-10/tables/qld/mornington_island,2009-01,2013-10,58,58,100.0,0,0,Station Stopped
+port_keats_aero,2026-03-10/tables/nt/port_keats_aero,2009-01,2014-02,62,58,93.54838709677419,4,3,Station Stopped
+dum_in_mirrie,2026-03-10/tables/nt/dum_in_mirrie,2009-01,2014-02,62,58,93.54838709677419,4,2,Station Stopped
+ceduna_(thevenard_ntc),2026-03-10/tables/sa/ceduna_(thevenard_ntc),2021-06,2026-03,58,58,100.0,0,0,Not enough data
+lajamanu,2026-03-10/tables/nt/lajamanu,2009-01,2014-02,62,58,93.54838709677419,4,3,Station Stopped
+daly_waters,2026-03-10/tables/nt/daly_waters,2009-01,2014-02,62,56,90.32258064516128,6,2,Station Stopped
+gosford_(narara_research_station),2026-03-10/tables/nsw/gosford_(narara_research_station),2009-01,2013-05,53,53,100.0,0,0,Station Stopped
+point_cook_raaf,2026-03-10/tables/vic/point_cook_raaf,2021-12,2026-03,52,52,100.0,0,0,Not enough data
+inglewood_forest,2026-03-10/tables/qld/inglewood_forest,2009-01,2013-02,50,50,100.0,0,0,Station Stopped
+walungurru,2026-03-10/tables/nt/walungurru,2009-01,2014-02,62,50,80.64516129032258,12,6,Station Stopped
+eddystone_point,2026-03-10/tables/tas/eddystone_point,2009-01,2012-10,46,46,100.0,0,0,Station Stopped
+fingal_(fleming_st),2026-03-10/tables/tas/fingal_(fleming_st),2022-07,2026-03,45,45,100.0,0,0,Not enough data
+she_oaks,2026-03-10/tables/vic/she_oaks,2022-08,2026-03,44,44,100.0,0,0,Not enough data
+gunnedah_resource_centre,2026-03-10/tables/nsw/gunnedah_resource_centre,2022-12,2026-03,40,40,100.0,0,0,Not enough data
+cressy_(brumbys_creek),2026-03-10/tables/tas/cressy_(brumbys_creek),2022-12,2026-03,40,40,100.0,0,0,Not enough data
+viewbank_(arpansa),2026-03-10/tables/vic/viewbank_(arpansa),2009-01,2012-03,39,39,100.0,0,0,Not enough data
+kyabram_dpi,2026-03-10/tables/vic/kyabram_dpi,2009-02,2012-03,38,38,100.0,0,0,Not enough data
+busselton,2026-03-10/tables/wa/busselton,2009-01,2011-11,35,35,100.0,0,0,Station Stopped
+portland_airport,2026-03-10/tables/vic/portland_airport,2023-05,2026-03,35,35,100.0,0,0,Not enough data
+port_maquarie_(port_macquarie_airport_aw),2026-03-10/tables/nsw/port_maquarie_(port_macquarie_airport_aw),2020-10,2023-06,33,33,100.0,0,0,Station Stopped
+witchcliffe_west,2026-03-10/tables/wa/witchcliffe_west,2023-07,2026-03,33,33,100.0,0,0,Not enough data
+knuckey_lagoon,2026-03-10/tables/nt/knuckey_lagoon,2023-07,2026-03,33,33,100.0,0,0,Not enough data
+sydney_olympic_park_(sydney_olympic_pk_a),2026-03-10/tables/nsw/sydney_olympic_park_(sydney_olympic_pk_a),2009-01,2011-08,32,32,100.0,0,0,Station Stopped
+east_point,2026-03-10/tables/nt/east_point,2023-08,2026-03,32,32,100.0,0,0,Not enough data
+ferny_creek_(dunns_hill),2026-03-10/tables/vic/ferny_creek_(dunns_hill),2009-01,2011-07,31,31,100.0,0,0,Station Stopped
+grovedale_(geelong_airport),2026-03-10/tables/vic/grovedale_(geelong_airport),2009-01,2011-06,30,30,100.0,0,0,Station Stopped
+geraldton_airport_comparison,2026-03-10/tables/wa/geraldton_airport_comparison,2012-02,2014-06,29,29,100.0,0,0,Station Stopped
+albany_airport_comparison,2026-03-10/tables/wa/albany_airport_comparison,2012-01,2014-02,26,26,100.0,0,0,Station Stopped
+cape_grim_baps,2026-03-10/tables/tas/cape_grim_baps,2009-01,2010-12,24,24,100.0,0,0,Station Stopped
+kennaook_cape_grim,2026-03-10/tables/tas/kennaook_cape_grim,2024-05,2026-03,23,23,100.0,0,0,Not enough data
+minnipa_dpi,2026-03-10/tables/sa/minnipa_dpi,2009-01,2010-12,24,23,95.83333333333334,1,1,Station Stopped
+nowra_ran_air_station_,2026-03-10/tables/nsw/nowra_ran_air_station_,2009-01,2010-09,21,21,100.0,0,0,Station Stopped
+ngukurr,2026-03-10/tables/nt/ngukurr,2012-07,2014-02,20,20,100.0,0,0,Station Stopped
+coffs_harbour_airport_comparison,2026-03-10/tables/nsw/coffs_harbour_airport_comparison,2013-08,2015-02,19,19,100.0,0,0,Station Stopped
+holsworthy_(defence),2026-03-10/tables/nsw/holsworthy_(defence),2017-12,2019-05,18,18,100.0,0,0,Station Stopped
+halls_creek_comparison,2026-03-10/tables/wa/halls_creek_comparison,2015-09,2017-01,17,17,100.0,0,0,Station Stopped
+walgett_(brewon),2026-03-10/tables/nsw/walgett_(brewon),2017-05,2018-03,11,11,100.0,0,0,Not enough data
+nyngan_(girilambone_(okeh)),2026-03-10/tables/nsw/nyngan_(girilambone_(okeh)),2017-05,2018-03,11,11,100.0,0,0,Not enough data
+smithville,2026-03-10/tables/nsw/smithville,2017-07,2018-03,9,9,100.0,0,0,Not enough data
+mulurulu,2026-03-10/tables/nsw/mulurulu,2017-07,2018-03,9,9,100.0,0,0,Not enough data
+eucla_(red_rocks_point),2026-03-10/tables/sa/eucla_(red_rocks_point),2013-11,2022-02,100,9,9.0,91,91,Station Stopped
+bradshaw_(angallari_valley)_(defence),2026-03-10/tables/nt/bradshaw_(angallari_valley)_(defence),2017-12,2018-08,9,9,100.0,0,0,Station Stopped
+noona,2026-03-10/tables/nsw/noona,2017-07,2018-03,9,9,100.0,0,0,Not enough data
+noonamah_(mkt),2026-03-10/tables/nt/noonamah_(mkt),2013-06,2014-02,9,9,100.0,0,0,Station Stopped
+charters_towers_airport,2026-03-10/tables/qld/charters_towers_airport,2025-07,2026-03,9,9,100.0,0,0,Not enough data
+kerang_airport,2026-03-10/tables/vic/kerang_airport,2025-07,2026-03,9,9,100.0,0,0,Not enough data
+melbourne_(olympic_park)_comparison,2026-03-10/tables/vic/melbourne_(olympic_park)_comparison,2013-06,2014-01,8,8,100.0,0,0,Station Stopped
+adelaide_airport_mo,2026-03-10/tables/sa/adelaide_airport_mo,2025-09,2026-03,7,7,100.0,0,0,Not enough data
+east_sale,2026-03-10/tables/vic/east_sale,2017-09,2018-03,7,7,100.0,0,0,Not enough data
+wanaaring_(delta),2026-03-10/tables/nsw/wanaaring_(delta),2017-10,2018-03,6,6,100.0,0,0,Not enough data
+western_sydney_airport,2026-03-10/tables/nsw/western_sydney_airport,2025-10,2026-03,6,6,100.0,0,0,Not enough data
+euabalong_(mount_hope),2026-03-10/tables/nsw/euabalong_(mount_hope),2017-10,2018-03,6,6,100.0,0,0,Not enough data
+bathurst_agricultural_station,2026-03-10/tables/nsw/bathurst_agricultural_station,2025-12,2026-03,4,4,100.0,0,0,Not enough data
+lucas_heights_(ansto),2026-03-10/tables/nsw/lucas_heights_(ansto),2025-12,2026-03,4,4,100.0,0,0,Not enough data
+borrona_downs,2026-03-10/tables/nsw/borrona_downs,2017-07,2018-10,16,3,18.75,13,13,Station Stopped
+cultana_training_area_(cultana_(defence),2026-03-10/tables/sa/cultana_training_area_(cultana_(defence),2017-12,2018-02,3,3,100.0,0,0,Station Stopped
+alice_springs_airport,2026-03-10/tables/sa/alice_springs_airport,2018-03,2020-12,34,3,8.823529411764707,31,30,Station Stopped
+glenlitta_avenue_-_micromac_site,2026-03-10/tables/vic/glenlitta_avenue_-_micromac_site,2014-01,2017-11,47,3,6.382978723404255,44,38,Station Stopped
+may_downs,2026-03-10/tables/qld/may_downs,2013-08,2013-09,2,2,100.0,0,0,Station Stopped
+deniliquin_airport,2026-03-10/tables/vic/deniliquin_airport,2019-08,2019-09,2,2,100.0,0,0,Station Stopped
+albury_airport,2026-03-10/tables/vic/albury_airport,2019-08,2019-09,2,2,100.0,0,0,Station Stopped
+timber_creek,2026-03-10/tables/nt/timber_creek,2013-02,2013-05,4,2,50.0,2,2,Station Stopped
+melbourne_(150_lonsdale_st),2026-03-10/tables/vic/melbourne_(150_lonsdale_st),2013-05,2013-06,2,2,100.0,0,0,Station Stopped
+eucla,2026-03-10/tables/sa/eucla,2013-03,2013-04,2,2,100.0,0,0,Station Stopped
+wangaratta_aero,2026-03-10/tables/wa/wangaratta_aero,2017-04,2017-04,1,1,100.0,0,0,Station Stopped
+ingham_aero,2026-03-10/tables/qld/ingham_aero,2024-02,2024-02,1,1,100.0,0,0,Station Stopped
+moonta_(warburto_point),2026-03-10/tables/sa/moonta_(warburto_point),2016-05,2016-05,1,1,100.0,0,0,Station Stopped
+kunanyi_(mount_wellington),2026-03-10/tables/tas/kunanyi_(mount_wellington),2015-10,2015-10,1,1,100.0,0,0,Station Stopped
+adelaide_west_terrace,2026-03-10/tables/sa/adelaide_west_terrace,2017-05,2017-05,1,1,100.0,0,0,Station Stopped
+adelaide_(west_tce_-_ngayirdpira),2026-03-10/tables/sa/adelaide_(west_tce_-_ngayirdpira),2017-05,2017-05,1,1,100.0,0,0,Station Stopped
+forrest,2026-03-10/tables/sa/forrest,2018-11,2018-11,1,1,100.0,0,0,Station Stopped
+holsworthy_-_defence,2026-03-10/tables/nsw/holsworthy_-_defence,2019-05,2019-05,1,1,100.0,0,0,Station Stopped
+alice_springs_airport,2026-03-10/tables/vic/alice_springs_airport,2017-03,2017-03,1,1,100.0,0,0,Not enough data
+hobart_airport_west,2026-03-10/tables/tas/hobart_airport_west,2022-08,2022-08,1,1,100.0,0,0,Station Stopped
+spitfire_channel_beacon,2026-03-10/tables/qld/spitfire_channel_beacon,2016-05,2016-05,1,1,100.0,0,0,Station Stopped
+swan_valley,2026-03-10/tables/wa/swan_valley,2017-05,2017-05,1,1,100.0,0,0,Station Stopped
+evans_head_raaf_bombing_range,2026-03-10/tables/qld/evans_head_raaf_bombing_range,2017-08,2017-08,1,1,100.0,0,0,Station Stopped
+adelaide_airport_comparison,2026-03-10/tables/sa/adelaide_airport_comparison,2025-09,2025-09,1,1,100.0,0,0,Station Stopped
+thangool_new,2026-03-10/tables/qld/thangool_new,2012-07,2012-07,1,1,100.0,0,0,Station Stopped
+port_macquarie_airport_(comparison),2026-03-10/tables/nsw/port_macquarie_airport_(comparison),2020-10,2020-10,1,1,100.0,0,0,Station Stopped
+banana_bank_north_beacon,2026-03-10/tables/qld/banana_bank_north_beacon,2016-05,2016-05,1,1,100.0,0,0,Station Stopped
+kunanyi_(mount_wellington_summit),2026-03-10/tables/tas/kunanyi_(mount_wellington_summit),2015-10,2015-10,1,1,100.0,0,0,Station Stopped
+st_kilda_harbour_-_rmys,2026-03-10/tables/vic/st_kilda_harbour_-_rmys,2016-05,2016-05,1,1,100.0,0,0,Station Stopped
