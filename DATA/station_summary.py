@@ -4,6 +4,7 @@ import pandas as pd
 import json
 from datetime import datetime
 
+
 with open("config.json") as f:
     config = json.load(f)
 
@@ -74,4 +75,12 @@ for root, dirs, files in os.walk(BASE_PATH):
 df = pd.DataFrame(rows)
 df = df.sort_values(by="months_available", ascending=False)
 df.to_csv("station_summary.csv", index=False)
-print("Station Summary saved to station_summary.csv")
+
+print("-" * 100)
+print(f"\nTotal stations found: {len(df)}")
+print(f"\tStations without issues: {sum(df.issue=="No")}")
+print(f"\tStations stopped working: {sum(df.issue=="Station Stopped")}")
+print(f"\tStations not having enough data: {sum(df.issue=="Not enough data")}")
+print(f"\tStations with coverage issue: {sum(df.issue=="Coverage")}")
+print("\nStation Summary saved to station_summary.csv\n")
+print("-" * 100)

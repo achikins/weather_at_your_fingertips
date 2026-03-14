@@ -47,6 +47,8 @@ else:
             print(f"{filename} deleted after extraction")
     
     ftp.quit()
+    
+    print("All Done")
     print("")
     print("-" * 100)
-    print("All Done")
+    

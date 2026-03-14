@@ -1,18 +1,24 @@
 import os
 import pandas as pd
 import json
+import shutil
 
+
+print("-" * 100)
+print("\nCombining data ...")
 with open("config.json") as f:
     config = json.load(f)
 
 BASE_PATH = config["base_path"]
-SUMMARY_FILE = "station_summary.csv"
+OUTPUT_PATH = config["combined_data_path"]
+SUMMARY_PATH = config["station_summary_path"]
 
-summary = pd.read_csv(SUMMARY_FILE)
+summary = pd.read_csv(SUMMARY_PATH)
 
 valid_stations = summary[summary['issue'] == "No"]["full_path"].tolist()
 
 all_data = []
+stations_processed = 0
 
 for station in valid_stations:
 
@@ -28,28 +34,28 @@ for station in valid_stations:
         try:
             df = pd.read_csv(path, skiprows=13, header=None, encoding="latin1")
             df.columns = [
-                "station name",
+                "station_name",
                 "date",
                 "evapotranspiration(mm)",
                 "rain(mm)",
-                "pan evaporation(mm)",
-                "maximum temperature(°C)",
-                "minimum temperature(°C)",
-                "maximum relative humidity(%)",
-                "minimum relative humidity(%)",
-                "average 10m wind speed(m/sec)",
-                "solar radiation(MJ/sq m)"
+                "pan_evaporation(mm)",
+                "maximum_temperature(°C)",
+                "minimum_temperature(°C)",
+                "maximum_relative_humidity(%)",
+                "minimum_relative_humidity(%)",
+                "average_10m_wind_speed(m/sec)",
+                "solar_radiation(MJ/sq m)"
             ]
             df = df[[
-                "station name",
+                "station_name",
                 "date",
                 "evapotranspiration(mm)",
                 "rain(mm)",
-                "maximum temperature(°C)",
-                "minimum temperature(°C)",
-                "maximum relative humidity(%)",
-                "minimum relative humidity(%)",
-                "average 10m wind speed(m/sec)"
+                "maximum_temperature(°C)",
+                "minimum_temperature(°C)",
+                "maximum_relative_humidity(%)",
+                "minimum_relative_humidity(%)",
+                "average_10m_wind_speed(m/sec)"
             ]]
 
             df["date"] = pd.to_datetime(df["date"], format="%d/%m/%Y")
@@ -57,6 +63,7 @@ for station in valid_stations:
 
         except Exception as e:
             print("Skipping", path, e)
+    stations_processed += 1
 
 
 if not all_data:
@@ -64,6 +71,21 @@ if not all_data:
     exit()
 
 final_df = pd.concat(all_data, ignore_index=True)
-final_df = final_df.sort_values(["station name", "date"])
-final_df.to_csv("combine_data.csv", index=False)
-print("Done")
+final_df = final_df.sort_values(["station_name", "date"])
+final_df = final_df[final_df["station_name"] != "Totals:"]
+final_df.to_csv(OUTPUT_PATH, index=False)
+
+print("\nData combination complete")
+print(f"Combined data saved to {OUTPUT_PATH}\n")
+print(f"Total stations combined: {stations_processed}")
+print(f"Total rows of data: {len(final_df)}\n")
+
+parent_folder = os.path.dirname(BASE_PATH)
+if os.path.exists(parent_folder):
+    try:
+        shutil.rmtree(parent_folder)
+        print(f"Deleted folder {parent_folder}\n")
+    except Exception as e:
+        print(f"Failed: {e}\n", e)
+
+print("-" * 100)
