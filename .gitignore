@@ -38,3 +38,8 @@ yarn-error.log*
 .cache/
 .parcel-cache/
 frontend/.vite/
+
+# DATA
+DATA/**/*.csv
+DATA/**/*.txt
+.DS_Store
