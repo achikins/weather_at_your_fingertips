@@ -1,10 +1,14 @@
 import pandas as pd
 import lightgbm
 import os
+import json
 
 
-INPUT_FILE = "combine_data.csv"
-OUTPUT_FILE = "clean_data.csv"
+with open("config.json") as f:
+    config = json.load(f)
+
+INPUT_FILE = config["combined_data_path"]
+OUTPUT_FILE = config["clean_data_path"]
 
 NUMERIC_COLS = [
     "evapotranspiration(mm)",
@@ -24,7 +28,6 @@ for col in NUMERIC_COLS:
 
 print("-" * 100)
 print(f"\nloaded {len(df)} rows from {INPUT_FILE}")
-print(f"Total rows: {len(df)}")
 print(f"Missing values BEFORE cleaning: \n{df[NUMERIC_COLS].isna().sum().to_string()}\n")
 
 cleaned_groups = []
@@ -114,10 +117,4 @@ if os.path.exists(INPUT_FILE):
     os.remove(INPUT_FILE)
     print(f"File {INPUT_FILE} has been deleted")
 print(f"File saved to {OUTPUT_FILE}\n")
-print("-" * 100)
-
-print(f"\nMissing features:\n")
-for x in skipped_info:
-    print(x)
-
 print("-" * 100)
