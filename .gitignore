@@ -1,6 +1,9 @@
 # Markdown files
 *.md
 
+# Frontend (added per backlog — commit incrementally)
+frontend/
+
 # Node modules
 node_modules/
 frontend/node_modules/
