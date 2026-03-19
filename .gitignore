@@ -5,6 +5,11 @@
 node_modules/
 frontend/node_modules/
 
+# Python virtual environments
+.venv/
+venv/
+env/
+
 # Build outputs
 dist/
 frontend/dist/
@@ -38,6 +43,7 @@ yarn-error.log*
 .cache/
 .parcel-cache/
 frontend/.vite/
+__pycache__
 
 # DATA
 DATA/**/*.csv
