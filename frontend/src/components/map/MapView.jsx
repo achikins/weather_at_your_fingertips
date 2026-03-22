@@ -147,75 +147,74 @@ export default function MapView() {
       const color = getMarkerColor(value, activeLayer);
       const unit = getLayerUnit(activeLayer);
 
-      // Single element — only the dot, no overflow children.
-      // Anchor "center" pins the exact centre of this 48x48 element to the coordinate.
-      const el = document.createElement("div");
-      el.className = "city-marker";
-      el.style.cssText = `
+      // DOT marker — anchor center so the circle pins exactly to the coordinate
+      const dotEl = document.createElement("div");
+      dotEl.style.cssText = `
         cursor: pointer;
         width: 48px;
         height: 48px;
         border-radius: 50%;
-        background: ${color}22;
-        border: 2px solid ${color};
+        background: ${color}18;
+        border: 2.5px solid ${color};
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 16px ${color}44;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: 0 0 14px ${color}55;
       `;
 
       const inner = document.createElement("div");
       inner.style.cssText = `
-        font-size: 10px;
-        font-weight: 700;
-        color: white;
+        font-size: 12px;
+        font-weight: 800;
+        color: #ffffff;
         text-align: center;
-        line-height: 1.1;
+        letter-spacing: -0.3px;
         pointer-events: none;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.9);
       `;
       inner.textContent = `${value}${unit}`;
+      dotEl.appendChild(inner);
 
-      const cityLabel = document.createElement("div");
-      cityLabel.style.cssText = `
-        font-size: 8px;
-        font-weight: 600;
-        color: rgba(255,255,255,0.7);
-        text-align: center;
-        pointer-events: none;
-        margin-top: 1px;
-      `;
-      cityLabel.textContent = city.name;
-
-      el.appendChild(inner);
-      el.appendChild(cityLabel);
-      const dot = el; // alias for hover handlers below
-
-      el.addEventListener("mouseenter", () => {
-        dot.style.transform = "scale(1.15)";
-        dot.style.boxShadow = `0 0 24px ${color}66`;
+      dotEl.addEventListener("mouseenter", () => {
+        dotEl.style.transform = "scale(1.15)";
+        dotEl.style.boxShadow = `0 0 24px ${color}77`;
       });
-      el.addEventListener("mouseleave", () => {
-        dot.style.transform = "scale(1)";
-        dot.style.boxShadow = `0 0 16px ${color}44`;
+      dotEl.addEventListener("mouseleave", () => {
+        dotEl.style.transform = "scale(1)";
+        dotEl.style.boxShadow = `0 0 14px ${color}55`;
       });
-
-      el.addEventListener("click", () => {
+      dotEl.addEventListener("click", () => {
         setSelectedCity(city);
-        map.flyTo({
-          center: city.coordinates,
-          zoom: 6,
-          duration: 1200,
-          essential: true,
-        });
+        map.flyTo({ center: city.coordinates, zoom: 6, duration: 1200, essential: true });
       });
 
-      const marker = new mapboxgl.Marker({ element: el, anchor: "center" })
+      const dotMarker = new mapboxgl.Marker({ element: dotEl, anchor: "center" })
         .setLngLat(city.coordinates)
         .addTo(map);
+      markersRef.current.push(dotMarker);
 
-      markersRef.current.push(marker);
+      // LABEL marker — separate element, anchor top, offset below the dot
+      const labelEl = document.createElement("div");
+      labelEl.style.cssText = `
+        font-size: 10px;
+        font-weight: 600;
+        color: #e2e8f0;
+        background: rgba(10,16,35,0.9);
+        padding: 3px 9px;
+        border-radius: 99px;
+        white-space: nowrap;
+        border: 1px solid rgba(255,255,255,0.13);
+        pointer-events: none;
+        letter-spacing: 0.2px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      `;
+      labelEl.textContent = city.name;
+
+      const labelMarker = new mapboxgl.Marker({ element: labelEl, anchor: "top", offset: [0, 28] })
+        .setLngLat(city.coordinates)
+        .addTo(map);
+      markersRef.current.push(labelMarker);
     });
   }, [mapLoaded, activeLayer]);
 
