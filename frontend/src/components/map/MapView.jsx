@@ -147,15 +147,15 @@ export default function MapView() {
       const color = getMarkerColor(value, activeLayer);
       const unit = getLayerUnit(activeLayer);
 
+      // Wrapper is position:relative so the label can be absolutely positioned
+      // without affecting the anchor point. The dot is always centered on the coordinate.
       const el = document.createElement("div");
       el.className = "city-marker";
       el.style.cssText = `
         position: relative;
         cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 4px;
+        width: 48px;
+        height: 48px;
       `;
 
       const dot = document.createElement("div");
@@ -184,8 +184,13 @@ export default function MapView() {
 
       dot.appendChild(inner);
 
+      // Label floats below the dot without shifting the anchor point
       const label = document.createElement("div");
       label.style.cssText = `
+        position: absolute;
+        top: 52px;
+        left: 50%;
+        transform: translateX(-50%);
         font-size: 10px;
         font-weight: 600;
         color: rgba(255,255,255,0.85);
@@ -194,6 +199,7 @@ export default function MapView() {
         border-radius: 20px;
         white-space: nowrap;
         border: 1px solid rgba(255,255,255,0.1);
+        pointer-events: none;
       `;
       label.textContent = city.name;
 
@@ -219,7 +225,7 @@ export default function MapView() {
         });
       });
 
-      const marker = new mapboxgl.Marker({ element: el, anchor: "bottom" })
+      const marker = new mapboxgl.Marker({ element: el, anchor: "center" })
         .setLngLat(city.coordinates)
         .addTo(map);
 
