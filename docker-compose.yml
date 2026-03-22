@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:18
+    container_name: weather_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: weather_at_your_fingertips_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - weather_at_your_fingertips_db_postgres_data:/var/lib/postgresql
+
+  backend:
+    build: ./backend
+    container_name: weather_backend
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: weather_at_your_fingertips_db
+      DB_USER: postgres
+      DB_PASSWORD: password
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+
+volumes:
+  weather_at_your_fingertips_db_postgres_data:
+    name: weather_at_your_fingertips_db_postgres_data
