@@ -147,25 +147,19 @@ export default function MapView() {
       const color = getMarkerColor(value, activeLayer);
       const unit = getLayerUnit(activeLayer);
 
-      // Wrapper is position:relative so the label can be absolutely positioned
-      // without affecting the anchor point. The dot is always centered on the coordinate.
+      // Single element — only the dot, no overflow children.
+      // Anchor "center" pins the exact centre of this 48x48 element to the coordinate.
       const el = document.createElement("div");
       el.className = "city-marker";
       el.style.cssText = `
-        position: relative;
         cursor: pointer;
-        width: 48px;
-        height: 48px;
-      `;
-
-      const dot = document.createElement("div");
-      dot.style.cssText = `
         width: 48px;
         height: 48px;
         border-radius: 50%;
         background: ${color}22;
         border: 2px solid ${color};
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         transition: all 0.3s ease;
@@ -174,37 +168,29 @@ export default function MapView() {
 
       const inner = document.createElement("div");
       inner.style.cssText = `
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 700;
         color: white;
         text-align: center;
-        line-height: 1.2;
+        line-height: 1.1;
+        pointer-events: none;
       `;
       inner.textContent = `${value}${unit}`;
 
-      dot.appendChild(inner);
-
-      // Label floats below the dot without shifting the anchor point
-      const label = document.createElement("div");
-      label.style.cssText = `
-        position: absolute;
-        top: 52px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 10px;
+      const cityLabel = document.createElement("div");
+      cityLabel.style.cssText = `
+        font-size: 8px;
         font-weight: 600;
-        color: rgba(255,255,255,0.85);
-        background: rgba(15,22,41,0.85);
-        padding: 2px 6px;
-        border-radius: 20px;
-        white-space: nowrap;
-        border: 1px solid rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.7);
+        text-align: center;
         pointer-events: none;
+        margin-top: 1px;
       `;
-      label.textContent = city.name;
+      cityLabel.textContent = city.name;
 
-      el.appendChild(dot);
-      el.appendChild(label);
+      el.appendChild(inner);
+      el.appendChild(cityLabel);
+      const dot = el; // alias for hover handlers below
 
       el.addEventListener("mouseenter", () => {
         dot.style.transform = "scale(1.15)";
