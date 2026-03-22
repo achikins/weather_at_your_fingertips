@@ -3,6 +3,7 @@ import pandas as pd
 import re
 import zipfile
 import os
+import json
 
 def clean_station_name(name):
     # remove AWS suffix if present
@@ -19,13 +20,15 @@ def normalize_station_name(name):
     name = re.sub(r"\s+", "_", name)
     return name
 
-FTP_HOST = "ftp.bom.gov.au"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
+
+with open(CONFIG_PATH) as f:
+    config = json.load(f)
+
 FTP_DIR = "/anon2/home/ncc/metadata/sitelists"
 ZIP_FILENAME = "stations.zip"
 TXT_FILENAME = "stations.txt"
-STATION_ID_FILE = "station_id.txt"
-SUMMARY_FILE = "station_summary.csv"
-OUTPUT_FILE = "station_data.csv"
 manual_map = {
     "BRADSHAW": "BRADSHAW HOMESTEAD",
     "CAPE GRIM BAPS (COMPARISON)": "CAPE GRIM BAPS (COMPARISON)",
@@ -42,9 +45,9 @@ stations = []
 if not os.path.exists(TXT_FILENAME):
     print(f"{TXT_FILENAME} not found. Downloading from BOM...")
 
-    ftp = FTP(FTP_HOST)
-    ftp.login()
+    ftp = FTP(config["ftp_host"])
     ftp.set_pasv(True)
+    ftp.login()
     ftp.cwd(FTP_DIR)
 
     with open(ZIP_FILENAME, "wb") as f:
@@ -99,7 +102,7 @@ stations_df = pd.DataFrame(stations)
 stations_df["station_name"] = stations_df["station_name"].apply(clean_station_name)
 active_stations_df = stations_df[stations_df["end"] == ".."].copy()
 
-with open(STATION_ID_FILE) as f:
+with open(config["station_id_path"]) as f:
     your_stations = []
     for line in f:
         line = line.strip()
@@ -150,7 +153,7 @@ for idx in failed_idx:
 
 
 # check for rows with missing lat/lon (unsuccessful match)
-failed_merges = merged[merged["latitude"].isna() | merged["longitude"].isna()]
+failed_merges = merged[merged["latitude"].isna() | merged["longitude"].isna() | merged["elevation_m"].isna()]
 
 # print each failed row
 for idx, row in failed_merges.iterrows():
@@ -159,8 +162,8 @@ for idx, row in failed_merges.iterrows():
 # print total number of failed merges
 print(f"Total number of unsuccessful merges: {len(failed_merges)}")
 
-if not os.path.exists(SUMMARY_FILE):
-    print(f"Error: {SUMMARY_FILE} not found.")
+if not os.path.exists(config["station_summary_path"]):
+    print(f"Error: {config["station_summary_path"]} not found.")
     exit(1)
 summary_df = pd.read_csv("station_summary.csv")
 summary_df = summary_df[summary_df["issue"] == "No"].copy()
@@ -173,18 +176,19 @@ summary_df["end_month"] = pd.to_datetime(summary_df["end_month"], format="%Y-%m"
 
 merged = pd.merge(
     merged,
-    summary_df[["station_key", "start_month", "end_month"]],
+    summary_df[["station_key", "start_month", "end_month", "coverage"]],
     on="station_key",
     how="left"
 )
 
 merged = merged.rename(columns={
     "start_month": "start_date",
-    "end_month": "end_date"
+    "end_month": "end_date",
+    "coverage": "coverage_pct"
 })
 
 merged = merged.drop(columns=["station_key", "start", "end"])
 
-merged.to_csv(OUTPUT_FILE, index=False)
+merged.to_csv(config["station_dataset_path"], index=False)
 
-print(f"Station data saved to {OUTPUT_FILE}")
+print(f"Station data saved to {config["station_dataset_path"]}")

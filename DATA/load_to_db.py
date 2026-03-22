@@ -6,8 +6,9 @@ Loads cleaned BOM weather data into the PostgreSQL database
 Run AFTER
   1. download_data.py
   2. station_summary.py
-  3. combine_data.py
-  4. clean_data.py
+  3. download_station_data.py
+  4. combine_data.py
+  5. clean_data.py
 
 And AFTER running the SQL schema file to create the tables
 
@@ -29,18 +30,23 @@ load_dotenv()
 
 #config
 
-with open("config.json") as f:
+# Get folder where this script is
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
+
+with open(CONFIG_PATH) as f:
     config = json.load(f)
 
-CLEAN_DATA_PATH = config["clean_data_path"]          
-STATION_SUMMARY_PATH = config["station_summary_path"]
+CLEAN_DATA_PATH = os.path.join(BASE_DIR, config["clean_data_path"])
+STATION_SUMMARY_PATH = os.path.join(BASE_DIR, config["station_summary_path"])
+STATION_DATA_PATH = os.path.join(BASE_DIR, config["station_dataset_path"])
 
 DB_CONFIG = {
     "host":     os.getenv("DB_HOST", "localhost"),
     "port":     os.getenv("DB_PORT", "5432"),
-    "dbname":   os.getenv("DB_NAME", "weather_db"),
+    "dbname":   os.getenv("DB_NAME", "weather_at_your_fingertips_db"),
     "user":     os.getenv("DB_USER", "postgres"),
-    "password": os.getenv("DB_PASSWORD", ""),
+    "password": os.getenv("DB_PASSWORD", "password"),
 }
 
 BATCH_SIZE = 5000  
@@ -67,48 +73,34 @@ print(f"Reading cleaned data from {CLEAN_DATA_PATH} ...")
 df = pd.read_csv(CLEAN_DATA_PATH, parse_dates=["date"])
 print(f"  {len(df)} rows loaded.\n")
 
-print("Loading station summary for metadata ...")
-station_df = pd.read_csv(STATION_SUMMARY_PATH)
-valid_stations = station_df[station_df["issue"] == "No"].copy()
+print("Loading station data ...\n")
+station_df = pd.read_csv(STATION_DATA_PATH)
 
-unique_stations = df["station_name"].unique()
-print(f"  {len(unique_stations)} unique stations in clean_data.\n")
+print(f"Inserting {len(station_df)} stations into `stations` table ...")
+station_id_map = {}
 
-print("Inserting into `stations` table ...")
-station_id_map = {}  
-
-for station_name in unique_stations:
-    # Try to find matching metadata from station_summary
-    # (station_summary uses folder names, clean_data uses BOM display names)
-    coverage = None
-    start_date = None
-    end_date = None
-
-    # Find date range from the actual data for this station
-    station_data = df[df["station_name"] == station_name]
-    start_date = station_data["date"].min().strftime("%Y-%m-%d")
-    end_date = station_data["date"].max().strftime("%Y-%m-%d")
-    total_days = (station_data["date"].max() - station_data["date"].min()).days + 1
-    coverage = round(len(station_data) / total_days * 100, 2) if total_days > 0 else 0
-
+for _, row in station_df.iterrows():
     cur.execute(
         """
-        INSERT INTO stations (station_name, display_name, starting_date, end_date, coverage_pct)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO stations (station_name, state, latitude, longitude, elevation_m, start_date, end_date, coverage_pct)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         ON CONFLICT DO NOTHING
         RETURNING station_id
         """,
         (
-            station_name,
-            station_name,
-            start_date,
-            end_date,
-            coverage,
+            row["station_name"], # required
+            row.get("state"),
+            row.get("latitude"),
+            row.get("longitude"),
+            row.get("elevation_m"),
+            row.get("start_date"),
+            row.get("end_date"),
+            row.get("coverage_pct"),
         ),
     )
     result = cur.fetchone()
     if result:
-        station_id_map[station_name] = result[0]
+        station_id_map[row["station_name"]] = result[0]
 
 # Also fetch any that already existed (ON CONFLICT hit)
 cur.execute("SELECT station_id, station_name FROM stations")
