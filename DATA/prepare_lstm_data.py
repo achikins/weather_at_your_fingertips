@@ -41,8 +41,8 @@ try:
     df["cos_day"] = np.cos(2 * np.pi * day_of_year / 365)
 
     mask_cols = [col + "_mask" for col in NUMERIC_COLS]
-    features = NUMERIC_COLS + mask_cols + ["station_id", "sin_day", "cos_day"]
-    df = df[features + ["date"]]
+    FEATURES = NUMERIC_COLS + mask_cols + ["station_id", "sin_day", "cos_day"]
+    df = df[FEATURES + ["date"]]
 
     df.to_csv(OUTPUT_FILE, index=False)
     print(f"Processed dataset saved as {OUTPUT_FILE}")
