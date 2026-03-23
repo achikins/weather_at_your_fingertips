@@ -1,18 +1,23 @@
 import numpy as np
 import pandas as pd
 import json
-import os   
+import os
+from pathlib import Path
+
 
 print("-" * 100)
+config_path = Path(__file__).parent.parent / "config.json"
 
 try:
     print("\nPreparing transformer data ...")
-    with open("config.json") as f:
+    with open(config_path) as f:
         config = json.load(f)
 
     LAG_STEPS = [1,2,3]
     INPUT_FILE = config["clean_data_path"]
-    OUTPUT_FILE = config["transformer_dataset_path"]
+    TRAIN_FILE = config["train_path"]
+    VAL_FILE = config["val_path"]
+    TEST_FILE = config["test_path"]
 
     df = pd.read_csv(INPUT_FILE)
 
@@ -54,22 +59,35 @@ try:
     df = df.merge(availability, on="station_id", how="left")
 
     # manual normalization
+    df = df.sort_values(["station_id", "date"])
+    train_df = df[df["date"] < "2023-01-01"].copy()
+    val_df = df[(df["date"] >= "2023-01-01") & (df["date"] < "2025-01-01")].copy()
+    test_df = df[df["date"] >= "2025-01-01"].copy()
+    print(f"Train: {len(train_df)}, Val: {len(val_df)}, Test: {len(test_df)}")
     stats = {}
     for col in NUMERIC_COLS:
-        mean = df[col].mean()
-        std = df[col].std()
+        mean = train_df[col].mean()
+        std = train_df[col].std()
         stats[col] = {"mean": float(mean), "std": float(std)}
-        df[col] = (df[col] - mean) / (std + 1e-8)
+        for split_df in [train_df, val_df, test_df]:
+            split_df[col] = (split_df[col] - mean) / (std + 1e-8)
     with open("transformer_stats.json", "w") as f:
         json.dump(stats, f, indent=4)
+    print("Saved normalization stats")
     print("Saved normalization stats to transformer_stats.json")
    
     # lag features
-    df[NUMERIC_COLS].fillna(0)
-    for col in NUMERIC_COLS:
-        for lag in LAG_STEPS:
-            df[f"{col}_lag{lag}"] = df.groupby("station_id")[col].shift(lag)
-    df.fillna(0)
+    def add_lags(df):
+        for col in NUMERIC_COLS:
+            for lag in LAG_STEPS:
+                df[f"{col}_lag{lag}"] = df.groupby("station_id")[col].shift(lag)
+        return df
+    train_df = add_lags(train_df)
+    val_df = add_lags(val_df)
+    test_df = add_lags(test_df)
+    for split_df in [train_df, val_df, test_df]:
+        split_df[NUMERIC_COLS] = split_df[NUMERIC_COLS].fillna(0)
+        split_df.fillna(0, inplace=True)
 
     # final feature list
     mask_cols = [col + "_mask" for col in NUMERIC_COLS]
@@ -77,10 +95,14 @@ try:
     lag_cols = [f"{col}_lag{lag}" for col in NUMERIC_COLS for lag in LAG_STEPS]
     time_cols = ["sin_day", "cos_day", "sin_month", "cos_month", "day_of_week"]
     FEATURES = NUMERIC_COLS + mask_cols + lag_cols + availability_cols + time_cols + ["station_id"]
-    df = df[FEATURES + ["date"]]
+    train_df = train_df[FEATURES + ["date"]]
+    val_df = val_df[FEATURES + ["date"]]
+    test_df = test_df[FEATURES + ["date"]]
 
-    df.to_csv(OUTPUT_FILE, index=False)
-    print(f"Transformer dataset saved as {OUTPUT_FILE}")
+    train_df.to_csv(TRAIN_FILE, index=False)
+    val_df.to_csv(VAL_FILE, index=False)
+    test_df.to_csv(TEST_FILE, index=False)
+    print(f"Saved train, val, test splits to {TRAIN_FILE}, {VAL_FILE}, {TEST_FILE}")
     os.remove(INPUT_FILE)
     print(f"Deleted input file {INPUT_FILE}\n")
 
