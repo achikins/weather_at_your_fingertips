@@ -8,6 +8,7 @@
     "coverage_threshold": 80,
     "clean_data_path": "clean_data.csv",
     "lstm_dataset_path": "lstm_dataset.csv",
+    "transformer_dataset_path": "transformer_dataset.csv",
     "station_dataset_path": "station_data.csv",
     "station_id_path": "station_id.txt"
 }
