@@ -6,7 +6,7 @@ import os
 
 print("-" * 100)
 try:
-    print("\nPreparing data ...")
+    print("\nPreparing lstm data ...")
     with open("config.json") as f:
         config = json.load(f)
 
