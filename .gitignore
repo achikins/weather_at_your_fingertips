@@ -48,4 +48,7 @@ __pycache__
 # DATA
 DATA/**/*.csv
 DATA/**/*.txt
+DATA/**/*.h5
+DATA/**/*.pkl
 .DS_Store
+
