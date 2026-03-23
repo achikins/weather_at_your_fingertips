@@ -1,3 +1,4 @@
+import time
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -24,11 +25,12 @@ def main():
     val_dataset = WeatherDataset(VAL_FILE, seq_len=60, forecast_horizon=7, target_cols=None)
     test_dataset = WeatherDataset(TEST_FILE, seq_len=60, forecast_horizon=7, target_cols=None)
 
+    start = time.time()
     train_loader = DataLoader(
         train_dataset, 
         batch_size=64, 
         shuffle=True,
-        num_workers=4,
+        num_workers=2,
         pin_memory=True,
         persistent_workers=True
     )
@@ -36,7 +38,7 @@ def main():
         val_dataset, 
         batch_size=64, 
         shuffle=False,
-        num_workers=4,
+        num_workers=2,
         pin_memory=True,
         persistent_workers=True
     )
@@ -44,10 +46,11 @@ def main():
         test_dataset, 
         batch_size=64, 
         shuffle=False,
-        num_workers=4,
+        num_workers=2,
         pin_memory=True,
         persistent_workers=True
     )
+    print(f"Data loading took {time.time() - start:.2f} seconds")
 
     model = Transformer(
         num_features=len(train_dataset.feature_cols),
@@ -65,6 +68,7 @@ def main():
     EPOCHS = 10
 
     for epoch in range(EPOCHS):
+        start_time = time.time()
 
         model.train()
         total_loss = 0
@@ -86,12 +90,14 @@ def main():
                 pred = model(X, station_id)
                 loss = criterion(pred, Y)
                 val_loss += loss.item()
-        
-        print(f"Epoch {epoch+1}")
+
+        epoch_time_sec = time.time() - start_time
+        epoch_time_min = epoch_time_sec / 60
+        print(f"Epoch {epoch+1} | Time: {epoch_time_min:.2f} mins")
         print(f"Train Loss: {total_loss / len(train_loader):.4f}")
         print(f"Val Loss: {val_loss / len(val_loader):.4f}\n")
 
-    torch.save(model.state_dict(), "transformer_model_weights.pt")
+    torch.save(model.state_dict(), "transformer/transformer_model_weights.pt")
 
 if __name__ == "__main__":
     main()
