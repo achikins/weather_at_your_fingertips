@@ -51,4 +51,5 @@ DATA/**/*.txt
 DATA/**/*.h5
 DATA/**/*.pkl
 .DS_Store
+DATA/transformer_stats.json
 
