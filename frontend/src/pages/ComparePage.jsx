@@ -6,6 +6,7 @@ import { australianCities } from '../data/australianCities'
 export default function ComparePage() {
   const [city1, setCity1] = useState(australianCities[0]) // Sydney
   const [city2, setCity2] = useState(australianCities[1]) // Melbourne
+  const [selectedYear, setSelectedYear] = useState('2025')
 
   const handleCity1Change = (id) => {
     const c = australianCities.find((x) => x.id === id)
@@ -22,6 +23,8 @@ export default function ComparePage() {
     setCity2(city1)
   }
 
+  const years = ['2023', '2024', '2025']
+
   return (
     <div className="h-full overflow-y-auto px-4 lg:px-6 py-5 space-y-5 animate-fade-in">
       {/* Header */}
@@ -34,13 +37,31 @@ export default function ComparePage() {
             {city1.state} vs {city2.state}
           </p>
         </div>
-        <CompareSelector
-          city1={city1}
-          city2={city2}
-          onCity1Change={handleCity1Change}
-          onCity2Change={handleCity2Change}
-          onSwap={handleSwap}
-        />
+
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-[#1a2035] px-3 py-2">
+            <label className="text-sm text-slate-400">Year:</label>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="bg-transparent text-white text-sm outline-none"
+            >
+              {years.map((year) => (
+                <option key={year} value={year} className="bg-[#1a2035] text-white">
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <CompareSelector
+            city1={city1}
+            city2={city2}
+            onCity1Change={handleCity1Change}
+            onCity2Change={handleCity2Change}
+            onSwap={handleSwap}
+          />
+        </div>
       </div>
 
       {/* City info cards */}
