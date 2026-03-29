@@ -20,11 +20,14 @@ function ChartCard({ title, icon: Icon, iconColor, children }) {
 
 export default function DashboardPage() {
   const [selectedCity, setSelectedCity] = useState(australianCities[0])
+  const [selectedYear, setSelectedYear] = useState('2025')
 
   const handleCityChange = (cityId) => {
     const city = australianCities.find((c) => c.id === cityId)
     if (city) setSelectedCity(city)
   }
+
+  const years = ['2023', '2024', '2025']
 
   const weather = getWeatherForCity(selectedCity?.id)
   const monthly = weather?.monthly || []
@@ -36,9 +39,32 @@ export default function DashboardPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-white font-semibold text-lg">{selectedCity?.name}</h2>
-          <p className="text-slate-400 text-sm">{selectedCity?.state} · {selectedCity?.description}</p>
+          <p className="text-slate-400 text-sm">
+            {selectedCity?.state} · {selectedCity?.description}
+          </p>
         </div>
-        <CitySelector selectedCity={selectedCity} onCityChange={handleCityChange} />
+
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-[#1a2035] px-3 py-2">
+            <label className="text-sm text-slate-400">Year:</label>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="bg-transparent text-white text-sm outline-none"
+            >
+              {years.map((year) => (
+                <option key={year} value={year} className="bg-[#1a2035] text-white">
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <CitySelector
+            selectedCity={selectedCity}
+            onCityChange={handleCityChange}
+          />
+        </div>
       </div>
 
       {/* Layout: weather cards left, charts right on large screens */}
