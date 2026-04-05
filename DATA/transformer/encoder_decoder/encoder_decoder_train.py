@@ -54,7 +54,7 @@ def main():
 
     model = Transformer(
         num_features=len(train_dataset.feature_cols),
-        num_stations=505,
+        num_stations=495,
         d_model=128,
         nhead=8,
         num_layers=3,
