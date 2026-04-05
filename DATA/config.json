@@ -2,7 +2,7 @@
     "ftp_host": "ftp.bom.gov.au",
     "ftp_dir": "anon/gen/clim_data",
     "files_to_download": ["IDCKWCDEA0.tgz"],
-    "base_path": "2026-03-23/tables",
+    "base_path": "2026-04-05/tables",
     "station_summary_path": "station_summary.csv",
     "combined_data_path": "combine_data.csv",
     "coverage_threshold": 80,
