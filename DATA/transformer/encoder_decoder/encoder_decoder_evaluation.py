@@ -18,17 +18,99 @@ def denormalise(tensor, stats, target_cols):
     return out
 
 
+def evaluate(model, test_loader, stats, target_cols, use_teacher_forcing=True, device="cpu"):
+    mae_total = 0
+    rmse_total = 0
+    baseline_mae_total = 0
+    horizon_mae = torch.zeros(7).to(device)
+    feature_mae = torch.zeros(len(target_cols)).to(device)
+    count = 0
+
+    with torch.no_grad():
+        for batch_idx, (X, Y, station_id) in enumerate(test_loader):
+            X, Y, station_id = X.to(device), Y.to(device), station_id.to(device)
+
+            if use_teacher_forcing:
+                # Teacher forcing
+                Y_input = torch.zeros_like(Y)
+                Y_input[:, 1:, :] = Y[:, :-1, :]
+                Y_input[:, 0, :] = 0
+                pred = model(X, station_id, Y_input)
+            else:
+                # Auto-regressive (no teacher forcing)
+                batch_size = X.size(0)
+                target_dim = Y.size(2)
+                pred = torch.zeros(batch_size, Y.size(1), target_dim).to(device)
+                decoder_input = torch.zeros(batch_size, 1, target_dim).to(device)
+
+                for t in range(Y.size(1)):
+                    step_pred = model(X, station_id, decoder_input)
+                    pred[:, t, :] = step_pred[:, 0, :]
+                    decoder_input = torch.cat([decoder_input, pred[:, t, :].unsqueeze(1)], dim=1)
+
+            # Baseline: repeat last known value
+            target_indices = [test_loader.dataset.feature_cols.index(col) for col in target_cols]
+            baseline = X[:, -1, target_indices].unsqueeze(1).repeat(1, 7, 1)
+
+            # Denormalize
+            pred = denormalise(pred, stats, target_cols)
+            Y = denormalise(Y, stats, target_cols)
+            baseline = denormalise(baseline, stats, target_cols)
+
+            # Metrics
+            mae = torch.mean(torch.abs(pred - Y))
+            rmse = torch.sqrt(torch.mean((pred - Y) ** 2))
+            baseline_mae = torch.mean(torch.abs(baseline - Y))
+
+            batch_size = X.size(0)
+            mae_total += mae.item() * batch_size
+            rmse_total += rmse.item() * batch_size
+            baseline_mae_total += baseline_mae.item() * batch_size
+            horizon_mae += torch.mean(torch.abs(pred - Y), dim=(0, 2)) * batch_size
+            feature_mae += torch.mean(torch.abs(pred - Y), dim=(0, 1)) * batch_size
+            count += batch_size
+
+    mae_avg = mae_total / count
+    rmse_avg = rmse_total / count
+    baseline_mae_avg = baseline_mae_total / count
+    horizon_mae_avg = horizon_mae / count
+    feature_mae_avg = feature_mae / count
+
+    # Prepare pretty output
+    output_lines = []
+    mode = "Teacher Forcing" if use_teacher_forcing else "Without Teacher Forcing"
+    output_lines.append(f"{mode}\n{'='*40}")
+    output_lines.append(f"MAE: {mae_avg:.4f}")
+    output_lines.append(f"RMSE: {rmse_avg:.4f}")
+    output_lines.append(f"Baseline MAE: {baseline_mae_avg:.4f}\n")
+
+    output_lines.append("--- MAE by Forecast Horizon ---")
+    for i, val in enumerate(horizon_mae_avg):
+        output_lines.append(f"Day {i+1}: {val.item():.4f}")
+
+    output_lines.append("\n--- MAE by Feature ---")
+    for col, val in zip(target_cols, feature_mae_avg):
+        output_lines.append(f"{col}: {val.item():.4f}")
+
+    improvement = (baseline_mae_avg - mae_avg) / baseline_mae_avg * 100
+    output_lines.append("\n--- Improvement over Baseline ---")
+    output_lines.append(f"Improvement: {improvement:.2f}%")
+    output_lines.append("="*40 + "\n")
+
+    return "\n".join(output_lines)
+
+
 def main():
     device = get_device()
 
     run_number = 1
     run_dir = Path(f"DATA/transformer/encoder_decoder/models/run_{run_number}")
     model_path = run_dir / "model_weights.pt"
-    stats_path = Path("DATA/transformer/transformer_stats.json")
+    stats_path = Path("DATA/transformer/transformer_stats.json")  # <-- your stats file
     output_file = run_dir / f"output_{run_number}.txt"
 
     if not model_path.exists() or not stats_path.exists():
-        print(f"Model weights or stats not found in {run_dir}. Please run the training script first.")
+        print(f"Model weights or stats not found in {run_dir} or {stats_path}.")
         return
 
     config_path = Path(__file__).parent.parent.parent / "config.json"
@@ -55,7 +137,7 @@ def main():
 
     model = Transformer(
         num_features=len(test_dataset.feature_cols),
-        num_stations=495,
+        num_stations=505,
         d_model=128,
         nhead=8,
         num_layers=3,
@@ -63,7 +145,7 @@ def main():
         target_dim=len(test_dataset.target_cols)
     ).to(device)
 
-    checkpoint = torch.load(model_path, map_location=device)   
+    checkpoint = torch.load(model_path, map_location=device)
     model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
 
@@ -71,72 +153,14 @@ def main():
         stats = json.load(f)
 
     target_cols = test_dataset.target_cols
-    try:
-        target_indices = test_dataset.target_indices
-    except AttributeError:
-        raise ValueError(
-            "WeatherDataset must have 'target_indices'. "
-            "Add: self.target_indices = [self.feature_cols.index(col) for col in self.target_cols]"
-        )
 
-    mae_total = 0
-    rmse_total = 0
-    baseline_mae_total = 0
-    horizon_mae = torch.zeros(7).to(device)
-    feature_mae = torch.zeros(len(target_cols)).to(device)
-    count = 0
-    with torch.no_grad():
-        for batch_idx, (X, Y, station_id) in enumerate(test_loader):
-            X, Y, station_id = X.to(device), Y.to(device), station_id.to(device)
-            Y_input = torch.zeros_like(Y)
-            Y_input[:, 1:, :] = Y[:, :-1, :]
-            Y_input[:, 0, :] = 0
-            pred = model(X, station_id, Y_input)
-            baseline = X[:, -1, target_indices].unsqueeze(1).repeat(1, 7, 1)
-            pred = denormalise(pred, stats, target_cols)
-            Y = denormalise(Y, stats, target_cols)
-            baseline = denormalise(baseline, stats, target_cols)
-            if batch_idx == 0:
-                print("\nDEBUG SHAPES:")
-                print("pred:", pred.shape)
-                print("Y:", Y.shape)
-                print("baseline:", baseline.shape)
-            mae = torch.mean(torch.abs(pred - Y))
-            rmse = torch.sqrt(torch.mean((pred - Y) ** 2))
-            baseline_mae = torch.mean(torch.abs(baseline - Y))
-            batch_size = X.size(0)
-            mae_total += mae.item() * batch_size
-            rmse_total += rmse.item() * batch_size
-            baseline_mae_total += baseline_mae.item() * batch_size
-            horizon_mae += torch.mean(torch.abs(pred - Y), dim=(0, 2)) * batch_size
-            feature_mae += torch.mean(torch.abs(pred - Y), dim=(0, 1)) * batch_size
-            count += batch_size
+    # Run both evaluations
+    output_teacher = evaluate(model, test_loader, stats, target_cols, use_teacher_forcing=True, device=device)
+    output_no_teacher = evaluate(model, test_loader, stats, target_cols, use_teacher_forcing=False, device=device)
 
-    mae_avg = mae_total / count
-    rmse_avg = rmse_total / count
-    baseline_mae_avg = baseline_mae_total / count
-    horizon_mae_avg = horizon_mae / count
-    feature_mae_avg = feature_mae / count
-
+    # Save combined output
     with open(output_file, "w") as f:
-        f.write("===== FINAL EVALUATION =====\n")
-        f.write(f"MAE: {mae_avg:.4f}\n")
-        f.write(f"RMSE: {rmse_avg:.4f}\n")
-        f.write(f"Baseline MAE: {baseline_mae_avg:.4f}\n\n")
-
-        f.write("--- MAE by Forecast Horizon ---\n")
-        for i, val in enumerate(horizon_mae_avg):
-            f.write(f"Day {i+1}: {val.item():.4f}\n")
-
-        f.write("\n--- MAE by Feature ---\n")
-        for col, val in zip(target_cols, feature_mae_avg):
-            f.write(f"{col}: {val.item():.4f}\n")
-
-        f.write("\n--- Improvement over Baseline ---\n")
-        improvement = (baseline_mae_avg - mae_avg) / baseline_mae_avg * 100
-        f.write(f"Improvement: {improvement:.4f}%\n")
-
-        f.write("\n================================\n")
+        f.write(output_teacher + "\n" + output_no_teacher)
 
     print(f"Evaluation results saved to {output_file}")
 
