@@ -71,7 +71,8 @@ try:
         stats[col] = {"mean": float(mean), "std": float(std)}
         for split_df in [train_df, val_df, test_df]:
             split_df[col] = (split_df[col] - mean) / (std + 1e-8)
-    with open("transformer_stats.json", "w") as f:
+    stats_path = Path(__file__).parent / "transformer_stats.json"
+    with open(stats_path, "w") as f:
         json.dump(stats, f, indent=4)
     print("Saved normalization stats")
     print("Saved normalization stats to transformer_stats.json")
