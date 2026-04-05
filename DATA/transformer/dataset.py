@@ -29,6 +29,8 @@ class WeatherDataset(Dataset):
             idxs = sorted(idxs)
             for i in range(len(idxs) - self.seq_len - self.forecast_horizon + 1):
                 self.indices.append((idxs[i], station_id))
+        
+        self.target_indices = [self.feature_cols.index(col) for col in self.target_cols]
 
     def __len__(self):
         return len(self.indices)

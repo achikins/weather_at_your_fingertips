@@ -25,7 +25,6 @@ def main():
     val_dataset = WeatherDataset(VAL_FILE, seq_len=60, forecast_horizon=7, target_cols=None)
     test_dataset = WeatherDataset(TEST_FILE, seq_len=60, forecast_horizon=7, target_cols=None)
 
-    start = time.time()
     train_loader = DataLoader(
         train_dataset, 
         batch_size=64, 
@@ -50,7 +49,6 @@ def main():
         pin_memory=True,
         persistent_workers=True
     )
-    print(f"Data loading took {time.time() - start:.2f} seconds")
 
     model = Transformer(
         num_features=len(train_dataset.feature_cols),
