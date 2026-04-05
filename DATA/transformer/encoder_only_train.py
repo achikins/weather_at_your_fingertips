@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from torch.utils.data import DataLoader
 from dataset import WeatherDataset
-from transformer import Transformer
+from DATA.transformer.encoder_only_transformer import Transformer
 from get_device import get_device
 
 
@@ -64,6 +64,8 @@ def main():
     optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
     EPOCHS = 10
+    train_losses = []
+    val_losses = []
 
     for epoch in range(EPOCHS):
         start_time = time.time()
@@ -80,6 +82,8 @@ def main():
             optimizer.step()
             total_loss += loss.item()
 
+        train_loss_epoch = total_loss / len(train_loader)
+        train_losses.append(train_loss_epoch)
         model.eval()
         val_loss = 0
         with torch.no_grad():
@@ -88,6 +92,8 @@ def main():
                 pred = model(X, station_id)
                 loss = criterion(pred, Y)
                 val_loss += loss.item()
+        val_loss_epoch = val_loss / len(val_loader)
+        val_losses.append(val_loss_epoch)
 
         epoch_time_sec = time.time() - start_time
         epoch_time_min = epoch_time_sec / 60
@@ -95,7 +101,34 @@ def main():
         print(f"Train Loss: {total_loss / len(train_loader):.4f}")
         print(f"Val Loss: {val_loss / len(val_loader):.4f}\n")
 
-    torch.save(model.state_dict(), "transformer/transformer_model_weights.pt")
+    base_dir = Path("transformer/models")
+    base_dir.mkdir(parents=True, exist_ok=True)
+    existing_runs = [
+        d for d in base_dir.iterdir()
+        if d.is_dir() and d.name.startswith("run")
+    ]
+    run_numbers = [
+        int(d.name.replace("run", ""))
+        for d in existing_runs
+        if d.name.replace("run", "").isdigit()
+    ]
+    next_run = max(run_numbers, default=0) + 1
+    run_dir = base_dir / f"run{next_run}"
+    run_dir.mkdir()
+    
+    save_path = run_dir / "transformer_model.pt"
+    torch.save({
+        "model_state_dict": model.state_dict(),
+        "config": config,
+        "epochs": EPOCHS,
+        "train_loss": train_losses,
+        "val_loss": val_losses
+    }, save_path)
+
+    with open(run_dir / "config.json", "w") as f:
+        json.dump(config, f, indent=4)
+
+    print(f"Model saved at: {save_path}")
 
 if __name__ == "__main__":
     main()
