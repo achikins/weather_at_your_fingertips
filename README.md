@@ -7,6 +7,7 @@
 4. python3 clean_data.py
 6. python3 transformer/prepare_transformer_data.py
 7. python3 transformer/encoder_decoder/encoder_decoder_train.py 
+8. python3 transformer/encoder_decoder/encoder_decoder_evaluation.py 
 
 #### Start database and backend + load data into database
 ```bash
