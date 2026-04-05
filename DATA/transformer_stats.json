@@ -1,0 +1,30 @@
+{
+    "evapotranspiration(mm)": {
+        "mean": 4.42556815869611,
+        "std": 2.380711087051018
+    },
+    "rain(mm)": {
+        "mean": 2.216672731660169,
+        "std": 6.236740215103774
+    },
+    "maximum_temperature(\u00b0C)": {
+        "mean": 24.6051597215367,
+        "std": 7.8690892136521295
+    },
+    "minimum_temperature(\u00b0C)": {
+        "mean": 13.007879592949143,
+        "std": 6.9190329868815015
+    },
+    "maximum_relative_humidity(%)": {
+        "mean": 85.89731624126046,
+        "std": 15.358998200387683
+    },
+    "minimum_relative_humidity(%)": {
+        "mean": 43.671042022721714,
+        "std": 18.47555456843818
+    },
+    "average_10m_wind_speed(m/sec)": {
+        "mean": 4.078121188190203,
+        "std": 1.9258891503384297
+    }
+}
