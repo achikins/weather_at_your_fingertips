@@ -1,8 +1,10 @@
 import torch
 import json
+import sys
 from pathlib import Path
 from torch.utils.data import DataLoader
-from transformer import Transformer
+sys.path.append(str(Path(__file__).parent.parent))
+from encoder_only.encoder_only_transformer import Transformer
 from dataset import WeatherDataset
 from get_device import get_device
 
@@ -16,65 +18,7 @@ def denormalise(tensor, stats, target_cols):
     return out
 
 
-def main():
-    device = get_device()
-
-    # --- load config ---
-    config_path = Path(__file__).parent.parent / "config.json"
-    with open(config_path) as f:
-        config = json.load(f)
-
-    TEST_FILE = config["test_path"]
-
-    # --- dataset ---
-    test_dataset = WeatherDataset(
-        TEST_FILE,
-        seq_len=60,
-        forecast_horizon=7,
-        target_cols=None
-    )
-
-    test_loader = DataLoader(
-        test_dataset,
-        batch_size=64,
-        shuffle=False,
-        num_workers=2,
-        pin_memory=False,
-        persistent_workers=True
-    )
-
-    # --- model ---
-    model = Transformer(
-        num_features=len(test_dataset.feature_cols),
-        num_stations=505,
-        d_model=128,
-        nhead=8,
-        num_layers=3,
-        forecast_horizon=7,
-        target_dim=len(test_dataset.target_cols)
-    ).to(device)
-
-    model.load_state_dict(
-        torch.load("transformer/transformer_model_weights_20260325_005259.pt", map_location=device)
-    )
-    model.eval()
-
-    # --- load normalization stats ---
-    with open("transformer/transformer_stats.json") as f:
-        stats = json.load(f)
-
-    target_cols = test_dataset.target_cols
-
-    # 🔥 IMPORTANT: get correct indices
-    try:
-        target_indices = test_dataset.target_indices
-    except AttributeError:
-        raise ValueError(
-            "WeatherDataset must have 'target_indices'. "
-            "Add: self.target_indices = [self.feature_cols.index(col) for col in self.target_cols]"
-        )
-
-    # --- metrics ---
+def evaluate(model, test_loader, stats, target_cols, device="cpu"):
     mae_total = 0
     rmse_total = 0
     baseline_mae_total = 0
@@ -85,25 +29,20 @@ def main():
     count = 0
 
     with torch.no_grad():
-        for batch_idx, (X, Y, station_id) in enumerate(test_loader):
+        for X, Y, station_id in test_loader:
             X, Y, station_id = X.to(device), Y.to(device), station_id.to(device)
 
+            # ✅ encoder-only forward
             pred = model(X, station_id)
 
             # ✅ correct baseline
+            target_indices = test_loader.dataset.target_indices
             baseline = X[:, -1, target_indices].unsqueeze(1).repeat(1, 7, 1)
 
             # --- denormalise ---
             pred = denormalise(pred, stats, target_cols)
             Y = denormalise(Y, stats, target_cols)
             baseline = denormalise(baseline, stats, target_cols)
-
-            # 🔍 debug once
-            if batch_idx == 0:
-                print("\nDEBUG SHAPES:")
-                print("pred:", pred.shape)
-                print("Y:", Y.shape)
-                print("baseline:", baseline.shape)
 
             # --- metrics ---
             mae = torch.mean(torch.abs(pred - Y))
@@ -128,27 +67,103 @@ def main():
     horizon_mae_avg = horizon_mae / count
     feature_mae_avg = feature_mae / count
 
-    output_file = "transformer/output_20260325_005259.txt"
-    # --- print ---
+    # --- pretty output ---
+    output_lines = []
+    output_lines.append("Encoder-Only Evaluation\n" + "="*40)
+    output_lines.append(f"MAE: {mae_avg:.4f}")
+    output_lines.append(f"RMSE: {rmse_avg:.4f}")
+    output_lines.append(f"Baseline MAE: {baseline_mae_avg:.4f}\n")
+
+    output_lines.append("--- MAE by Forecast Horizon ---")
+    for i, val in enumerate(horizon_mae_avg):
+        output_lines.append(f"Day {i+1}: {val.item():.4f}")
+
+    output_lines.append("\n--- MAE by Feature ---")
+    for col, val in zip(target_cols, feature_mae_avg):
+        output_lines.append(f"{col}: {val.item():.4f}")
+
+    improvement = (baseline_mae_avg - mae_avg) / baseline_mae_avg * 100
+    output_lines.append("\n--- Improvement over Baseline ---")
+    output_lines.append(f"Improvement: {improvement:.2f}%")
+    output_lines.append("="*40 + "\n")
+
+    return "\n".join(output_lines)
+
+
+def main():
+    device = get_device()
+
+    # ✅ Use run-based structure (same as encoder-decoder)
+    run_number = 2
+    run_dir = Path(f"transformer/encoder_only/models/run{run_number}")
+    model_path = run_dir / "transformer_model.pt"
+    stats_path = Path("transformer/transformer_stats.json")
+    output_file = run_dir / f"output_{run_number}.txt"
+
+    # ✅ checks
+    if not model_path.exists():
+        print(f"Model weights not found in {run_dir}")
+        print(model_path)
+        return
+
+    if not stats_path.exists():
+        print(f"Stats not found in {stats_path}")
+        return
+
+    # ✅ correct config path
+    config_path = Path(__file__).parent.parent.parent / "config.json"
+    with open(config_path) as f:
+        config = json.load(f)
+
+    with open(stats_path) as f:
+        stats = json.load(f)
+
+    TEST_FILE = config["test_path"]
+
+    # --- dataset ---
+    test_dataset = WeatherDataset(
+        TEST_FILE,
+        seq_len=60,
+        forecast_horizon=7,
+        target_cols=None
+    )
+
+    test_loader = DataLoader(
+        test_dataset,
+        batch_size=64,
+        shuffle=False,
+        num_workers=2,
+        pin_memory=False,
+        persistent_workers=True
+    )
+    
+    model = Transformer(
+        num_features=len(test_dataset.feature_cols),
+        num_stations=stats["num_stations"],
+        # num_stations=505,
+        d_model=128,
+        nhead=8,
+        num_layers=3,
+        forecast_horizon=7,
+        target_dim=len(test_dataset.target_cols)
+    ).to(device)
+
+    # ✅ load checkpoint (same format as training)
+    checkpoint = torch.load(model_path, map_location=device)
+    if "model_state_dict" in checkpoint:
+        model.load_state_dict(checkpoint["model_state_dict"])
+    else:
+        model.load_state_dict(checkpoint)
+    model.eval()
+
+    target_cols = test_dataset.target_cols
+
+    # --- evaluate ---
+    output = evaluate(model, test_loader, stats, target_cols, device=device)
+
+    # --- save ---
     with open(output_file, "w") as f:
-        f.write("===== FINAL EVALUATION =====\n")
-        f.write(f"MAE: {mae_avg:.4f}\n")
-        f.write(f"RMSE: {rmse_avg:.4f}\n")
-        f.write(f"Baseline MAE: {baseline_mae_avg:.4f}\n\n")
-
-        f.write("--- MAE by Forecast Horizon ---\n")
-        for i, val in enumerate(horizon_mae_avg):
-            f.write(f"Day {i+1}: {val.item():.4f}\n")
-
-        f.write("\n--- MAE by Feature ---\n")
-        for col, val in zip(target_cols, feature_mae_avg):
-            f.write(f"{col}: {val.item():.4f}\n")
-
-        f.write("\n--- Improvement over Baseline ---\n")
-        improvement = (baseline_mae_avg - mae_avg) / baseline_mae_avg * 100
-        f.write(f"Improvement: {improvement:.2f}%\n")
-
-        f.write("\n================================\n")
+        f.write(output)
 
     print(f"Evaluation results saved to {output_file}")
 
