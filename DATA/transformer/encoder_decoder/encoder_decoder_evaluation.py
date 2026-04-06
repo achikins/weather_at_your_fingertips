@@ -7,6 +7,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 from encoder_decoder.encoder_decoder_transformer import Transformer
 from dataset import WeatherDataset
 from get_device import get_device
+from encoder_decoder.encoder_decoder_train import scheduled_sampling_forward
 
 
 def denormalise(tensor, stats, target_cols):
@@ -45,7 +46,7 @@ def evaluate(model, test_loader, stats, target_cols, use_teacher_forcing=True, d
 
                 for t in range(Y.size(1)):
                     step_pred = model(X, station_id, decoder_input)
-                    pred[:, t, :] = step_pred[:, 0, :]
+                    pred[:, t, :] = step_pred[:, -1, :]
                     decoder_input = torch.cat([decoder_input, pred[:, t, :].unsqueeze(1)], dim=1)
 
             # Baseline: repeat last known value
@@ -104,18 +105,24 @@ def main():
     device = get_device()
 
     run_number = 1
-    run_dir = Path(f"DATA/transformer/encoder_decoder/models/run_{run_number}")
-    model_path = run_dir / "model_weights.pt"
-    stats_path = Path("DATA/transformer/transformer_stats.json")  # <-- your stats file
+    run_dir = Path(f"transformer/encoder_decoder/models/run{run_number}")
+    model_path = run_dir / "transformer_model.pt"
+    stats_path = Path("transformer/transformer_stats.json")
     output_file = run_dir / f"output_{run_number}.txt"
 
-    if not model_path.exists() or not stats_path.exists():
-        print(f"Model weights or stats not found in {run_dir} or {stats_path}.")
+    if not model_path.exists():
+        print(f"Model weights not found in {run_dir}.")
+        print(model_path)
+        return
+    if not stats_path.exists():
+        print(f"Stats not found in {stats_path}.")
         return
 
     config_path = Path(__file__).parent.parent.parent / "config.json"
     with open(config_path) as f:
         config = json.load(f)
+    with open(stats_path) as f:
+        stats = json.load(f)
 
     TEST_FILE = config["test_path"]
 
@@ -137,7 +144,7 @@ def main():
 
     model = Transformer(
         num_features=len(test_dataset.feature_cols),
-        num_stations=505,
+        num_stations=stats["num_stations"],
         d_model=128,
         nhead=8,
         num_layers=3,
@@ -148,9 +155,6 @@ def main():
     checkpoint = torch.load(model_path, map_location=device)
     model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
-
-    with open(stats_path) as f:
-        stats = json.load(f)
 
     target_cols = test_dataset.target_cols
 
