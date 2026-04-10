@@ -163,7 +163,8 @@ for idx, row in failed_merges.iterrows():
 print(f"Total number of unsuccessful merges: {len(failed_merges)}")
 
 if not os.path.exists(config["station_summary_path"]):
-    print(f"Error: {config["station_summary_path"]} not found.")
+    path = config["station_summary_path"]
+    print(f"Error: {path} not found.")
     exit(1)
 summary_df = pd.read_csv("station_summary.csv")
 summary_df = summary_df[summary_df["issue"] == "No"].copy()
@@ -191,4 +192,5 @@ merged = merged.drop(columns=["station_key", "start", "end"])
 
 merged.to_csv(config["station_dataset_path"], index=False)
 
-print(f"Station data saved to {config["station_dataset_path"]}")
+save_path = config["station_dataset_path"]
+print(f"Station data saved to {save_path}")
