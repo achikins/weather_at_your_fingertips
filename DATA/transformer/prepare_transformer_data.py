@@ -71,6 +71,7 @@ try:
         stats[col] = {"mean": float(mean), "std": float(std)}
         for split_df in [train_df, val_df, test_df]:
             split_df[col] = (split_df[col] - mean) / (std + 1e-8)
+    stats["num_stations"] = int(df["station_id"].nunique())
     stats_path = Path(__file__).parent / "transformer_stats.json"
     with open(stats_path, "w") as f:
         json.dump(stats, f, indent=4)

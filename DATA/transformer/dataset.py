@@ -21,6 +21,8 @@ class WeatherDataset(Dataset):
         self.df = self.df.sort_values(["station_id", "date"])
         self.feature_cols = [col for col in self.df.columns if col not in ["date"]]
 
+        self.station_ids = sorted(self.df["station_id"].unique())
+        self.num_stations = len(self.station_ids)
         self.data = self.df.values
         self.groups = self.df.groupby("station_id").indices
         self.indices = []
