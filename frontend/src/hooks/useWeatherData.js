@@ -3,7 +3,7 @@ import { mockWeatherData, weatherAlerts, getWeatherForCity, getAlertsForCity } f
 import { australianCities, getCityById } from '../data/australianCities'
 
 export const useWeatherData = () => {
-  const [selectedCity, setSelectedCity] = useState(australianCities[0]) // Sydney default
+  const [selectedCity, setSelectedCity] = useState(australianCities[0])
   const [compareCity1, setCompareCity1] = useState(australianCities[0])
   const [compareCity2, setCompareCity2] = useState(australianCities[1])
   const [activeLayer, setActiveLayer] = useState('temperature')
@@ -44,16 +44,6 @@ export const useWeatherData = () => {
     []
   )
 
-  const getLayerData = useCallback(
-    (cityId) => {
-      const id = cityId || selectedCity?.id
-      const monthly = getWeatherForCity(id)?.monthly || []
-      const current = getWeatherForCity(id)?.current || {}
-      return { monthly, current }
-    },
-    [selectedCity]
-  )
-
   return {
     cities: australianCities,
     selectedCity,
@@ -66,7 +56,6 @@ export const useWeatherData = () => {
     getMonthlyData,
     getCurrentConditions,
     getAlerts,
-    getLayerData,
     allWeatherData: mockWeatherData,
   }
 }

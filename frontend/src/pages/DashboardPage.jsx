@@ -3,26 +3,15 @@ import { Thermometer, CloudRain, Droplets, Wind } from 'lucide-react'
 import CitySelector from '../components/dashboard/CitySelector'
 import WeatherCards from '../components/dashboard/WeatherCards'
 import { TemperatureChart, RainfallChart, HumidityChart, WindChart } from '../components/charts/WeatherChart'
-import { australianCities } from '../data/australianCities'
+import ChartCard from '../components/charts/ChartCard'
+import { australianCities, getCityById } from '../data/australianCities'
 import { getWeatherForCity } from '../data/mockWeatherData'
-
-function ChartCard({ title, icon: Icon, iconColor, children }) {
-  return (
-    <div className="rounded-2xl border border-white/5 bg-[#1a2035] p-4 hover:border-white/10 transition-colors animate-fade-in">
-      <div className="flex items-center gap-2 mb-4">
-        <Icon size={15} className={iconColor} />
-        <h3 className="text-sm font-medium text-white">{title}</h3>
-      </div>
-      <div className="h-52">{children}</div>
-    </div>
-  )
-}
 
 export default function DashboardPage() {
   const [selectedCity, setSelectedCity] = useState(australianCities[0])
 
   const handleCityChange = (cityId) => {
-    const city = australianCities.find((c) => c.id === cityId)
+    const city = getCityById(cityId)
     if (city) setSelectedCity(city)
   }
 

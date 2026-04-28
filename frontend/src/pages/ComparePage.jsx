@@ -1,19 +1,19 @@
 import { useState } from 'react'
 import CompareSelector from '../components/compare/CompareSelector'
 import CompareCharts from '../components/compare/CompareCharts'
-import { australianCities } from '../data/australianCities'
+import { australianCities, getCityById } from '../data/australianCities'
 
 export default function ComparePage() {
-  const [city1, setCity1] = useState(australianCities[0]) // Sydney
-  const [city2, setCity2] = useState(australianCities[1]) // Melbourne
+  const [city1, setCity1] = useState(australianCities[0])
+  const [city2, setCity2] = useState(australianCities[1])
 
   const handleCity1Change = (id) => {
-    const c = australianCities.find((x) => x.id === id)
+    const c = getCityById(id)
     if (c) setCity1(c)
   }
 
   const handleCity2Change = (id) => {
-    const c = australianCities.find((x) => x.id === id)
+    const c = getCityById(id)
     if (c) setCity2(c)
   }
 
