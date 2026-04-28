@@ -1,4 +1,5 @@
-import { AlertTriangle, CloudLightning, Droplets, Wind, Waves, Thermometer, Clock, MapPin } from 'lucide-react'
+import { useState } from 'react'
+import { AlertTriangle, CloudLightning, Droplets, Wind, Waves, Thermometer, Clock, MapPin, ShieldCheck } from 'lucide-react'
 
 const typeIcons = {
   'Severe Storm': CloudLightning,
@@ -60,6 +61,7 @@ const timeUntilExpiry = (isoString) => {
 }
 
 export default function AlertCard({ alert, compact = false }) {
+  const [tipsOpen, setTipsOpen] = useState(false)
   const config = severityConfig[alert.severity] || severityConfig.low
   const Icon = typeIcons[alert.type] || AlertTriangle
 
@@ -133,6 +135,33 @@ export default function AlertCard({ alert, compact = false }) {
           {timeUntilExpiry(alert.expires)}
         </span>
       </div>
+
+      {/* Safety Tips — collapsible */}
+      {alert.safetyTips?.length > 0 && (
+        <div className="bg-white/[0.03] border-t border-white/5">
+          <button
+            onClick={() => setTipsOpen((prev) => !prev)}
+            className="w-full flex items-center justify-between px-5 py-3 text-xs font-semibold text-slate-300 hover:text-white transition-colors duration-150"
+          >
+            <span className="flex items-center gap-2">
+              <ShieldCheck size={13} className="text-teal-400" />
+              Safety Tips
+            </span>
+            <span className="text-slate-500 text-[11px]">{tipsOpen ? '▴' : '▾'}</span>
+          </button>
+
+          {tipsOpen && (
+            <ul className="px-5 pb-3 space-y-2">
+              {alert.safetyTips.map((tip, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-teal-400 shrink-0" />
+                  <span className="text-xs text-slate-300 leading-relaxed">{tip}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   )
 }
