@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { Thermometer, CloudRain, Droplets, Wind } from 'lucide-react'
-import CitySelector from '../components/dashboard/CitySelector'
 import WeatherCards from '../components/dashboard/WeatherCards'
 import { TemperatureChart, RainfallChart, HumidityChart, WindChart } from '../components/charts/WeatherChart'
 import ChartCard from '../components/charts/ChartCard'
 import { australianCities, getCityById } from '../data/australianCities'
 import { getWeatherForCity } from '../data/mockWeatherData'
+import WeatherFilter from '../components/filters/WeatherFilter'
+import { useWeatherFilter } from '../hooks/useWeatherFilter'
 
 export default function DashboardPage() {
   const [selectedCity, setSelectedCity] = useState(australianCities[0])
+  const [season, setSeason] = useState('all')
 
   const handleCityChange = (cityId) => {
     const city = getCityById(cityId)
@@ -19,6 +21,8 @@ export default function DashboardPage() {
   const monthly = weather?.monthly || []
   const current = weather?.current || null
 
+  const filteredMonthly = useWeatherFilter(monthly, season)
+
   return (
     <div className="h-full overflow-y-auto px-4 lg:px-6 py-5 space-y-5 animate-fade-in">
       {/* Page Header */}
@@ -27,7 +31,12 @@ export default function DashboardPage() {
           <h2 className="text-white font-semibold text-lg">{selectedCity?.name}</h2>
           <p className="text-slate-400 text-sm">{selectedCity?.state} · {selectedCity?.description}</p>
         </div>
-        <CitySelector selectedCity={selectedCity} onCityChange={handleCityChange} />
+        <WeatherFilter
+          season={season}
+          onSeasonChange={setSeason}
+          selectedCity={selectedCity}
+          onCityChange={handleCityChange}
+        />
       </div>
 
       {/* Layout: weather cards left, charts right on large screens */}
@@ -40,10 +49,10 @@ export default function DashboardPage() {
         {/* Charts */}
         <div className="lg:col-span-2 space-y-4">
           <ChartCard title="Temperature (°C)" icon={Thermometer} iconColor="text-orange-400">
-            <TemperatureChart data={monthly} />
+            <TemperatureChart data={filteredMonthly} />
           </ChartCard>
           <ChartCard title="Monthly Rainfall (mm)" icon={CloudRain} iconColor="text-blue-400">
-            <RainfallChart data={monthly} />
+            <RainfallChart data={filteredMonthly} />
           </ChartCard>
         </div>
       </div>
@@ -51,10 +60,10 @@ export default function DashboardPage() {
       {/* Bottom row: humidity and wind */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ChartCard title="Relative Humidity (%)" icon={Droplets} iconColor="text-teal-400">
-          <HumidityChart data={monthly} />
+          <HumidityChart data={filteredMonthly} />
         </ChartCard>
         <ChartCard title="Wind Speed (km/h)" icon={Wind} iconColor="text-purple-400">
-          <WindChart data={monthly} />
+          <WindChart data={filteredMonthly} />
         </ChartCard>
       </div>
 
@@ -75,7 +84,7 @@ export default function DashboardPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {monthly.map((m) => (
+              {filteredMonthly.map((m) => (
                 <tr key={m.month} className="hover:bg-white/2 transition-colors">
                   <td className="px-4 py-2.5 text-slate-300 font-medium">{m.month}</td>
                   <td className="px-4 py-2.5 text-blue-400">{m.tempMin}°</td>
