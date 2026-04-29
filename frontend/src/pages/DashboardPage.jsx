@@ -28,8 +28,8 @@ export default function DashboardPage() {
       {/* Page Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-white font-semibold text-lg">{selectedCity?.name}</h2>
-          <p className="text-slate-400 text-sm">{selectedCity?.state} · {selectedCity?.description}</p>
+          <h2 className="text-gray-900 dark:text-white font-semibold text-lg">{selectedCity?.name}</h2>
+          <p className="text-gray-500 dark:text-slate-400 text-sm">{selectedCity?.state} · {selectedCity?.description}</p>
         </div>
         <WeatherFilter
           season={season}
@@ -68,31 +68,31 @@ export default function DashboardPage() {
       </div>
 
       {/* Monthly data table */}
-      <div className="rounded-2xl border border-white/5 bg-[#1a2035] overflow-hidden">
-        <div className="px-5 py-3 border-b border-white/5">
-          <h3 className="text-sm font-medium text-white">Monthly Data Table</h3>
+      <div className="rounded-2xl border border-gray-100 dark:border-white/5 bg-white dark:bg-[#1a2035] overflow-hidden shadow-sm dark:shadow-none">
+        <div className="px-5 py-3 border-b border-gray-100 dark:border-white/5">
+          <h3 className="text-sm font-medium text-gray-900 dark:text-white">Monthly Data Table</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-white/5">
+              <tr className="border-b border-gray-100 dark:border-white/5">
                 {['Month', 'Min °C', 'Avg °C', 'Max °C', 'Rainfall mm', 'Humidity %', 'Wind km/h'].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-slate-500 font-medium uppercase tracking-wider whitespace-nowrap">
+                  <th key={h} className="px-4 py-3 text-left text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wider whitespace-nowrap">
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-gray-50 dark:divide-white/5">
               {filteredMonthly.map((m) => (
-                <tr key={m.month} className="hover:bg-white/2 transition-colors">
-                  <td className="px-4 py-2.5 text-slate-300 font-medium">{m.month}</td>
-                  <td className="px-4 py-2.5 text-blue-400">{m.tempMin}°</td>
-                  <td className="px-4 py-2.5 text-teal-400">{m.tempAvg}°</td>
-                  <td className="px-4 py-2.5 text-orange-400">{m.tempMax}°</td>
-                  <td className="px-4 py-2.5 text-slate-300">{m.rainfall}</td>
-                  <td className="px-4 py-2.5 text-slate-300">{m.humidity}%</td>
-                  <td className="px-4 py-2.5 text-slate-300">{m.windSpeed}</td>
+                <tr key={m.month} className="hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
+                  <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300 font-medium">{m.month}</td>
+                  <td className="px-4 py-2.5 text-blue-500 dark:text-blue-400">{m.tempMin}°</td>
+                  <td className="px-4 py-2.5 text-teal-500 dark:text-teal-400">{m.tempAvg}°</td>
+                  <td className="px-4 py-2.5 text-orange-500 dark:text-orange-400">{m.tempMax}°</td>
+                  <td className="px-4 py-2.5 text-gray-600 dark:text-slate-300">{m.rainfall}</td>
+                  <td className="px-4 py-2.5 text-gray-600 dark:text-slate-300">{m.humidity}%</td>
+                  <td className="px-4 py-2.5 text-gray-600 dark:text-slate-300">{m.windSpeed}</td>
                 </tr>
               ))}
             </tbody>

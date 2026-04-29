@@ -27,10 +27,10 @@ export default function ComparePage() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-white font-semibold text-lg">
+          <h2 className="text-gray-900 dark:text-white font-semibold text-lg">
             {city1.name} vs {city2.name}
           </h2>
-          <p className="text-slate-400 text-sm">
+          <p className="text-gray-500 dark:text-slate-400 text-sm">
             {city1.state} vs {city2.state}
           </p>
         </div>
@@ -46,15 +46,15 @@ export default function ComparePage() {
       {/* City info cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {[
-          { city: city1, color: 'blue', borderColor: 'border-blue-500/25', textColor: 'text-blue-400', dot: 'bg-blue-500' },
-          { city: city2, color: 'teal', borderColor: 'border-teal-500/25', textColor: 'text-teal-400', dot: 'bg-teal-400' },
+          { city: city1, borderColor: 'border-blue-200 dark:border-blue-500/25', textColor: 'text-blue-600 dark:text-blue-400', dot: 'bg-blue-500' },
+          { city: city2, borderColor: 'border-teal-200 dark:border-teal-500/25', textColor: 'text-teal-600 dark:text-teal-400', dot: 'bg-teal-400' },
         ].map(({ city, borderColor, textColor, dot }) => (
-          <div key={city.id} className={`rounded-2xl border ${borderColor} bg-[#1a2035] px-4 py-3 flex items-start gap-3`}>
+          <div key={city.id} className={`rounded-2xl border ${borderColor} bg-white dark:bg-[#1a2035] px-4 py-3 flex items-start gap-3 shadow-sm dark:shadow-none`}>
             <span className={`w-2.5 h-2.5 rounded-full ${dot} mt-1 shrink-0`} />
             <div>
               <p className={`font-semibold text-sm ${textColor}`}>{city.name}</p>
-              <p className="text-xs text-slate-400 mt-0.5">{city.state}</p>
-              <p className="text-[11px] text-slate-500 mt-1">{city.description}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">{city.state}</p>
+              <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-1">{city.description}</p>
             </div>
           </div>
         ))}

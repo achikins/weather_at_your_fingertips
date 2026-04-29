@@ -56,47 +56,47 @@ export default function CompareCharts({ city1, city2 }) {
 
   return (
     <div className="space-y-4 animate-fade-in">
-      <div className="rounded-2xl border border-white/5 bg-[#1a2035] overflow-hidden">
-        <div className="px-5 py-3 border-b border-white/5">
-          <h3 className="text-sm font-medium text-white">Annual Summary Comparison</h3>
+      <div className="rounded-2xl border border-gray-100 dark:border-white/5 bg-white dark:bg-[#1a2035] overflow-hidden shadow-sm dark:shadow-none">
+        <div className="px-5 py-3 border-b border-gray-100 dark:border-white/5">
+          <h3 className="text-sm font-medium text-gray-900 dark:text-white">Annual Summary Comparison</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/5">
-                <th className="text-left px-5 py-3 text-xs text-slate-500 font-medium uppercase tracking-wider w-40">Metric</th>
-                <th className="text-center px-4 py-3 text-xs font-semibold text-blue-400 uppercase tracking-wider">
+              <tr className="border-b border-gray-100 dark:border-white/5">
+                <th className="text-left px-5 py-3 text-xs text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wider w-40">Metric</th>
+                <th className="text-center px-4 py-3 text-xs font-semibold text-blue-500 dark:text-blue-400 uppercase tracking-wider">
                   <span className="flex items-center justify-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-blue-500" />{city1.name}
                   </span>
                 </th>
-                <th className="text-center px-4 py-3 text-xs font-semibold text-teal-400 uppercase tracking-wider">
+                <th className="text-center px-4 py-3 text-xs font-semibold text-teal-500 dark:text-teal-400 uppercase tracking-wider">
                   <span className="flex items-center justify-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-teal-400" />{city2.name}
                   </span>
                 </th>
-                <th className="text-center px-4 py-3 text-xs text-slate-500 font-medium uppercase tracking-wider">Winner</th>
+                <th className="text-center px-4 py-3 text-xs text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wider">Winner</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-gray-50 dark:divide-white/5">
               {comparisonRows.map(({ label, key, unit, higher }) => {
                 const v1 = summary1[key]
                 const v2 = summary2[key]
                 const diff = v1 - v2
                 return (
-                  <tr key={key} className="hover:bg-white/2 transition-colors">
-                    <td className="px-5 py-3 text-slate-400 text-xs font-medium">{label}</td>
-                    <td className={`px-4 py-3 text-center text-sm font-semibold ${diff > 0 ? 'text-blue-300' : 'text-slate-300'}`}>
+                  <tr key={key} className="hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
+                    <td className="px-5 py-3 text-gray-500 dark:text-slate-400 text-xs font-medium">{label}</td>
+                    <td className={`px-4 py-3 text-center text-sm font-semibold ${diff > 0 ? 'text-blue-500 dark:text-blue-300' : 'text-gray-600 dark:text-slate-300'}`}>
                       {v1}{unit}
                     </td>
-                    <td className={`px-4 py-3 text-center text-sm font-semibold ${diff < 0 ? 'text-teal-300' : 'text-slate-300'}`}>
+                    <td className={`px-4 py-3 text-center text-sm font-semibold ${diff < 0 ? 'text-teal-500 dark:text-teal-300' : 'text-gray-600 dark:text-slate-300'}`}>
                       {v2}{unit}
                     </td>
                     <td className="px-4 py-3 text-center">
                       {diff === 0 ? (
-                        <span className="text-[10px] text-slate-500">Tied</span>
+                        <span className="text-[10px] text-gray-400 dark:text-slate-500">Tied</span>
                       ) : (
-                        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${diff > 0 ? 'bg-blue-500/15 text-blue-300' : 'bg-teal-500/15 text-teal-300'}`}>
+                        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${diff > 0 ? 'bg-blue-50 dark:bg-blue-500/15 text-blue-600 dark:text-blue-300' : 'bg-teal-50 dark:bg-teal-500/15 text-teal-600 dark:text-teal-300'}`}>
                           {diff > 0 ? city1.name : city2.name} · {higher}
                         </span>
                       )}
