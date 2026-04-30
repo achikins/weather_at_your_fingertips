@@ -1,52 +1,77 @@
-import { Filter, X, MapPin, Calendar, ChevronDown } from 'lucide-react'
+import { Filter, X, MapPin, Calendar, CalendarDays, ChevronDown } from 'lucide-react'
 import { australianCities } from '../../data/australianCities'
-import { SEASONS } from '../../hooks/useWeatherFilter'
+import { MONTHS_LIST, YEARS_LIST, DAYS_LIST } from '../../hooks/useWeatherFilter'
 
-export default function WeatherFilter({ season, onSeasonChange, selectedCity, onCityChange }) {
-  const isFiltered = season !== 'all' || (selectedCity && selectedCity.id !== australianCities[0].id)
+function SelectDropdown({ icon: Icon, iconClass, value, onChange, options }) {
+  return (
+    <div className="flex items-center gap-2 bg-white dark:bg-[#1a2035] border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 hover:border-gray-300 dark:hover:border-white/20 transition-colors shadow-sm dark:shadow-none">
+      <Icon size={14} className={`${iconClass} shrink-0`} />
+      <div className="relative">
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="appearance-none bg-transparent text-gray-700 dark:text-slate-300 text-sm pr-6 focus:outline-none cursor-pointer"
+        >
+          {options.map((o) => (
+            <option key={o.value} value={o.value}>{o.label}</option>
+          ))}
+        </select>
+        <ChevronDown size={13} className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-400 pointer-events-none" />
+      </div>
+    </div>
+  )
+}
+
+export default function WeatherFilter({ filters, onFilterChange, selectedCity, onCityChange }) {
+  const { month, year, day } = filters
+
+  const isFiltered =
+    month !== 'all' ||
+    year !== 'all' ||
+    day !== 'all' ||
+    (selectedCity && selectedCity.id !== australianCities[0].id)
 
   const handleClear = () => {
-    onSeasonChange('all')
+    onFilterChange({ month: 'all', year: 'all', day: 'all' })
     onCityChange(australianCities[0].id)
   }
 
+  const cityOptions = australianCities.map((c) => ({ value: c.id, label: `${c.name} — ${c.stateCode}` }))
+
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {/* Season */}
-      <div className="flex items-center gap-2 bg-white dark:bg-[#1a2035] border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 hover:border-gray-300 dark:hover:border-white/20 transition-colors shadow-sm dark:shadow-none">
-        <Calendar size={14} className="text-blue-500 dark:text-blue-400 shrink-0" />
-        <div className="relative">
-          <select
-            value={season}
-            onChange={(e) => onSeasonChange(e.target.value)}
-            className="appearance-none bg-transparent text-gray-700 dark:text-slate-300 text-sm pr-6 focus:outline-none cursor-pointer"
-          >
-            {SEASONS.map((s) => (
-              <option key={s.value} value={s.value}>{s.label}</option>
-            ))}
-          </select>
-          <ChevronDown size={13} className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-400 pointer-events-none" />
-        </div>
-      </div>
+      <SelectDropdown
+        icon={Calendar}
+        iconClass="text-violet-500 dark:text-violet-400"
+        value={year}
+        onChange={(v) => onFilterChange({ ...filters, year: v })}
+        options={YEARS_LIST}
+      />
 
-      {/* City */}
-      <div className="flex items-center gap-2 bg-white dark:bg-[#1a2035] border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 hover:border-gray-300 dark:hover:border-white/20 transition-colors shadow-sm dark:shadow-none">
-        <MapPin size={14} className="text-teal-500 dark:text-teal-400 shrink-0" />
-        <div className="relative">
-          <select
-            value={selectedCity?.id || ''}
-            onChange={(e) => onCityChange(e.target.value)}
-            className="appearance-none bg-transparent text-gray-700 dark:text-slate-300 text-sm pr-6 focus:outline-none cursor-pointer"
-          >
-            {australianCities.map((city) => (
-              <option key={city.id} value={city.id}>{city.name} — {city.stateCode}</option>
-            ))}
-          </select>
-          <ChevronDown size={13} className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-400 pointer-events-none" />
-        </div>
-      </div>
+      <SelectDropdown
+        icon={Calendar}
+        iconClass="text-blue-500 dark:text-blue-400"
+        value={month}
+        onChange={(v) => onFilterChange({ ...filters, month: v })}
+        options={MONTHS_LIST}
+      />
 
-      {/* Clear / indicator */}
+      <SelectDropdown
+        icon={CalendarDays}
+        iconClass="text-orange-500 dark:text-orange-400"
+        value={day}
+        onChange={(v) => onFilterChange({ ...filters, day: v })}
+        options={DAYS_LIST}
+      />
+
+      <SelectDropdown
+        icon={MapPin}
+        iconClass="text-teal-500 dark:text-teal-400"
+        value={selectedCity?.id || ''}
+        onChange={onCityChange}
+        options={cityOptions}
+      />
+
       {isFiltered ? (
         <button
           onClick={handleClear}

@@ -10,7 +10,7 @@ import { useWeatherFilter } from '../hooks/useWeatherFilter'
 
 export default function DashboardPage() {
   const [selectedCity, setSelectedCity] = useState(australianCities[0])
-  const [season, setSeason] = useState('all')
+  const [filters, setFilters] = useState({ month: 'all', year: 'all', day: 'all' })
 
   const handleCityChange = (cityId) => {
     const city = getCityById(cityId)
@@ -21,7 +21,7 @@ export default function DashboardPage() {
   const monthly = weather?.monthly || []
   const current = weather?.current || null
 
-  const filteredMonthly = useWeatherFilter(monthly, season)
+  const filteredMonthly = useWeatherFilter(monthly, filters)
 
   return (
     <div className="h-full overflow-y-auto px-4 lg:px-6 py-5 space-y-5 animate-fade-in">
@@ -32,8 +32,8 @@ export default function DashboardPage() {
           <p className="text-gray-500 dark:text-slate-400 text-sm">{selectedCity?.state} · {selectedCity?.description}</p>
         </div>
         <WeatherFilter
-          season={season}
-          onSeasonChange={setSeason}
+          filters={filters}
+          onFilterChange={setFilters}
           selectedCity={selectedCity}
           onCityChange={handleCityChange}
         />
