@@ -76,7 +76,7 @@ export default function DashboardPage() {
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-gray-100 dark:border-white/5">
-                {['Month', 'Min °C', 'Avg °C', 'Max °C', 'Rainfall mm', 'Humidity %', 'Wind km/h'].map((h) => (
+                {['Month', 'Date', 'Min °C', 'Avg °C', 'Max °C', 'Rainfall mm', 'Humidity %', 'Wind km/h'].map((h) => (
                   <th key={h} className="px-4 py-3 text-left text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wider whitespace-nowrap">
                     {h}
                   </th>
@@ -87,6 +87,7 @@ export default function DashboardPage() {
               {filteredMonthly.map((m) => (
                 <tr key={m.month} className="hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
                   <td className="px-4 py-2.5 text-gray-700 dark:text-slate-300 font-medium">{m.month}</td>
+                  <td className="px-4 py-2.5 text-gray-400 dark:text-slate-500">{m.date}</td>
                   <td className="px-4 py-2.5 text-blue-500 dark:text-blue-400">{m.tempMin}°</td>
                   <td className="px-4 py-2.5 text-teal-500 dark:text-teal-400">{m.tempAvg}°</td>
                   <td className="px-4 py-2.5 text-orange-500 dark:text-orange-400">{m.tempMax}°</td>

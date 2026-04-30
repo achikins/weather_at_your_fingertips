@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 export const SEASONS = [
   { value: 'all',    label: 'All Months' },
   { value: 'summer', label: 'Summer (Dec – Feb)' },
@@ -6,7 +8,6 @@ export const SEASONS = [
   { value: 'spring', label: 'Spring (Sep – Nov)' },
 ]
 
-// monthIndex ranges for each southern-hemisphere season
 const SEASON_MONTHS = {
   summer: [11, 0, 1],
   autumn: [2, 3, 4],
@@ -14,21 +15,12 @@ const SEASON_MONTHS = {
   spring: [8, 9, 10],
 }
 
-/**
- * Filters a 12-entry monthly data array by season.
- *
- * @param {Object[]} monthly - Array of monthly objects with a `monthIndex` field (0 = Jan … 11 = Dec).
- * @param {string}   season  - One of: 'all' | 'summer' | 'autumn' | 'winter' | 'spring'
- * @returns {Object[]} filteredMonthly
- */
 export function useWeatherFilter(monthly, season) {
-  if (!monthly || monthly.length === 0) return []
-  if (!season || season === 'all') return monthly
-
-  const allowed = SEASON_MONTHS[season]
-  if (!allowed) return monthly
-
-  // Preserve the natural calendar order that comes from the source data (Jan→Dec),
-  // but only include months that belong to the selected season.
-  return monthly.filter((m) => allowed.includes(m.monthIndex))
+  return useMemo(() => {
+    if (!monthly || monthly.length === 0) return []
+    if (!season || season === 'all') return monthly
+    const allowed = SEASON_MONTHS[season]
+    if (!allowed) return monthly
+    return monthly.filter((m) => allowed.includes(m.monthIndex))
+  }, [monthly, season])
 }

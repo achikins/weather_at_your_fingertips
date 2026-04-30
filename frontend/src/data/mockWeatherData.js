@@ -1,4 +1,5 @@
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const YEAR = 2024
 
 // Each city has 12 months of: tempMin, tempMax, tempAvg (°C), rainfall (mm), humidity (%), windSpeed (km/h)
 const rawData = {
@@ -90,6 +91,7 @@ const buildMonthlyData = (cityId) => {
   return MONTHS.map((month, i) => ({
     month,
     monthIndex: i,
+    date: `${YEAR}-${String(i + 1).padStart(2, '0')}-01`,
     tempMin: d.tempMin[i],
     tempMax: d.tempMax[i],
     tempAvg: d.tempAvg[i],
