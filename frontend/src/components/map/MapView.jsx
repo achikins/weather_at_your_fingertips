@@ -8,7 +8,6 @@ import CityPopup from "./CityPopup";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN || "YOUR_MAPBOX_TOKEN";
 
-// Colors for each layer value
 const layerColorScale = {
   temperature: { low: "#3b82f6", mid: "#f59e0b", high: "#ef4444" },
   rainfall: { low: "#e2e8f0", mid: "#60a5fa", high: "#1d4ed8" },
@@ -56,14 +55,15 @@ const getLayerUnit = (layer) => {
   }
 };
 
+const LAYER_RANGES = {
+  temperature: [8, 24],
+  rainfall: [3, 380],
+  humidity: [40, 80],
+  wind: [11, 24],
+}
+
 const getMarkerColor = (value, layer) => {
-  const ranges = {
-    temperature: [8, 24],
-    rainfall: [3, 380],
-    humidity: [40, 80],
-    wind: [11, 24],
-  };
-  const [min, max] = ranges[layer] || [0, 100];
+  const [min, max] = LAYER_RANGES[layer] || [0, 100];
   const t = Math.min(1, Math.max(0, (value - min) / (max - min)));
   if (t < 0.5) {
     const a = layerColorScale[layer].low;
@@ -100,7 +100,6 @@ export default function MapView() {
   const [selectedCity, setSelectedCity] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  // Initialize map
   useEffect(() => {
     if (mapRef.current) return;
     const map = new mapboxgl.Map({
@@ -133,12 +132,10 @@ export default function MapView() {
     };
   }, []);
 
-  // Add/update city markers
   useEffect(() => {
     if (!mapLoaded || !mapRef.current) return;
     const map = mapRef.current;
 
-    // Remove old markers
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
 
@@ -147,7 +144,6 @@ export default function MapView() {
       const color = getMarkerColor(value, activeLayer);
       const unit = getLayerUnit(activeLayer);
 
-      // DOT marker — anchor center so the circle pins exactly to the coordinate
       const dotEl = document.createElement("div");
       dotEl.style.cssText = `
         cursor: pointer;
@@ -194,7 +190,6 @@ export default function MapView() {
         .addTo(map);
       markersRef.current.push(dotMarker);
 
-      // LABEL marker — separate element, anchor top, offset below the dot
       const labelEl = document.createElement("div");
       labelEl.style.cssText = `
         font-size: 10px;

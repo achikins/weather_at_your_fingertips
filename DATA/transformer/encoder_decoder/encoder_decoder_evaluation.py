@@ -104,11 +104,11 @@ def evaluate(model, test_loader, stats, target_cols, use_teacher_forcing=True, d
 def main():
     device = get_device()
 
-    run_number = 1
+    run_number = 2
     run_dir = Path(f"transformer/encoder_decoder/models/run{run_number}")
-    model_path = run_dir / "transformer_model.pt"
+    model_path = run_dir / "transformer_model_finetuned3.pt"
     stats_path = Path("transformer/transformer_stats.json")
-    output_file = run_dir / f"output_{run_number}.txt"
+    output_file = run_dir / f"output_{run_number}_finetuned3.txt"
 
     if not model_path.exists():
         print(f"Model weights not found in {run_dir}.")

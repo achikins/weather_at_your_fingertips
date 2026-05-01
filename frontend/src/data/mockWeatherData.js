@@ -1,4 +1,5 @@
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const YEAR = 2024
 
 // Each city has 12 months of: tempMin, tempMax, tempAvg (°C), rainfall (mm), humidity (%), windSpeed (km/h)
 const rawData = {
@@ -90,6 +91,7 @@ const buildMonthlyData = (cityId) => {
   return MONTHS.map((month, i) => ({
     month,
     monthIndex: i,
+    date: `${YEAR}-${String(i + 1).padStart(2, '0')}-01`,
     tempMin: d.tempMin[i],
     tempMax: d.tempMax[i],
     tempAvg: d.tempAvg[i],
@@ -135,6 +137,12 @@ export const weatherAlerts = [
     issued: '2026-03-14T06:00:00Z',
     expires: '2026-03-17T18:00:00Z',
     affectedAreas: ['Cairns CBD', 'Northern Beaches', 'Port Douglas', 'Innisfail'],
+    safetyTips: [
+      'Shelter indoors in a sturdy building away from windows and doors',
+      'Unplug electronics and avoid using corded phones during the storm',
+      'Stay away from large trees and power lines that may fall',
+      'Prepare an emergency kit with water, food, first aid, and a torch',
+    ],
   },
   {
     id: 'alert-2',
@@ -147,6 +155,12 @@ export const weatherAlerts = [
     issued: '2026-03-15T00:00:00Z',
     expires: '2026-03-16T12:00:00Z',
     affectedAreas: ['Darwin CBD', 'Palmerston', 'Litchfield', 'Howard Springs'],
+    safetyTips: [
+      'Never drive through floodwater — just 15 cm can sweep a car off the road',
+      'Move valuables and important documents to higher ground now',
+      'Monitor the Bureau of Meteorology and emergency services for updates',
+      'Avoid walking through fast-moving or unknown-depth floodwater',
+    ],
   },
   {
     id: 'alert-3',
@@ -159,6 +173,12 @@ export const weatherAlerts = [
     issued: '2026-03-13T09:00:00Z',
     expires: '2026-03-18T20:00:00Z',
     affectedAreas: ['Perth Metropolitan Area', 'Swan Valley', 'Hills District'],
+    safetyTips: [
+      'Drink water regularly even if you do not feel thirsty',
+      'Avoid strenuous outdoor activity between 11am and 3pm',
+      'Check on elderly neighbours, young children, and pets frequently',
+      'Wear light-coloured, loose-fitting clothing and a hat outdoors',
+    ],
   },
   {
     id: 'alert-4',
@@ -171,6 +191,12 @@ export const weatherAlerts = [
     issued: '2026-03-15T03:00:00Z',
     expires: '2026-03-16T06:00:00Z',
     affectedAreas: ['Central Highlands', 'Derwent Valley', 'Mount Wellington'],
+    safetyTips: [
+      'Secure or bring in loose outdoor items such as furniture, trampolines, and bins',
+      'Avoid driving high-sided vehicles, caravans, or trailers on exposed roads',
+      'Stay away from trees, branches, and unsecured structures that could fall',
+      'Be alert for fallen power lines and report them to your electricity provider',
+    ],
   },
   {
     id: 'alert-5',
@@ -183,6 +209,12 @@ export const weatherAlerts = [
     issued: '2026-03-15T05:00:00Z',
     expires: '2026-03-16T18:00:00Z',
     affectedAreas: ['Northern Beaches', 'Eastern Suburbs', 'Illawarra Coast'],
+    safetyTips: [
+      'Avoid beaches, rock platforms, and coastal cliffs during hazardous surf',
+      'Watch for unexpected rogue waves — never turn your back on the ocean',
+      'Follow advice from Surf Life Saving Australia and beach patrol flags',
+      'Keep children well away from water edges, storm drains, and rockpools',
+    ],
   },
   {
     id: 'alert-6',
@@ -195,6 +227,12 @@ export const weatherAlerts = [
     issued: '2026-03-15T07:00:00Z',
     expires: '2026-03-15T22:00:00Z',
     affectedAreas: ['CBD', 'Eastern Suburbs', 'Dandenong Ranges'],
+    safetyTips: [
+      'Shelter indoors or in a hard-topped vehicle if storms develop nearby',
+      'Unplug sensitive electronics and avoid using landline phones',
+      'Stay away from tall trees, open fields, and hilltops during lightning',
+      'Wait at least 30 minutes after the last thunder before going back outside',
+    ],
   },
 ]
 

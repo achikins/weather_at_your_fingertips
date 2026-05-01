@@ -72,7 +72,7 @@ def main():
 
     run_number = 2
     run_dir = Path(f"transformer/encoder_decoder/models/run{run_number}")
-    model_path = run_dir / "transformer_model.pt"
+    model_path = run_dir / "transformer_model_finetuned2.pt"
 
     if not model_path.exists():
         print(f"No checkpoint found at {model_path}. Run phase 1 first.")
@@ -88,7 +88,7 @@ def main():
     criterion = nn.HuberLoss()
     optimizer = optim.Adam(model.parameters(), lr=1e-5)
 
-    EPOCHS = 1
+    EPOCHS = 2
     train_losses = []
     val_losses = []
 
@@ -129,7 +129,7 @@ def main():
         print(f"Train Loss: {train_loss_epoch:.4f}")
         print(f"Val Loss:   {val_loss_epoch:.4f}\n")
 
-    save_path = run_dir / "transformer_model_finetuned.pt"
+    save_path = run_dir / "transformer_model_finetuned3.pt"
 
     torch.save({
         "model_state_dict": model.state_dict(),
