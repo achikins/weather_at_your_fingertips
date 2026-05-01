@@ -8,16 +8,10 @@ import AlertsPage from './pages/AlertsPage'
 
 export default function App() {
   return (
-    <div className="flex h-screen bg-[#0a0e1a] text-white overflow-hidden">
-      {/* Sidebar */}
+    <div className="flex h-screen bg-gray-50 dark:bg-[#0a0e1a] text-gray-900 dark:text-white overflow-hidden">
       <Sidebar />
-
-      {/* Main content area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Top navbar */}
         <Navbar />
-
-        {/* Page content */}
         <main className="flex-1 overflow-hidden">
           <Routes>
             <Route path="/" element={<MapPage />} />

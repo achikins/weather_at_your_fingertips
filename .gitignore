@@ -1,6 +1,9 @@
 # Markdown files
 *.md
 
+# Superpower plugin
+.superpower/
+
 # Node modules
 node_modules/
 frontend/node_modules/

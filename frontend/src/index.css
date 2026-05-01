@@ -18,10 +18,15 @@
 
   body {
     font-family: 'Inter', system-ui, sans-serif;
-    background-color: #0a0e1a;
-    color: white;
+    background-color: #f9fafb;
+    color: #111827;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  html.dark body {
+    background-color: #0a0e1a;
+    color: white;
   }
 
   /* Custom scrollbar */
