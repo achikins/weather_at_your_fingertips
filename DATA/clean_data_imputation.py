@@ -126,3 +126,6 @@ def run_clean_data_imputation(verbose=True):
     if verbose:
         print(f"File saved to {OUTPUT_FILE}")
 
+
+if __name__ == "__main__":
+    run_clean_data_imputation()

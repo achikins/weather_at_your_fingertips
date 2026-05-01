@@ -87,3 +87,7 @@ def run_clean_data_wo_imputation(verbose=True):
             print(f"Deleted input file {INPUT_FILE}")
     if verbose:
         print(f"Saved to {OUTPUT_FILE}\n")
+
+
+if __name__ == "__main__":
+    run_clean_data_wo_imputation()

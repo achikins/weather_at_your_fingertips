@@ -43,4 +43,5 @@ def main(imputation=False, verbose=True):
 
 
 if __name__ == "__main__":
-    main(imputation=False, verbose=True)
+    imputation_flag = False
+    main(imputation=imputation_flag, verbose=True)

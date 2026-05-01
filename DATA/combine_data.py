@@ -89,3 +89,6 @@ def run_combine_data(verbose=True):
         except Exception as e:
             print(f"Failed: {e}\n", e)
 
+
+if __name__ == "__main__":
+    run_combine_data()
