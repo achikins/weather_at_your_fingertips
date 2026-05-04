@@ -3,7 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from database import engine
 from jobs.generate_alerts import run as run_alert_generation
 from models import Base
-from routers import weather, stations
+from routers import alerts, weather, stations
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -21,6 +21,7 @@ Base.metadata.create_all(bind=engine)
 
 app.include_router(stations.router, prefix="/api")
 app.include_router(weather.router, prefix="/api")
+app.include_router(alerts.router, prefix="/api")
 
 @app.on_event("startup")
 def start_scheduler() -> None:

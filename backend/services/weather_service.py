@@ -32,6 +32,7 @@ MONTH_NAMES = {
     12: "Dec",
 }
 
+
 def _serialize_daily_weather(row: DailyWeather) -> dict[str, Any]:
     return {
         "obs_date": row.obs_date.isoformat(),

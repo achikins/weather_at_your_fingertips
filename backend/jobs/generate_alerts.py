@@ -57,36 +57,28 @@ def pick_severity(rule: ThresholdRule, value: float | None) -> str | None:
     return None
 
 def build_message(rule: ThresholdRule, metric_value: float, severity: str) -> str:
-    severity_label = severity.replace("_", " ").title()
-
     if rule.alert_type == "heatwave":
         return (
-            f"{severity_label} heat conditions expected. "
             f"Forecast temperature may reach {metric_value:.1f}°C. "
-            "Stay hydrated and avoid prolonged outdoor activity during peak heat."
+            "Heat stress conditions are expected."
         )
 
     if rule.alert_type == "heavy_rainfall":
         return (
-            f"{severity_label} rainfall expected. "
-            f"Forecast rain may reach {metric_value:.1f} mm. "
-            "Watch for local flooding, avoid driving through floodwater "
-            "and monitor official weather updates."
+            f"Forecast rainfall may reach {metric_value:.1f} mm. "
+            "Heavy rainfall and localized flooding are possible."
         )
 
     if rule.alert_type == "strong_winds":
         return (
-            f"{severity_label} wind conditions expected. "
             f"Forecast average wind speed may reach {metric_value:.1f} m/s. "
-            "Secure loose outdoor items and take extra care when traveling."
+            "Damaging wind conditions are possible."
         )
 
     if rule.alert_type == "cold_wave":
         return (
-            f"{severity_label} cold conditions expected. "
             f"Forecast minimum temperature may drop to {metric_value:.1f}°C. "
-            "Keep indoor spaces warm and avoid prolonged outdoor exposure. "
-            "Layer clothing and cover extremities."
+            "Very cold overnight conditions are expected."
         )
 
 def latest_forecast_rows(db) -> list[Forecast]:
