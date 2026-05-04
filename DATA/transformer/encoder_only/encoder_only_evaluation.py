@@ -94,9 +94,9 @@ def main():
     device = get_device()
 
     # ✅ Use run-based structure (same as encoder-decoder)
-    run_number = 2
+    run_number = 10
     run_dir = Path(f"transformer/encoder_only/models/run{run_number}")
-    model_path = run_dir / "transformer_model.pt"
+    model_path = run_dir / "last_model.pt"
     stats_path = Path("transformer/transformer_stats.json")
     output_file = run_dir / f"output_{run_number}.txt"
 
@@ -137,10 +137,19 @@ def main():
         persistent_workers=True
     )
     
-    model = Transformer(
+    # model = Transformer( #run1-3
+    #     num_features=len(test_dataset.feature_cols),
+    #     num_stations=stats["num_stations"],
+    #     d_model=128,
+    #     nhead=8,
+    #     num_layers=3,
+    #     forecast_horizon=7,
+    #     target_dim=len(test_dataset.target_cols)
+    # ).to(device)
+
+    model = Transformer( #run4
         num_features=len(test_dataset.feature_cols),
         num_stations=stats["num_stations"],
-        # num_stations=505,
         d_model=128,
         nhead=8,
         num_layers=3,

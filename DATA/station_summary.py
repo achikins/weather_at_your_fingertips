@@ -52,8 +52,10 @@ def run_station_summary(verbose=True):
 
         issue = "No"
         today = datetime.today()
+        end_ym = (end.year, end.month)
+        today_ym = (today.year, today.month)
 
-        if end.month != today.month:
+        if end_ym != today_ym:
             issue = "Station Stopped"
         elif months_available < MIN_MONTHS:
             issue = "Not enough data"
@@ -84,3 +86,7 @@ def run_station_summary(verbose=True):
         print(f"Stations not having enough data: {sum(df.issue=="Not enough data")/len(df)*100:.2f}")
         print(f"Stations with coverage issue: {sum(df.issue=="Coverage")/len(df)*100:.2f}")
         print("Station Summary saved to station_summary.csv")
+
+
+if __name__ == "__main__":
+    run_station_summary()

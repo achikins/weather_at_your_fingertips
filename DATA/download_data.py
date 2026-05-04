@@ -46,4 +46,5 @@ def run_download_data(verbose=True):
         
         ftp.quit()
 
-    
+if __name__ == "__main__":
+    run_download_data()
