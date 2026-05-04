@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from database import engine
 from models import Base
-from routers import compare, dashboard, stations, weather
+from routers import weather, stations
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -18,8 +18,6 @@ Base.metadata.create_all(bind=engine)
 
 app.include_router(stations.router, prefix="/api")
 app.include_router(weather.router, prefix="/api")
-app.include_router(dashboard.router, prefix="/api")
-app.include_router(compare.router, prefix="/api")
 
 @app.get("/")
 def root():
