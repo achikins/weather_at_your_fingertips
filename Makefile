@@ -4,6 +4,7 @@
 up:
 	docker compose up -d --build
 	@echo "FastAPI is running at: http://localhost:8000"
+	@echo "Vite is running at: http://localhost:5173"
 
 # Stop containers
 down:
