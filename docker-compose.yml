@@ -17,6 +17,8 @@ services:
     environment:
       #use DATABASE_URL from .env/shell if set, otherwise fall back to the local docker postgres 
       DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:password@db:5432/weather_at_your_fingertips_db}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "8000:8000"
     depends_on:
