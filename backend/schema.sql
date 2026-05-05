@@ -19,6 +19,7 @@ create table daily_weather(
     id bigserial primary key,
     station_id integer not null references stations(station_id) on delete cascade,
     obs_date date not null, 
+    evapotranspiration_mm numeric(7,2),
     rain_mm numeric(7,2),
     max_temp_c numeric(5,2),
     min_temp_c numeric(5,2),
@@ -53,7 +54,8 @@ create table forecasts (
     pred_max_temp_c numeric(5,2),
     pred_min_temp_c numeric(5,2),
     pred_rain_mm numeric(7,2),
-    pred_humidity_pct numeric(5,2),
+    pred_max_humidity_pct numeric(5,2),
+    pred_min_humidity_pct numeric(5,2),
     pred_wind_speed_ms numeric(5,2),
     constraint uq_forecast unique (station_id, forecast_date, horizon_days)
 );
@@ -67,6 +69,12 @@ create table alerts (
     start_time timestamp not null,
     end_time timestamp,                              --null if still continuing
     is_active boolean default true
+);
+
+CREATE TABLE model_stats (
+    id serial primary key,
+    stats jsonb not null,
+    created_at timestamp default now()
 );
 
 insert into alerts (station_id, alert_type, severity, message, start_time)
