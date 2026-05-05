@@ -1,43 +1,59 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from dependencies import get_db
-from services.station_service import station_exists
 from services.weather_service import (
-    get_available_years,
-    get_daily_weather as get_daily_weather_service,
-    get_monthly_weather as get_monthly_weather_service,
+    get_city_weather,
+    get_supported_cities,
 )
 
-router = APIRouter(prefix="/weather", tags=["Weather"])
+router = APIRouter(tags=["Weather"])
 
-@router.get("/{station_id}/daily")
-def get_daily_weather(station_id: int, db: Session = Depends(get_db)):
-    if not station_exists(db, station_id):
-        raise HTTPException(status_code=404, detail="Station not found")
+@router.get("/cities")
+def get_cities():
+    return {"cities": get_supported_cities()}
 
-    return {
-        "station_id": station_id,
-        "daily": get_daily_weather_service(db, station_id),
-    }
-
-@router.get("/{station_id}/years")
-def get_weather_years(station_id: int, db: Session = Depends(get_db)):
-    if not station_exists(db, station_id):
-        raise HTTPException(status_code=404, detail="Station not found")
-
-    return {"station_id": station_id, "years": get_available_years(db, station_id)}
-
-@router.get("/{station_id}/monthly")
-def get_monthly_weather(
-    station_id: int,
+@router.get("/weather/city/{city_id}")
+def get_weather_for_city(
+    city_id: str,
     year: int | None = None,
     db: Session = Depends(get_db),
 ):
-    if not station_exists(db, station_id):
-        raise HTTPException(status_code=404, detail="Station not found")
+    try:
+        return get_city_weather(db, city_id, year=year)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-    return {
-        "station_id": station_id,
-        "year": year,
-        "monthly": get_monthly_weather_service(db, station_id, year=year),
-    }
+@router.get("/weather/city/{city_id}/monthly")
+def get_city_monthly_weather(
+    city_id: str,
+    year: int | None = None,
+    db: Session = Depends(get_db),
+):
+    try:
+        payload = get_city_weather(db, city_id, year=year)
+        return {
+            "cityId": payload["cityId"],
+            "station_id": payload["station_id"],
+            "available_years": payload["available_years"],
+            "selected_year": payload["selected_year"],
+            "monthly": payload["monthly"],
+        }
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+@router.get("/weather/city/{city_id}/current")
+def get_city_current_weather(
+    city_id: str,
+    year: int | None = None,
+    db: Session = Depends(get_db),
+):
+    try:
+        payload = get_city_weather(db, city_id, year=year)
+        return {
+            "cityId": payload["cityId"],
+            "station_id": payload["station_id"],
+            "selected_year": payload["selected_year"],
+            "current": payload["current"],
+        }
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc

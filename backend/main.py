@@ -1,10 +1,13 @@
 from fastapi import FastAPI
+from apscheduler.schedulers.background import BackgroundScheduler
 from database import engine
+from jobs.generate_alerts import run as run_alert_generation
 from models import Base
-from routers import compare, dashboard, stations, weather
+from routers import alerts, weather, stations
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+scheduler = BackgroundScheduler(timezone="UTC")
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,8 +21,26 @@ Base.metadata.create_all(bind=engine)
 
 app.include_router(stations.router, prefix="/api")
 app.include_router(weather.router, prefix="/api")
-app.include_router(dashboard.router, prefix="/api")
-app.include_router(compare.router, prefix="/api")
+app.include_router(alerts.router, prefix="/api")
+
+@app.on_event("startup")
+def start_scheduler() -> None:
+    scheduler.add_job(
+        run_alert_generation,
+        trigger="cron",
+        hour=3,
+        minute=0,
+        id="generate_alerts_job",
+        replace_existing=True,
+        coalesce=True,
+        max_instances=1,
+    )
+    scheduler.start()
+
+@app.on_event("shutdown")
+def stop_scheduler() -> None:
+    if scheduler.running:
+        scheduler.shutdown(wait=False)
 
 @app.get("/")
 def root():

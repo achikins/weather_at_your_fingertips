@@ -25,6 +25,19 @@ services:
       - db
     volumes:
       - ./backend:/app
+    
+  frontend:
+    build: ./frontend
+    container_name: weather_frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
 
 volumes:
   weather_at_your_fingertips_db_postgres_data:
