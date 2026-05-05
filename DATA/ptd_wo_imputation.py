@@ -3,42 +3,45 @@ import pandas as pd
 import json
 import os
 from pathlib import Path
-
+import psycopg2
+from psycopg2.extras import execute_values
+from dotenv import load_dotenv
 
 def run_prepare_transformer_data(verbose=True):
-    config_path = Path(__file__).parent.parent / "config.json"
+    load_dotenv()
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    print("Connecting using:", DATABASE_URL)
+    conn = psycopg2.connect(DATABASE_URL)
+
+    config_path = "config.json"
     try:
         with open(config_path) as f:
             config = json.load(f)
 
         LAG_STEPS = [1, 2, 3, 7]
         ROLLING_WINDOWS = [7, 14, 30]
-        INPUT_FILE = config["clean_data_path"]
         TRAIN_FILE = config["train_path"]
         VAL_FILE = config["val_path"]
         TEST_FILE = config["test_path"]
 
-        df = pd.read_csv(INPUT_FILE)
+        df = pd.read_sql("""
+            SELECT *
+            FROM daily_weather
+        """, conn)
 
         NUMERIC_COLS = [
-            "evapotranspiration(mm)",
-            "rain(mm)",
-            "maximum_temperature(°C)",
-            "minimum_temperature(°C)",
-            "maximum_relative_humidity(%)",
-            "minimum_relative_humidity(%)",
-            "average_10m_wind_speed(m/sec)"
+            "evapotranspiration_mm",
+            "rain_mm",
+            "max_temp_c",
+            "min_temp_c",
+            "max_humidity_pct",
+            "min_humidity_pct",
+            "avg_wind_speed_mps"
         ]
 
-        # --- station_id ---
-        df["station_id"] = df["station_name"].astype("category").cat.codes
-        station_mapping = dict(enumerate(df["station_name"].astype("category").cat.categories))
-        with open("station_id.txt", "w") as f:
-            for key, value in station_mapping.items():
-                f.write(f"{key}: {value}\n")
 
         # --- date features ---
-        df["date"] = pd.to_datetime(df["date"])
+        df["date"] = pd.to_datetime(df["obs_date"])
         df = df.sort_values(["station_id", "date"])
         df["day_of_year"] = df["date"].dt.dayofyear
         df["day_of_week"] = df["date"].dt.dayofweek
@@ -71,11 +74,21 @@ def run_prepare_transformer_data(verbose=True):
                 split_df[col] = (split_df[col] - mean) / (std + 1e-8)
 
         stats["num_stations"] = int(df["station_id"].nunique())
-        stats_path = Path(__file__).parent / "transformer_stats.json"
+        stats_path = "transformer_stats.json"
+
         with open(stats_path, "w") as f:
             json.dump(stats, f, indent=4)
         if verbose:
             print("Saved normalisation stats to transformer_stats.json")
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO model_stats (stats)
+                VALUES (%s)
+                """,
+                (json.dumps(stats),)
+            )
+        conn.commit()
 
         # --- lag features ---
         def add_lags(df):
@@ -147,9 +160,7 @@ def run_prepare_transformer_data(verbose=True):
         if verbose:
             print(f"Saved splits to {TRAIN_FILE}, {VAL_FILE}, {TEST_FILE}")
 
-        os.remove(INPUT_FILE)
-        if verbose:
-            print(f"Deleted input file {INPUT_FILE}\n")
+        conn.close()
 
     except Exception as e:
         import traceback

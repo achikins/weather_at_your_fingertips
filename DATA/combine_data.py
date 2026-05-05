@@ -72,6 +72,13 @@ def run_combine_data(verbose=True):
     final_df = pd.concat(all_data, ignore_index=True)
     final_df = final_df.sort_values(["station_name", "date"])
     final_df = final_df[final_df["station_name"] != "Totals:"]
+    final_df["station_name"] = final_df["station_name"].astype("category")
+    final_df["station_id"] = final_df["station_name"].cat.codes
+    station_mapping = dict(enumerate(final_df["station_name"].cat.categories))
+    with open("station_id.txt", "w") as f:
+        for key, value in station_mapping.items():
+            f.write(f"{key}: {value}\n")
+
     final_df.to_csv(OUTPUT_PATH, index=False)
 
     if verbose:

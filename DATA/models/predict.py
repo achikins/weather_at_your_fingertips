@@ -8,10 +8,10 @@ import numpy as np
 from pathlib import Path
 from torch.utils.data import Dataset, DataLoader
 sys.path.append(str(Path(__file__).parent.parent))
-from encoder_only.encoder_only_transformer import Transformer as EncoderOnlyTransformer
-from encoder_decoder.encoder_decoder_transformer import Transformer as EncoderDecoderTransformer
+from data.models.encoder_only.encoder_only_transformer import Transformer as EncoderOnlyTransformer
+from data.models.encoder_decoder.encoder_decoder_transformer import Transformer as EncoderDecoderTransformer
 from get_device import get_device
-from latest_window_dataset import LatestWindowDataset, TARGET_COLS, denormalise
+from data.models.latest_window_dataset import LatestWindowDataset, TARGET_COLS, denormalise
 
 
 def load_encoder_only(stats, num_features, device, model_path):

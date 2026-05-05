@@ -194,3 +194,7 @@ def run_download_station_data():
     merged.to_csv(config["station_dataset_path"], index=False)
 
     print(f"Station data saved to {config["station_dataset_path"]}")
+
+
+if __name__ == "__main__":
+    run_download_station_data()

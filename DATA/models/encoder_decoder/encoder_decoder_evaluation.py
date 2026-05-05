@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 from torch.utils.data import DataLoader
 sys.path.append(str(Path(__file__).parent.parent))
-from encoder_decoder.encoder_decoder_transformer import Transformer
+from data.models.encoder_decoder.encoder_decoder_transformer import Transformer
 from dataset import WeatherDataset
 from get_device import get_device
 from encoder_decoder.encoder_decoder_train import scheduled_sampling_forward

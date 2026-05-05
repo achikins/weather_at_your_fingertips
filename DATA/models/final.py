@@ -7,11 +7,11 @@ import numpy as np
 from pathlib import Path
 from torch.utils.data import Dataset, DataLoader
 sys.path.append(str(Path(__file__).parent.parent))
-from encoder_only.encoder_only_transformer import Transformer as EncoderOnlyTransformer
-from encoder_decoder.encoder_decoder_transformer import Transformer as EncoderDecoderTransformer
-from get_device import get_device
+from data.models.encoder_only.encoder_only_transformer import Transformer as EncoderOnlyTransformer
+from data.models.encoder_decoder.encoder_decoder_transformer import Transformer as EncoderDecoderTransformer
+from data.models.get_device import get_device
 from latest_window_dataset import LatestWindowDataset, TARGET_COLS, denormalise
-from predict import load_encoder_only, load_encoder_decoder, predict_encoder_only, predict_encoder_decoder, load_station_mapping
+from data.models.predict import load_encoder_only, load_encoder_decoder, predict_encoder_only, predict_encoder_decoder, load_station_mapping
 
 
 def main():

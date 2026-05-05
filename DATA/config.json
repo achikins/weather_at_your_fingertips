@@ -2,16 +2,17 @@
     "ftp_host": "ftp.bom.gov.au",
     "ftp_dir": "anon/gen/clim_data",
     "files_to_download": ["IDCKWCDEA0.tgz"],
-    "base_path": "2026-04-28/tables",
+    "base_path": "2026-05-05/tables",
     "station_summary_path": "station_summary.csv",
     "combined_data_path": "combine_data.csv",
     "coverage_threshold": 80,
     "clean_data_path": "clean_data.csv",
     "lstm_dataset_path": "lstm_dataset.csv",
     "transformer_dataset_path": "transformer_dataset.csv",
-    "train_path": "transformer/train.csv",
-    "test_path": "transformer/test.csv",
-    "val_path": "transformer/val.csv",
+    "train_path": "train.csv",
+    "test_path": "test.csv",
+    "val_path": "val.csv",
     "station_dataset_path": "station_data.csv",
-    "station_id_path": "station_id.txt"
+    "station_id_path": "station_id.txt",
+    "stations_path": "stations.txt"
 }

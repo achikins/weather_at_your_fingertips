@@ -7,18 +7,18 @@ import numpy as np
 from pathlib import Path
 from torch.utils.data import Dataset, DataLoader
 sys.path.append(str(Path(__file__).parent.parent))
-from encoder_only.encoder_only_transformer import Transformer as EncoderOnlyTransformer
-from encoder_decoder.encoder_decoder_transformer import Transformer as EncoderDecoderTransformer
-from get_device import get_device
+from data.models.encoder_only.encoder_only_transformer import Transformer as EncoderOnlyTransformer
+from data.models.encoder_decoder.encoder_decoder_transformer import Transformer as EncoderDecoderTransformer
+from data.models.get_device import get_device
 
 
 TARGET_COLS = [
-    "rain(mm)",
-    "maximum_temperature(°C)",
-    "minimum_temperature(°C)",
-    "maximum_relative_humidity(%)",
-    "minimum_relative_humidity(%)",
-    "average_10m_wind_speed(m/sec)"
+    "rain_mm",
+    "max_temp_c",
+    "min_temp_c",
+    "max_humidity_pct",
+    "min_humidity_pct",
+    "avg_wind_speed_mps"
 ]
 
 

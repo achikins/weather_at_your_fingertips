@@ -4,8 +4,7 @@ from download_station_data import run_download_station_data
 from combine_data import run_combine_data
 from clean_data_imputation import run_clean_data_imputation
 from clean_data_wo_imputation import run_clean_data_wo_imputation
-from transformer.ptd_imputation import run_prepare_transformer_data_imputation
-from transformer.ptd_wo_imputation import run_prepare_transformer_data_wo_imputation
+from load_to_db import run_load_to_db
 
 
 def main(imputation=False, verbose=True):
@@ -25,7 +24,12 @@ def main(imputation=False, verbose=True):
     run_combine_data(verbose=verbose)
 
     print("\n" + "=" * 80)
-    print("  STEP 4: Clean and impute data")
+    print("  STEP 4: Download Station data")
+    print("=" * 80)
+    run_download_station_data()
+
+    print("\n" + "=" * 80)
+    print("  STEP 5: Clean and impute data")
     print("=" * 80)
     if imputation:
         run_clean_data_imputation(verbose=verbose)
@@ -33,13 +37,9 @@ def main(imputation=False, verbose=True):
         run_clean_data_wo_imputation(verbose=verbose)
 
     print("\n" + "=" * 80)
-    print("  STEP 5: Prepare transformer data")
+    print("  STEP 6: Load everything to db")
     print("=" * 80)
-    if imputation:
-        run_prepare_transformer_data_imputation(verbose=verbose)
-    else:
-        run_prepare_transformer_data_wo_imputation(verbose=verbose)
-
+    run_load_to_db()
 
 
 if __name__ == "__main__":

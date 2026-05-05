@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 from torch.utils.data import DataLoader
 sys.path.append(str(Path(__file__).parent.parent))
-from encoder_only.encoder_only_transformer import Transformer
+from data.models.encoder_only.encoder_only_transformer import Transformer
 from dataset import WeatherDataset
 from get_device import get_device
 
@@ -94,11 +94,12 @@ def main():
     device = get_device()
 
     # ✅ Use run-based structure (same as encoder-decoder)
-    run_number = 10
+    run_number = 11
+    typ = "best"
     run_dir = Path(f"transformer/encoder_only/models/run{run_number}")
-    model_path = run_dir / "last_model.pt"
+    model_path = run_dir / f"{typ}_model.pt"
     stats_path = Path("transformer/transformer_stats.json")
-    output_file = run_dir / f"output_{run_number}.txt"
+    output_file = run_dir / f"output_{run_number}_{typ}.txt"
 
     # ✅ checks
     if not model_path.exists():

@@ -11,17 +11,17 @@ from torch.utils.data import DataLoader
 sys.path.append(str(Path(__file__).parent.parent))
 
 from dataset import WeatherDataset
-from encoder_only.encoder_only_transformer import Transformer
+from encoder_only_transformer import Transformer
 from get_device import get_device
 
 
 TARGET_COLS = [
-    "rain(mm)",
-    "maximum_temperature(°C)",
-    "minimum_temperature(°C)",
-    "maximum_relative_humidity(%)",
-    "minimum_relative_humidity(%)",
-    "average_10m_wind_speed(m/sec)"
+    "rain_mm",
+    "max_temp_c",
+    "min_temp_c",
+    "max_humidity_pct",
+    "min_humidity_pct",
+    "avg_wind_speed_mps"
 ]
 
 
@@ -94,13 +94,13 @@ class EarlyStopping:
 # -----------------------------
 def main():
 
-    run_number          = 10
+    run_number          = 12
     EPOCHS_THIS_SESSION = 12
     TOTAL_EPOCHS        = 50
     WARMUP_EPOCHS       = 3
 
     config_path = Path(__file__).parent.parent.parent / "config.json"
-    stats_path  = Path(__file__).parent.parent / "transformer_stats.json"
+    stats_path  = Path(__file__).parent.parent.parent / "transformer_stats.json"
     device      = get_device()
 
     with open(config_path) as f:
@@ -149,12 +149,12 @@ def main():
     model = Transformer(
         num_features=len(train_dataset.feature_cols),
         num_stations=stats["num_stations"],
-        d_model=128,
+        d_model=64,
         nhead=8,
         num_layers=3,
         forecast_horizon=7,
         target_dim=len(train_dataset.target_cols),
-        dropout=0.15   # slightly reduced from 0.2
+        dropout=0.15
     ).to(device)
 
     # -----------------------------
@@ -185,7 +185,7 @@ def main():
     # -----------------------------
     # Checkpoint
     # -----------------------------
-    run_dir = Path(f"transformer/encoder_only/models/run{run_number}")
+    run_dir = Path(f"models/encoder_only/models/run{run_number}")
     run_dir.mkdir(parents=True, exist_ok=True)
 
     best_path = run_dir / "best_model.pt"

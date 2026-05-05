@@ -11,12 +11,12 @@ class WeatherDataset(Dataset):
         self.forecast_horizon = forecast_horizon
 
         self.target_cols = target_cols or [
-            "rain(mm)",
-            "maximum_temperature(°C)",
-            "minimum_temperature(°C)",
-            "maximum_relative_humidity(%)",
-            "minimum_relative_humidity(%)",
-            "average_10m_wind_speed(m/sec)"
+            "rain_mm",
+            "max_temp_c",
+            "min_temp_c",
+            "max_humidity_pct",
+            "min_humidity_pct",
+            "avg_wind_speed_mps"
         ]
         self.df = self.df.sort_values(["station_id", "date"])
         self.feature_cols = [col for col in self.df.columns if col not in ["date"]]
