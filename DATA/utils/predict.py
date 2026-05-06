@@ -1,17 +1,12 @@
 import torch
-import json
 import sys
-import argparse
-import pandas as pd
-import re
 import numpy as np
 from pathlib import Path
-from torch.utils.data import Dataset, DataLoader
-sys.path.append(str(Path(__file__).parent.parent))
-from data.models.encoder_only.encoder_only_transformer import Transformer as EncoderOnlyTransformer
-from data.models.encoder_decoder.encoder_decoder_transformer import Transformer as EncoderDecoderTransformer
-from get_device import get_device
-from data.models.latest_window_dataset import LatestWindowDataset, TARGET_COLS, denormalise
+sys.path.append(str(Path(__file__).parent))
+from latest_window_dataset import LatestWindowDataset, TARGET_COLS, denormalise
+from encoder_only.encoder_only_transformer import Transformer as EncoderOnlyTransformer
+from encoder_decoder.encoder_decoder_transformer import Transformer as EncoderDecoderTransformer
+
 
 
 def load_encoder_only(stats, num_features, device, model_path):
@@ -21,8 +16,8 @@ def load_encoder_only(stats, num_features, device, model_path):
     model = EncoderOnlyTransformer(
         num_features=num_features,
         num_stations=stats["num_stations"],
-        d_model=128,
-        nhead=8,
+        d_model=64,
+        nhead=4,
         num_layers=3,
         forecast_horizon=7,
         target_dim=len(TARGET_COLS)
@@ -92,18 +87,3 @@ def predict_encoder_decoder(model, loader, device):
             pred = torch.cat(preds, dim=1)
             all_preds.append(pred.cpu().numpy())
     return np.concatenate(all_preds, axis=0)
-
-
-def load_station_mapping(station_id_path):
-    station_map = {}
-    with open(station_id_path) as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            match = re.match(r"(\d+):\s*(.*)", line)
-            if match:
-                station_id = int(match.group(1))
-                station_name = match.group(2)
-                station_map[station_id] = station_name
-    return station_map

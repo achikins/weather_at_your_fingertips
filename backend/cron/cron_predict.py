@@ -6,8 +6,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from torch.utils.data import Dataset, DataLoader
 from huggingface_hub import hf_hub_download
-from data.models.encoder_only.encoder_only_transformer import Transformer as EncoderOnlyTransformer
-from data.models.latest_window_dataset import LatestWindowDataset, TARGET_COLS, denormalise
+from data.encoder_only.encoder_only_transformer import Transformer as EncoderOnlyTransformer
+from data.utils.latest_window_dataset import LatestWindowDataset, TARGET_COLS, denormalise
 from backend.cron.cron_build_features import TARGET_COLS, NUMERIC_COLS, build_features, WindowDataset, denormalise
 
 

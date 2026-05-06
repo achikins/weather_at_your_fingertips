@@ -1,15 +1,10 @@
 import torch
-import json
 import sys
-import argparse
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 sys.path.append(str(Path(__file__).parent.parent))
-from data.models.encoder_only.encoder_only_transformer import Transformer as EncoderOnlyTransformer
-from data.models.encoder_decoder.encoder_decoder_transformer import Transformer as EncoderDecoderTransformer
-from data.models.get_device import get_device
 
 
 TARGET_COLS = [
@@ -23,9 +18,9 @@ TARGET_COLS = [
 
 
 class LatestWindowDataset(Dataset):
-    def __init__(self, csv_file, seq_len=60):
+    def __init__(self, df, seq_len=60):
         self.seq_len = seq_len
-        df = pd.read_csv(csv_file)
+        df = df.copy()
         df["date"] = pd.to_datetime(df["date"])
         df = df.sort_values(["station_id", "date"])
 

@@ -3,13 +3,18 @@ import re
 import pandas as pd
 import json
 from datetime import datetime
+from pathlib import Path
+
+
+BASE_DIR = Path(__file__).resolve().parent
+config_path = BASE_DIR / "config.json"
 
 
 def run_station_summary(verbose=True):
-    with open("config.json") as f:
+    with open(config_path) as f:
         config = json.load(f)
 
-    BASE_PATH = config["base_path"]
+    BASE_PATH = datetime.today().strftime("%Y-%m-%d") + "/tables"
 
     MIN_MONTHS = 60
     MIN_COVERAGE = 80

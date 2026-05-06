@@ -7,13 +7,17 @@ import psycopg2
 from psycopg2.extras import execute_values
 from dotenv import load_dotenv
 
+
+BASE_DIR = Path(__file__).resolve().parent
+config_path = BASE_DIR / "config.json"
+
+
 def run_prepare_transformer_data(verbose=True):
     load_dotenv()
     DATABASE_URL = os.getenv("DATABASE_URL")
     print("Connecting using:", DATABASE_URL)
     conn = psycopg2.connect(DATABASE_URL)
 
-    config_path = "config.json"
     try:
         with open(config_path) as f:
             config = json.load(f)

@@ -6,7 +6,9 @@ from pathlib import Path
 
 
 def run_prepare_transformer_data_imputation(verbose=True):
-    config_path = Path(__file__).parent.parent / "config.json"
+
+    BASE_DIR = Path(__file__).resolve().parent
+    config_path = BASE_DIR / "config.json"
     try:
         with open(config_path) as f:
             config = json.load(f)

@@ -5,14 +5,16 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import json
+import psycopg2
 from pathlib import Path
 from torch.utils.data import DataLoader
 
-sys.path.append(str(Path(__file__).parent.parent))
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-from dataset import WeatherDataset
+from utils.dataset import WeatherDataset
 from encoder_only_transformer import Transformer
-from get_device import get_device
+from utils.get_device import get_device
+from utils.load_from_db import load_stats
 
 
 TARGET_COLS = [
@@ -94,19 +96,19 @@ class EarlyStopping:
 # -----------------------------
 def main():
 
-    run_number          = 12
-    EPOCHS_THIS_SESSION = 12
+    run_number          = 13
+    EPOCHS_THIS_SESSION = 15
     TOTAL_EPOCHS        = 50
     WARMUP_EPOCHS       = 3
 
-    config_path = Path(__file__).parent.parent.parent / "config.json"
-    stats_path  = Path(__file__).parent.parent.parent / "transformer_stats.json"
+    db_url = "postgresql://postgres:password@localhost:5432/weather_at_your_fingertips_db"
+    conn = psycopg2.connect(db_url)
+    config_path = Path(__file__).parent.parent / "utils/config.json"
     device      = get_device()
 
     with open(config_path) as f:
         config = json.load(f)
-    with open(stats_path) as f:
-        stats = json.load(f)
+    stats = load_stats(conn, 1)
 
     # -----------------------------
     # Dataset

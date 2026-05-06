@@ -4,7 +4,11 @@ import re
 import zipfile
 import os
 import json
+from pathlib import Path
 
+
+BASE_DIR = Path(__file__).resolve().parent
+config_path = BASE_DIR / "config.json"
 
 def run_download_station_data():
     def clean_station_name(name):
@@ -22,10 +26,8 @@ def run_download_station_data():
         name = re.sub(r"\s+", "_", name)
         return name
 
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
 
-    with open(CONFIG_PATH) as f:
+    with open(config_path) as f:
         config = json.load(f)
 
     FTP_DIR = "/anon2/home/ncc/metadata/sitelists"

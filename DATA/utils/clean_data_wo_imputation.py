@@ -1,10 +1,15 @@
 import pandas as pd
 import os
 import json
+from pathlib import Path
+
+
+BASE_DIR = Path(__file__).resolve().parent
+config_path = BASE_DIR / "config.json"
 
 
 def run_clean_data_wo_imputation(verbose=True):
-    with open("config.json") as f:
+    with open(config_path) as f:
         config = json.load(f)
 
     INPUT_FILE = config["combined_data_path"]

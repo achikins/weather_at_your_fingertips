@@ -3,7 +3,11 @@ import os
 import tarfile
 import datetime
 import json
+from pathlib import Path
 
+
+BASE_DIR = Path(__file__).resolve().parent
+config_path = BASE_DIR / "config.json"
 
 def run_download_data(verbose=True):
     today_str = datetime.date.today().strftime("%Y-%m-%d")
@@ -16,7 +20,7 @@ def run_download_data(verbose=True):
     else:
         os.makedirs(download_folder, exist_ok=True)
 
-        with open("config.json") as f:
+        with open(config_path) as f:
             config = json.load(f)
         FTP_HOST = config["ftp_host"]
         FTP_DIR = config["ftp_dir"]
