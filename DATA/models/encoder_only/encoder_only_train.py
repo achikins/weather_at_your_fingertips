@@ -150,7 +150,7 @@ def main():
         num_features=len(train_dataset.feature_cols),
         num_stations=stats["num_stations"],
         d_model=64,
-        nhead=8,
+        nhead=4,
         num_layers=3,
         forecast_horizon=7,
         target_dim=len(train_dataset.target_cols),
