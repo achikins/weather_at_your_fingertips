@@ -144,9 +144,13 @@ export default function MapView() {
       const color = getMarkerColor(value, activeLayer);
       const unit = getLayerUnit(activeLayer);
 
+      // Outer el: owned by Mapbox GL (writes transform: translate here) — no transforms on this
       const dotEl = document.createElement("div");
-      dotEl.style.cssText = `
-        cursor: pointer;
+      dotEl.style.cssText = `cursor: pointer;`;
+
+      // Inner el: safe to scale/animate without conflicting with Mapbox's translate
+      const dotInner = document.createElement("div");
+      dotInner.style.cssText = `
         width: 48px;
         height: 48px;
         border-radius: 50%;
@@ -155,8 +159,9 @@ export default function MapView() {
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
         box-shadow: 0 0 14px ${color}55;
+        transform-origin: center center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
       `;
 
       const inner = document.createElement("div");
@@ -170,15 +175,16 @@ export default function MapView() {
         text-shadow: 0 1px 4px rgba(0,0,0,0.9);
       `;
       inner.textContent = `${value}${unit}`;
-      dotEl.appendChild(inner);
+      dotInner.appendChild(inner);
+      dotEl.appendChild(dotInner);
 
       dotEl.addEventListener("mouseenter", () => {
-        dotEl.style.transform = "scale(1.15)";
-        dotEl.style.boxShadow = `0 0 24px ${color}77`;
+        dotInner.style.transform = "scale(1.15)";
+        dotInner.style.boxShadow = `0 0 24px ${color}77`;
       });
       dotEl.addEventListener("mouseleave", () => {
-        dotEl.style.transform = "scale(1)";
-        dotEl.style.boxShadow = `0 0 14px ${color}55`;
+        dotInner.style.transform = "scale(1)";
+        dotInner.style.boxShadow = `0 0 14px ${color}55`;
       });
       dotEl.addEventListener("click", () => {
         setSelectedCity(city);
