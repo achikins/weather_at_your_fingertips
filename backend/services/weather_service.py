@@ -1,4 +1,5 @@
 from typing import Any
+from sqlalchemy import extract
 from sqlalchemy.orm import Session
 from models import DailyWeather, MonthlyAggregate
 from services.number_utils import round_one_decimal, to_float
@@ -31,7 +32,6 @@ MONTH_NAMES = {
     11: "Nov",
     12: "Dec",
 }
-
 
 def _serialize_daily_weather(row: DailyWeather) -> dict[str, Any]:
     return {
@@ -72,6 +72,17 @@ def get_daily_weather(db: Session, station_id: int) -> list[dict[str, Any]]:
 
     return [_serialize_daily_weather(row) for row in rows]
 
+def get_latest_daily_weather(db: Session, station_id: int) -> dict[str, Any] | None:
+    row = (
+        db.query(DailyWeather)
+        .filter(DailyWeather.station_id == station_id)
+        .order_by(DailyWeather.obs_date.desc())
+        .first()
+    )
+    if row is None:
+        return None
+    return _serialize_daily_weather(row)
+
 def get_monthly_weather(
     db: Session,
     station_id: int,
@@ -88,6 +99,12 @@ def get_monthly_weather(
 
 def get_supported_cities() -> list[str]:
     return sorted(CITY_TO_STATION.keys())
+
+def city_id_for_station_id(station_id: int) -> str | None:
+    for city_id, mapped_station_id in CITY_TO_STATION.items():
+        if mapped_station_id == station_id:
+            return city_id
+    return None
 
 def resolve_station_for_city(db: Session, city_id: str) -> int:
     normalized = city_id.lower().strip()
@@ -132,17 +149,58 @@ def normalize_monthly(monthly: list[dict[str, Any]]) -> list[dict[str, Any]]:
         )
     return normalized
 
-def derive_current_from_monthly(monthly: list[dict[str, Any]]) -> dict[str, Any] | None:
-    if not monthly:
+def derive_current_from_daily(latest_daily: dict[str, Any] | None) -> dict[str, Any] | None:
+    if latest_daily is None:
         return None
-    latest = monthly[-1]
+    max_temp = latest_daily.get("max_temp_c")
+    min_temp = latest_daily.get("min_temp_c")
+    avg_temp = None
+    if max_temp is not None and min_temp is not None:
+        avg_temp = (max_temp + min_temp) / 2
+
+    min_h = latest_daily.get("min_humidity_pct")
+    max_h = latest_daily.get("max_humidity_pct")
+    humidity = None
+    if min_h is not None and max_h is not None:
+        humidity = (min_h + max_h) / 2
+
+    wind_ms = latest_daily.get("avg_wind_speed_mps")
+    wind_kmh = None if wind_ms is None else wind_ms * 3.6
+
     return {
-        "temp": round_one_decimal(latest.get("tempAvg")),
-        "condition": "N/A",
-        "humidity": round_one_decimal(latest.get("humidity")),
-        "windSpeed": round_one_decimal(latest.get("windSpeed")),
-        "rainfall": round_one_decimal(latest.get("rainfall")),
-        "uvIndex": None,
+        "obsDate": latest_daily.get("obs_date"),
+        "temp": round_one_decimal(avg_temp),
+        "tempMin": round_one_decimal(min_temp),
+        "tempMax": round_one_decimal(max_temp),
+        "humidity": round_one_decimal(humidity),
+        "windSpeed": round_one_decimal(wind_kmh),
+        "rainfall": round_one_decimal(latest_daily.get("rain_mm")),
+    }
+
+def _build_station_weather_payload(
+    db: Session,
+    station_id: int,
+    year: int | None = None,
+) -> dict[str, Any]:
+    available_years = get_station_years(db, station_id)
+    selected_year = year
+    if selected_year is None and available_years:
+        selected_year = available_years[0]
+    if selected_year is not None and selected_year not in available_years:
+        raise ValueError(f"Year {selected_year} does not exist for station: {station_id}")
+
+    monthly_raw = get_monthly_weather(db, station_id, year=selected_year)
+    monthly = normalize_monthly(monthly_raw)
+    latest_daily = get_latest_daily_weather(db, station_id)
+    current = derive_current_from_daily(latest_daily)
+
+    return {
+        "cityId": city_id_for_station_id(station_id),
+        "station_id": station_id,
+        "available_years": available_years,
+        "selected_year": selected_year,
+        "monthly": monthly,
+        "current": current,
     }
 
 def get_city_weather(
@@ -152,23 +210,58 @@ def get_city_weather(
 ) -> dict[str, Any]:
     normalized_city = city_id.lower().strip()
     station_id = resolve_station_for_city(db, normalized_city)
-    available_years = get_station_years(db, station_id)
+    payload = _build_station_weather_payload(db, station_id, year=year)
+    payload["cityId"] = normalized_city
+    return payload
 
-    selected_year = year
-    if selected_year is None and available_years:
-        selected_year = available_years[0]
-    if selected_year is not None and selected_year not in available_years:
-        raise ValueError(f"Year {selected_year} does not exist for city: {city_id}")
+def resolve_station_from_params(
+    db: Session,
+    city_id: str | None = None,
+    station_id: str | int | None = None,
+) -> tuple[str | None, int]:
+    if city_id:
+        normalized_city = city_id.lower().strip()
+        return normalized_city, resolve_station_for_city(db, normalized_city)
 
-    monthly_raw = get_monthly_weather(db, station_id, year=selected_year)
-    monthly = normalize_monthly(monthly_raw)
-    current = derive_current_from_monthly(monthly)
+    if station_id is None:
+        raise ValueError("Provide either city_id or station_id")
 
-    return {
-        "cityId": normalized_city,
-        "station_id": station_id,
-        "available_years": available_years,
-        "selected_year": selected_year,
-        "monthly": monthly,
-        "current": current,
-    }
+    if isinstance(station_id, int):
+        if not station_exists(db, station_id):
+            raise ValueError(f"Station not found: {station_id}")
+        return city_id_for_station_id(station_id), station_id
+
+    normalized_station = station_id.lower().strip()
+    if normalized_station.isdigit():
+        numeric_station_id = int(normalized_station)
+        if not station_exists(db, numeric_station_id):
+            raise ValueError(f"Station not found: {station_id}")
+        return city_id_for_station_id(numeric_station_id), numeric_station_id
+
+    return normalized_station, resolve_station_for_city(db, normalized_station)
+
+def get_station_weather(
+    db: Session,
+    station_id: int,
+    year: int | None = None,
+) -> dict[str, Any]:
+    return _build_station_weather_payload(db, station_id, year=year)
+
+def get_historical_weather(
+    db: Session,
+    station_id: int,
+    year: int | None = None,
+    month: int | None = None,
+    day: int | None = None,
+) -> list[dict[str, Any]]:
+    query = db.query(DailyWeather).filter(DailyWeather.station_id == station_id)
+
+    if year is not None:
+        query = query.filter(extract("year", DailyWeather.obs_date) == year)
+    if month is not None:
+        query = query.filter(extract("month", DailyWeather.obs_date) == month)
+    if day is not None:
+        query = query.filter(extract("day", DailyWeather.obs_date) == day)
+
+    rows = query.order_by(DailyWeather.obs_date.asc()).all()
+    return [_serialize_daily_weather(row) for row in rows]
