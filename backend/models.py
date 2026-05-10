@@ -55,7 +55,8 @@ class Forecast(Base):
     pred_max_temp_c = Column(Numeric(5, 2), nullable=True)
     pred_min_temp_c = Column(Numeric(5, 2), nullable=True)
     pred_rain_mm = Column(Numeric(7, 2), nullable=True)
-    pred_humidity_pct = Column(Numeric(5, 2), nullable=True)
+    pred_max_humidity_pct = Column(Numeric(5, 2), nullable=True)
+    pred_min_humidity_pct = Column(Numeric(5, 2), nullable=True)
     pred_wind_speed_ms = Column(Numeric(5, 2), nullable=True)
 
     # Relationship back to Station
@@ -91,6 +92,7 @@ class DailyWeather(Base):
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("stations.station_id", ondelete="CASCADE"), nullable=False)
     obs_date = Column(Date, nullable=False)
+    evapotranspiration_mm = Column(Numeric(7, 2), nullable=True)
     rain_mm = Column(Numeric(7, 2), nullable=True)
     max_temp_c = Column(Numeric(5, 2), nullable=True)
     min_temp_c = Column(Numeric(5, 2), nullable=True)
