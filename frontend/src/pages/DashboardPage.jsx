@@ -65,30 +65,32 @@ export default function DashboardPage() {
         <div className="text-sm text-gray-400 dark:text-slate-500 text-center py-6">Loading weather data…</div>
       )}
 
-      {/* Layout: weather cards left, charts right on large screens */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      {/* Top row: summary cards + temperature chart */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
         <div className="lg:col-span-1">
           <WeatherCards current={current} monthly={monthly} city={selectedCity} />
         </div>
-        <div className="lg:col-span-2 space-y-4">
-          <ChartCard title="Temperature (°C)" icon={Thermometer} iconColor="text-orange-400" data={filteredMonthly}>
+        <div className="lg:col-span-3">
+          <ChartCard title="Temperature (°C)" icon={Thermometer} iconColor="text-orange-400" data={filteredMonthly} tall>
             <TemperatureChart data={filteredMonthly} />
-          </ChartCard>
-          <ChartCard title="Monthly Rainfall (mm)" icon={CloudRain} iconColor="text-blue-400" data={filteredMonthly}>
-            <RainfallChart data={filteredMonthly} />
           </ChartCard>
         </div>
       </div>
 
-      {/* Bottom row: humidity and wind */}
+      {/* Middle row: rainfall + humidity side by side */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <ChartCard title="Monthly Rainfall (mm)" icon={CloudRain} iconColor="text-blue-400" data={filteredMonthly}>
+          <RainfallChart data={filteredMonthly} />
+        </ChartCard>
         <ChartCard title="Relative Humidity (%)" icon={Droplets} iconColor="text-teal-400" data={filteredMonthly}>
           <HumidityChart data={filteredMonthly} />
         </ChartCard>
-        <ChartCard title="Wind Speed (km/h)" icon={Wind} iconColor="text-purple-400" data={filteredMonthly}>
-          <WindChart data={filteredMonthly} />
-        </ChartCard>
       </div>
+
+      {/* Bottom row: wind full width */}
+      <ChartCard title="Wind Speed (km/h)" icon={Wind} iconColor="text-purple-400" data={filteredMonthly}>
+        <WindChart data={filteredMonthly} />
+      </ChartCard>
 
       {/* Monthly data table */}
       <div className="rounded-2xl border border-gray-100 dark:border-white/5 bg-white dark:bg-[#1a2035] overflow-hidden shadow-sm dark:shadow-none">

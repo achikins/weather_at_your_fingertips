@@ -84,7 +84,7 @@ export function WindChart({ data }) {
       <LineChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
         <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} unit=" k" />
+        <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip unit=" km/h" />} />
         <Line type="monotone" dataKey="windSpeed" name="Wind" stroke="#a78bfa" strokeWidth={2} dot={{ fill: '#a78bfa', r: 3 }} activeDot={{ r: 5 }} />
       </LineChart>
