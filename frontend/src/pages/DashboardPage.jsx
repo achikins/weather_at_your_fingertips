@@ -71,10 +71,10 @@ export default function DashboardPage() {
           <WeatherCards current={current} monthly={monthly} city={selectedCity} />
         </div>
         <div className="lg:col-span-2 space-y-4">
-          <ChartCard title="Temperature (°C)" icon={Thermometer} iconColor="text-orange-400">
+          <ChartCard title="Temperature (°C)" icon={Thermometer} iconColor="text-orange-400" data={filteredMonthly}>
             <TemperatureChart data={filteredMonthly} />
           </ChartCard>
-          <ChartCard title="Monthly Rainfall (mm)" icon={CloudRain} iconColor="text-blue-400">
+          <ChartCard title="Monthly Rainfall (mm)" icon={CloudRain} iconColor="text-blue-400" data={filteredMonthly}>
             <RainfallChart data={filteredMonthly} />
           </ChartCard>
         </div>
@@ -82,10 +82,10 @@ export default function DashboardPage() {
 
       {/* Bottom row: humidity and wind */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ChartCard title="Relative Humidity (%)" icon={Droplets} iconColor="text-teal-400">
+        <ChartCard title="Relative Humidity (%)" icon={Droplets} iconColor="text-teal-400" data={filteredMonthly}>
           <HumidityChart data={filteredMonthly} />
         </ChartCard>
-        <ChartCard title="Wind Speed (km/h)" icon={Wind} iconColor="text-purple-400">
+        <ChartCard title="Wind Speed (km/h)" icon={Wind} iconColor="text-purple-400" data={filteredMonthly}>
           <WindChart data={filteredMonthly} />
         </ChartCard>
       </div>
