@@ -16,10 +16,6 @@ export const MONTHS_LIST = [
   { value: '11', label: 'December' },
 ]
 
-export const YEARS_LIST = [
-  { value: 'all', label: 'All Years' },
-  { value: '2024', label: '2024' },
-]
 
 export const DAYS_LIST = [
   { value: 'all', label: 'All Days' },

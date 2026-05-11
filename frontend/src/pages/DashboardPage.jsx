@@ -13,6 +13,7 @@ export default function DashboardPage() {
   const [filters, setFilters] = useState({ month: 'all', year: 'all', day: 'all' })
   const [monthly, setMonthly] = useState([])
   const [current, setCurrent] = useState(null)
+  const [availableYears, setAvailableYears] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
@@ -20,14 +21,15 @@ export default function DashboardPage() {
     if (!selectedCity) return
     setLoading(true)
     setError(null)
-    api.getCityWeather(selectedCity.id)
+    api.getCityWeather(selectedCity.id, filters.year !== 'all' ? filters.year : undefined)
       .then((data) => {
         setMonthly(data.monthly || [])
         setCurrent(data.current || null)
+        setAvailableYears(data.available_years || [])
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
-  }, [selectedCity])
+  }, [selectedCity, filters.year])
 
   const handleCityChange = (cityId) => {
     const city = getCityById(cityId)
@@ -49,6 +51,7 @@ export default function DashboardPage() {
           onFilterChange={setFilters}
           selectedCity={selectedCity}
           onCityChange={handleCityChange}
+          availableYears={availableYears}
         />
       </div>
 

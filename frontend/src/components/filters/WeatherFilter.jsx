@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Calendar, X, MapPin, ChevronDown } from 'lucide-react'
 import { australianCities } from '../../data/australianCities'
-import { MONTHS_LIST, YEARS_LIST, DAYS_LIST } from '../../hooks/useWeatherFilter'
+import { MONTHS_LIST, DAYS_LIST } from '../../hooks/useWeatherFilter'
 
 function PopupSelect({ label, value, onChange, options }) {
   return (
@@ -25,7 +25,11 @@ function PopupSelect({ label, value, onChange, options }) {
   )
 }
 
-export default function WeatherFilter({ filters, onFilterChange, selectedCity, onCityChange }) {
+export default function WeatherFilter({ filters, onFilterChange, selectedCity, onCityChange, availableYears = [] }) {
+  const yearOptions = [
+    { value: 'all', label: 'All Years' },
+    ...availableYears.map((y) => ({ value: String(y), label: String(y) })),
+  ]
   const { month, year, day } = filters
   const [open, setOpen] = useState(false)
   const popupRef = useRef(null)
@@ -94,7 +98,7 @@ export default function WeatherFilter({ filters, onFilterChange, selectedCity, o
               label="Year"
               value={year}
               onChange={(v) => onFilterChange({ ...filters, year: v })}
-              options={YEARS_LIST}
+              options={yearOptions}
             />
             <PopupSelect
               label="Month"
