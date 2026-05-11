@@ -1,4 +1,4 @@
-import { Thermometer, Droplets, Wind, CloudRain } from 'lucide-react'
+import { Thermometer, Droplets, Wind, CloudRain, TrendingUp, TrendingDown } from 'lucide-react'
 
 const conditionEmoji = (condition) => {
   if (!condition) return '🌤'
@@ -13,82 +13,98 @@ const conditionEmoji = (condition) => {
 
 function StatCard({ icon: Icon, label, value, unit, color, bg }) {
   return (
-    <div className="rounded-2xl border border-gray-100 dark:border-white/5 p-4 bg-white dark:bg-[#1a2035] hover:border-gray-200 dark:hover:border-white/10 transition-all duration-200 shadow-sm dark:shadow-none">
-      <div className="flex items-start justify-between mb-3">
-        <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center`}>
-          <Icon size={16} className={color} />
-        </div>
+    <div className="rounded-2xl border border-gray-100 dark:border-white/5 p-4 bg-white dark:bg-[#1a2035] hover:border-gray-200 dark:hover:border-white/10 transition-all duration-200 shadow-sm dark:shadow-none flex items-center gap-3">
+      <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center shrink-0`}>
+        <Icon size={17} className={color} />
       </div>
-      <p className="text-2xl font-bold text-gray-900 dark:text-white">
-        {value}<span className="text-base font-normal text-gray-400 dark:text-slate-400 ml-0.5">{unit}</span>
-      </p>
-      <p className="text-xs text-gray-400 dark:text-slate-500 mt-1">{label}</p>
+      <div className="min-w-0">
+        <p className="text-xs text-gray-400 dark:text-slate-500 truncate">{label}</p>
+        <p className="text-lg font-bold text-gray-900 dark:text-white leading-tight">
+          {value}<span className="text-xs font-normal text-gray-400 dark:text-slate-400 ml-0.5">{unit}</span>
+        </p>
+      </div>
     </div>
   )
 }
 
-export default function WeatherCards({ current, monthly, city }) {
-  if (!current || !monthly?.length) return null
+function SkeletonCard() {
+  return (
+    <div className="rounded-2xl border border-gray-100 dark:border-white/5 p-4 bg-white dark:bg-[#1a2035] shadow-sm animate-pulse flex items-center gap-3">
+      <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-white/5 shrink-0" />
+      <div className="flex-1 space-y-2">
+        <div className="h-2.5 bg-gray-100 dark:bg-white/5 rounded w-2/3" />
+        <div className="h-4 bg-gray-100 dark:bg-white/5 rounded w-1/2" />
+      </div>
+    </div>
+  )
+}
 
-  const avgTemp     = Math.round(monthly.reduce((s, m) => s + m.tempAvg, 0) / monthly.length)
+export default function WeatherCards({ monthly, loading }) {
+  if (loading && !monthly?.length) {
+    return (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
+      </div>
+    )
+  }
+
+  if (!monthly?.length) return null
+
+  const latest      = monthly[monthly.length - 1]
+  const avgTemp     = (monthly.reduce((s, m) => s + m.tempAvg, 0) / monthly.length).toFixed(1)
   const maxTemp     = Math.max(...monthly.map((m) => m.tempMax))
   const minTemp     = Math.min(...monthly.map((m) => m.tempMin))
   const totalRain   = Math.round(monthly.reduce((s, m) => s + m.rainfall, 0))
   const avgHumidity = Math.round(monthly.reduce((s, m) => s + m.humidity, 0) / monthly.length)
-  const avgWind     = Math.round(monthly.reduce((s, m) => s + m.windSpeed, 0) / monthly.length)
+  const avgWind     = (monthly.reduce((s, m) => s + m.windSpeed, 0) / monthly.length).toFixed(1)
 
   return (
-    <div className="space-y-4">
-      {/* Hero card */}
-      <div className="rounded-2xl border border-gray-100 dark:border-white/5 bg-gradient-to-br from-blue-50 dark:from-blue-600/10 via-white dark:via-[#1a2035] to-teal-50 dark:to-teal-600/5 p-5 shadow-sm dark:shadow-none">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-gray-500 dark:text-slate-400 text-sm mb-1">Current Conditions</p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-bold text-gray-900 dark:text-white">{current.temp}°</span>
-              <span className="text-xl text-gray-400 dark:text-slate-400">C</span>
-            </div>
-            <p className="text-gray-700 dark:text-slate-300 text-sm mt-1">{current.condition}</p>
-            <p className="text-gray-400 dark:text-slate-500 text-xs mt-0.5">UV Index: {current.uvIndex}</p>
-          </div>
-          <div className="text-5xl leading-none">{conditionEmoji(current.condition)}</div>
-        </div>
-        <div className="grid grid-cols-3 gap-3 mt-4 pt-4 border-t border-gray-100 dark:border-white/5">
-          {[
-            { label: 'Humidity', value: `${current.humidity}%`,       color: 'text-teal-500 dark:text-teal-400' },
-            { label: 'Wind',     value: `${current.windSpeed} km/h`,  color: 'text-purple-500 dark:text-purple-400' },
-            { label: 'Rainfall', value: `${current.rainfall} mm`,     color: 'text-blue-500 dark:text-blue-400' },
-          ].map(({ label, value, color }) => (
-            <div key={label} className="text-center">
-              <p className={`text-sm font-semibold ${color}`}>{value}</p>
-              <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-0.5">{label}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 gap-3">
-        <StatCard icon={Thermometer} label="Annual Avg Temp" value={avgTemp} unit="°C"  color="text-orange-400" bg="bg-orange-500/10" />
-        <StatCard icon={CloudRain}   label="Annual Rainfall"  value={totalRain} unit=" mm" color="text-blue-400"   bg="bg-blue-500/10" />
-        <StatCard icon={Droplets}    label="Avg Humidity"     value={avgHumidity} unit="%" color="text-teal-400"   bg="bg-teal-500/10" />
-        <StatCard icon={Wind}        label="Avg Wind Speed"   value={avgWind} unit=" km/h" color="text-purple-400" bg="bg-purple-500/10" />
-      </div>
-
-      {/* Temp range */}
-      <div className="rounded-2xl border border-gray-100 dark:border-white/5 bg-white dark:bg-[#1a2035] p-4 shadow-sm dark:shadow-none">
-        <p className="text-xs text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wider mb-3">Annual Temperature Range</p>
+    <div className="space-y-3">
+      {/* Current conditions hero strip — derived from most recent month */}
+      <div className="rounded-2xl border border-gray-100 dark:border-white/5 bg-gradient-to-r from-blue-50 dark:from-blue-600/10 to-teal-50 dark:to-teal-600/5 px-5 py-4 shadow-sm dark:shadow-none flex flex-wrap items-center gap-6">
         <div className="flex items-center gap-3">
-          <div className="text-center">
-            <p className="text-xl font-bold text-blue-500 dark:text-blue-400">{minTemp}°</p>
-            <p className="text-[10px] text-gray-400 dark:text-slate-500">Record Low</p>
-          </div>
-          <div className="flex-1 h-2 rounded-full bg-gradient-to-r from-blue-500 via-teal-400 to-orange-500 mx-2" />
-          <div className="text-center">
-            <p className="text-xl font-bold text-orange-500 dark:text-orange-400">{maxTemp}°</p>
-            <p className="text-[10px] text-gray-400 dark:text-slate-500">Record High</p>
+          <span className="text-4xl leading-none">{conditionEmoji('')}</span>
+          <div>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{latest.tempAvg}°<span className="text-base font-normal text-gray-400 ml-0.5">C</span></p>
+            <p className="text-sm text-gray-500 dark:text-slate-400">{latest.month} average</p>
           </div>
         </div>
+        <div className="h-10 w-px bg-gray-200 dark:bg-white/10 hidden sm:block" />
+        <div className="flex gap-5 text-sm">
+          <div>
+            <p className="text-teal-500 dark:text-teal-400 font-semibold">{latest.humidity}%</p>
+            <p className="text-xs text-gray-400 dark:text-slate-500">Humidity</p>
+          </div>
+          <div>
+            <p className="text-purple-500 dark:text-purple-400 font-semibold">{latest.windSpeed} km/h</p>
+            <p className="text-xs text-gray-400 dark:text-slate-500">Wind</p>
+          </div>
+          <div>
+            <p className="text-blue-500 dark:text-blue-400 font-semibold">{latest.rainfall} mm</p>
+            <p className="text-xs text-gray-400 dark:text-slate-500">Rainfall</p>
+          </div>
+        </div>
+        <div className="ml-auto hidden md:flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-1.5">
+            <TrendingDown size={14} className="text-blue-400" />
+            <span className="text-blue-500 dark:text-blue-400 font-semibold">{minTemp}°</span>
+            <span className="text-xs text-gray-400 dark:text-slate-500">Period Low</span>
+          </div>
+          <div className="h-1.5 w-16 rounded-full bg-gradient-to-r from-blue-500 via-teal-400 to-orange-500" />
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-gray-400 dark:text-slate-500">Period High</span>
+            <span className="text-orange-500 dark:text-orange-400 font-semibold">{maxTemp}°</span>
+            <TrendingUp size={14} className="text-orange-400" />
+          </div>
+        </div>
+      </div>
+
+      {/* Stat cards row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <StatCard icon={Thermometer} label="Avg Temperature"  value={avgTemp}     unit="°C"    color="text-orange-400" bg="bg-orange-500/10" />
+        <StatCard icon={CloudRain}   label="Total Rainfall"   value={totalRain}   unit=" mm"   color="text-blue-400"   bg="bg-blue-500/10" />
+        <StatCard icon={Droplets}    label="Avg Humidity"     value={avgHumidity} unit="%"     color="text-teal-400"   bg="bg-teal-500/10" />
+        <StatCard icon={Wind}        label="Avg Wind Speed"   value={avgWind}     unit=" km/h" color="text-purple-400" bg="bg-purple-500/10" />
       </div>
     </div>
   )

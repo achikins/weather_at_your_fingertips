@@ -41,7 +41,7 @@ export function TemperatureChart({ data }) {
 export function RainfallChart({ data }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+      <BarChart data={data} margin={{ top: 5, right: 5, left: -10, bottom: 0 }}>
         <defs>
           <linearGradient id="rainfallGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.9} />
@@ -50,9 +50,9 @@ export function RainfallChart({ data }) {
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
         <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} unit="mm" />
+        <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${Math.round(v)}mm`} width={48} />
         <Tooltip content={<CustomTooltip unit=" mm" />} />
-        <Bar dataKey="rainfall" name="Rainfall" fill="url(#rainfallGrad)" radius={[3, 3, 0, 0]} />
+        <Bar dataKey="rainfall" name="Rainfall" fill="url(#rainfallGrad)" radius={[3, 3, 0, 0]} maxBarSize={40} />
       </BarChart>
     </ResponsiveContainer>
   )
