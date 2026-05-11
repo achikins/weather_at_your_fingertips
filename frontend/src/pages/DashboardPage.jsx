@@ -10,7 +10,7 @@ import { api } from '../services/api'
 
 export default function DashboardPage() {
   const [selectedCity, setSelectedCity] = useState(australianCities[0])
-  const [filters, setFilters] = useState({ month: 'all', year: 'all', day: 'all' })
+  const [filters, setFilters] = useState({ month: 'all', year: 'all' })
   const [monthly, setMonthly] = useState([])
   const [current, setCurrent] = useState(null)
   const [availableYears, setAvailableYears] = useState([])

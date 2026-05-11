@@ -17,14 +17,6 @@ export const MONTHS_LIST = [
 ]
 
 
-export const DAYS_LIST = [
-  { value: 'all', label: 'All Days' },
-  ...Array.from({ length: 31 }, (_, i) => ({
-    value: String(i + 1),
-    label: String(i + 1),
-  })),
-]
-
 // Legacy export kept so any other import of SEASONS doesn't break
 export const SEASONS = [
   { value: 'all',    label: 'All Months' },
@@ -38,18 +30,11 @@ export function useWeatherFilter(monthly, filters) {
   return useMemo(() => {
     if (!monthly || monthly.length === 0) return []
 
-    const { month = 'all', year = 'all', day = 'all' } = filters || {}
+    const { month = 'all', year = 'all' } = filters || {}
 
     return monthly.filter((m) => {
       if (month !== 'all' && m.monthIndex !== Number(month)) return false
-
-      if (year !== 'all' || day !== 'all') {
-        // parse the date field (YYYY-MM-DD)
-        const [entryYear, , entryDay] = (m.date || '').split('-')
-        if (year !== 'all' && entryYear !== year) return false
-        if (day !== 'all' && Number(entryDay) !== Number(day)) return false
-      }
-
+      if (year !== 'all' && String(m.year) !== year) return false
       return true
     })
   }, [monthly, filters])
