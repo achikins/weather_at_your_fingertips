@@ -1,15 +1,20 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AlertTriangle, Bell, X } from 'lucide-react'
-import { weatherAlerts } from '../../data/mockWeatherData'
-
-const getMostSevereAlert = () =>
-  weatherAlerts.find((a) => a.severity === 'extreme') ||
-  weatherAlerts.find((a) => a.severity === 'high') ||
-  null
+import { api } from '../../services/api'
 
 export default function AlertBanner({ onViewDetails }) {
   const [dismissed, setDismissed] = useState(false)
-  const alert = getMostSevereAlert()
+  const [alert, setAlert] = useState(null)
+
+  useEffect(() => {
+    api.getAllAlerts()
+      .then((data) => {
+        const all = data.alerts || []
+        const top = all.find((a) => a.severity === 'extreme') || all.find((a) => a.severity === 'high') || null
+        setAlert(top)
+      })
+      .catch(() => setAlert(null))
+  }, [])
 
   if (dismissed || !alert) return null
 

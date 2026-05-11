@@ -1,15 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Bell, Filter } from 'lucide-react'
 import AlertCard from './AlertCard'
-import { weatherAlerts } from '../../data/mockWeatherData'
 import { australianCities } from '../../data/australianCities'
+import { api } from '../../services/api'
 
 const severities = ['all', 'extreme', 'high', 'moderate', 'low']
-
-const severityCounts = severities.slice(1).reduce((acc, s) => {
-  acc[s] = weatherAlerts.filter((a) => a.severity === s).length
-  return acc
-}, {})
 
 const activeStyles = {
   all:      'bg-gray-200 dark:bg-white/10 text-gray-800 dark:text-white border-gray-300 dark:border-white/20',
@@ -20,10 +15,22 @@ const activeStyles = {
 }
 
 export default function AlertsPanel({ compact = false }) {
+  const [alerts, setAlerts] = useState([])
   const [filterSeverity, setFilterSeverity] = useState('all')
   const [filterCity, setFilterCity] = useState('all')
 
-  const filtered = weatherAlerts.filter((a) => {
+  useEffect(() => {
+    api.getAllAlerts()
+      .then((data) => setAlerts(data.alerts || []))
+      .catch(() => setAlerts([]))
+  }, [])
+
+  const severityCounts = severities.slice(1).reduce((acc, s) => {
+    acc[s] = alerts.filter((a) => a.severity === s).length
+    return acc
+  }, {})
+
+  const filtered = alerts.filter((a) => {
     if (filterSeverity !== 'all' && a.severity !== filterSeverity) return false
     if (filterCity !== 'all' && a.cityId !== filterCity) return false
     return true
@@ -32,7 +39,7 @@ export default function AlertsPanel({ compact = false }) {
   if (compact) {
     return (
       <div className="space-y-2">
-        {weatherAlerts.slice(0, 3).map((alert) => (
+        {alerts.slice(0, 3).map((alert) => (
           <AlertCard key={alert.id} alert={alert} compact />
         ))}
       </div>
@@ -44,8 +51,8 @@ export default function AlertsPanel({ compact = false }) {
       {/* Header stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: 'Total Alerts', value: weatherAlerts.length,    color: 'text-gray-900 dark:text-white',   bg: 'bg-gray-50 dark:bg-white/5' },
-          { label: 'Extreme',      value: severityCounts.extreme,  color: 'text-red-500 dark:text-red-400',  bg: 'bg-red-50 dark:bg-red-500/10' },
+          { label: 'Total Alerts', value: alerts.length,           color: 'text-gray-900 dark:text-white',        bg: 'bg-gray-50 dark:bg-white/5' },
+          { label: 'Extreme',      value: severityCounts.extreme,  color: 'text-red-500 dark:text-red-400',       bg: 'bg-red-50 dark:bg-red-500/10' },
           { label: 'High',         value: severityCounts.high,     color: 'text-orange-500 dark:text-orange-400', bg: 'bg-orange-50 dark:bg-orange-500/10' },
           { label: 'Moderate',     value: severityCounts.moderate, color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-50 dark:bg-yellow-500/10' },
         ].map(({ label, value, color, bg }) => (

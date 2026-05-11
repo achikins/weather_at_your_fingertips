@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import {
   ResponsiveContainer,
   AreaChart, Area,
@@ -6,7 +7,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts'
 import { Thermometer, CloudRain, Droplets, Wind } from 'lucide-react'
-import { getWeatherForCity } from '../../data/mockWeatherData'
+import { api } from '../../services/api'
 import CustomTooltip from '../charts/CustomTooltip'
 import ChartCard from '../charts/ChartCard'
 
@@ -34,10 +35,18 @@ const comparisonRows = [
 ]
 
 export default function CompareCharts({ city1, city2 }) {
-  if (!city1 || !city2) return null
+  const [data1, setData1] = useState([])
+  const [data2, setData2] = useState([])
 
-  const data1 = getWeatherForCity(city1.id)?.monthly || []
-  const data2 = getWeatherForCity(city2.id)?.monthly || []
+  useEffect(() => {
+    if (city1) api.getCityMonthly(city1.id).then((d) => setData1(d.monthly || [])).catch(() => setData1([]))
+  }, [city1])
+
+  useEffect(() => {
+    if (city2) api.getCityMonthly(city2.id).then((d) => setData2(d.monthly || [])).catch(() => setData2([]))
+  }, [city2])
+
+  if (!city1 || !city2) return null
 
   const merged = data1.map((m, i) => ({
     month: m.month,

@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { australianCities } from "../../data/australianCities";
-import { mockWeatherData, getAlertsForCity } from "../../data/mockWeatherData";
+import { mockWeatherData } from "../../data/mockWeatherData";
+import { api } from "../../services/api";
 import LayerToggle from "./LayerToggle";
 import CityPopup from "./CityPopup";
 
@@ -99,6 +100,7 @@ export default function MapView() {
   const [activeLayer, setActiveLayer] = useState("temperature");
   const [selectedCity, setSelectedCity] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [cityAlerts, setCityAlerts] = useState([]);
 
   useEffect(() => {
     if (mapRef.current) return;
@@ -219,7 +221,12 @@ export default function MapView() {
     });
   }, [mapLoaded, activeLayer]);
 
-  const cityAlerts = selectedCity ? getAlertsForCity(selectedCity.id) : [];
+  useEffect(() => {
+    if (!selectedCity) { setCityAlerts([]); return }
+    api.getCityAlerts(selectedCity.id)
+      .then((data) => setCityAlerts(data.alerts || []))
+      .catch(() => setCityAlerts([]))
+  }, [selectedCity]);
 
   return (
     <div className="relative w-full h-full">

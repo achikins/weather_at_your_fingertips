@@ -1,25 +1,38 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Thermometer, CloudRain, Droplets, Wind } from 'lucide-react'
 import WeatherCards from '../components/dashboard/WeatherCards'
 import { TemperatureChart, RainfallChart, HumidityChart, WindChart } from '../components/charts/WeatherChart'
 import ChartCard from '../components/charts/ChartCard'
 import { australianCities, getCityById } from '../data/australianCities'
-import { getWeatherForCity } from '../data/mockWeatherData'
 import WeatherFilter from '../components/filters/WeatherFilter'
 import { useWeatherFilter } from '../hooks/useWeatherFilter'
+import { api } from '../services/api'
 
 export default function DashboardPage() {
   const [selectedCity, setSelectedCity] = useState(australianCities[0])
   const [filters, setFilters] = useState({ month: 'all', year: 'all', day: 'all' })
+  const [monthly, setMonthly] = useState([])
+  const [current, setCurrent] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (!selectedCity) return
+    setLoading(true)
+    setError(null)
+    api.getCityWeather(selectedCity.id)
+      .then((data) => {
+        setMonthly(data.monthly || [])
+        setCurrent(data.current || null)
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [selectedCity])
 
   const handleCityChange = (cityId) => {
     const city = getCityById(cityId)
     if (city) setSelectedCity(city)
   }
-
-  const weather = getWeatherForCity(selectedCity?.id)
-  const monthly = weather?.monthly || []
-  const current = weather?.current || null
 
   const filteredMonthly = useWeatherFilter(monthly, filters)
 
@@ -39,14 +52,21 @@ export default function DashboardPage() {
         />
       </div>
 
+      {error && (
+        <div className="rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 px-4 py-3 text-sm text-red-600 dark:text-red-400">
+          Could not load weather data: {error}
+        </div>
+      )}
+
+      {loading && (
+        <div className="text-sm text-gray-400 dark:text-slate-500 text-center py-6">Loading weather data…</div>
+      )}
+
       {/* Layout: weather cards left, charts right on large screens */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Weather summary cards */}
         <div className="lg:col-span-1">
           <WeatherCards current={current} monthly={monthly} city={selectedCity} />
         </div>
-
-        {/* Charts */}
         <div className="lg:col-span-2 space-y-4">
           <ChartCard title="Temperature (°C)" icon={Thermometer} iconColor="text-orange-400">
             <TemperatureChart data={filteredMonthly} />
