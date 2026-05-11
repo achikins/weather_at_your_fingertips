@@ -64,7 +64,7 @@ def run_load_to_db():
     # --------------------------------------------------
     # CONNECT DB
     # --------------------------------------------------
-    db_url = "postgresql://postgres:password@localhost:5432/weather_at_your_fingertips_db"
+    db_url = os.environ.get("DATABASE_URL", "postgresql://postgres:password@localhost:5432/weather_at_your_fingertips_db")
     print("Connecting using:", db_url)
 
     conn = psycopg2.connect(db_url)
