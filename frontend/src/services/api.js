@@ -1,3 +1,5 @@
+import { getWeatherForCity, getAlertsForCity, weatherAlerts } from '../data/mockWeatherData'
+
 const BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
 async function get(path) {
@@ -6,27 +8,56 @@ async function get(path) {
   return res.json()
 }
 
+// Wraps a live API call with a mock fallback if the API returns an error
+async function withMockFallback(apiFn, mockFn) {
+  try {
+    return await apiFn()
+  } catch {
+    return mockFn()
+  }
+}
+
 export const api = {
   getCities: () => get('/api/cities'),
 
   getCityWeather: (cityId, year) =>
-    get(`/api/weather/city/${cityId}${year ? `?year=${year}` : ''}`),
+    withMockFallback(
+      () => get(`/api/weather/city/${cityId}${year ? `?year=${year}` : ''}`),
+      () => getWeatherForCity(cityId) || { monthly: [], current: null }
+    ),
 
   getCityMonthly: (cityId, year) =>
-    get(`/api/weather/city/${cityId}/monthly${year ? `?year=${year}` : ''}`),
+    withMockFallback(
+      () => get(`/api/weather/city/${cityId}/monthly${year ? `?year=${year}` : ''}`),
+      () => ({ monthly: getWeatherForCity(cityId)?.monthly || [] })
+    ),
 
   getCityCurrent: (cityId) =>
-    get(`/api/weather/city/${cityId}/current`),
+    withMockFallback(
+      () => get(`/api/weather/city/${cityId}/current`),
+      () => ({ current: getWeatherForCity(cityId)?.current || null })
+    ),
 
   getHistorical: (cityId, { year, month, day } = {}) => {
     const params = new URLSearchParams({ city_id: cityId })
     if (year && year !== 'all') params.set('year', year)
     if (month && month !== 'all') params.set('month', Number(month) + 1)
     if (day && day !== 'all') params.set('day', day)
-    return get(`/api/weather/historical?${params}`)
+    return withMockFallback(
+      () => get(`/api/weather/historical?${params}`),
+      () => ({ historical: getWeatherForCity(cityId)?.monthly || [] })
+    )
   },
 
-  getAllAlerts: () => get('/api/alerts/'),
+  getAllAlerts: () =>
+    withMockFallback(
+      () => get('/api/alerts/'),
+      () => ({ alerts: weatherAlerts })
+    ),
 
-  getCityAlerts: (cityId) => get(`/api/alerts/${cityId}`),
+  getCityAlerts: (cityId) =>
+    withMockFallback(
+      () => get(`/api/alerts/${cityId}`),
+      () => ({ alerts: getAlertsForCity(cityId) })
+    ),
 }
