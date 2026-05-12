@@ -11,11 +11,19 @@ from services.weather_service import (
 
 router = APIRouter(tags=["Weather"])
 
-@router.get("/cities")
+@router.get(
+    "/cities",
+    summary="Get supported cities",
+    description="Returns the list of cities supported by the weather dashboard.",
+    )
 def get_cities():
     return {"cities": get_supported_cities()}
 
-@router.get("/weather/city/{city_id}")
+@router.get(
+    "/weather/city/{city_id}",
+    summary="Get city weather",
+    description="Returns weather data for a selected city, with an optional year filter.",
+    )
 def get_weather_for_city(
     city_id: str,
     year: int | None = None,
@@ -26,7 +34,11 @@ def get_weather_for_city(
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-@router.get("/weather/city/{city_id}/monthly")
+@router.get(
+    "/weather/city/{city_id}/monthly",
+    summary="Get monthly city weather",
+    description="Returns monthly weather data for a selected city and optional year.",
+    )
 def get_city_monthly_weather(
     city_id: str,
     year: int | None = None,
@@ -44,7 +56,11 @@ def get_city_monthly_weather(
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-@router.get("/weather/city/{city_id}/current")
+@router.get(
+    "/weather/city/{city_id}/current",
+    summary="Get current city weather",
+    description="Returns current weather data for a selected city and optional year.",
+    )
 def get_city_current_weather(
     city_id: str,
     year: int | None = None,
@@ -61,7 +77,11 @@ def get_city_current_weather(
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-@router.get("/weather/current")
+@router.get(
+    "/weather/current",
+    summary="Get current weather by city or station",
+    description="Returns current weather data using either a city ID or station ID.",
+    )
 def get_current_weather(
     city_id: str | None = None,
     station_id: str | None = None,
@@ -83,7 +103,11 @@ def get_current_weather(
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-@router.get("/weather/monthly")
+@router.get(
+    "/weather/monthly",
+    summary="Get monthly weather by city or station",
+    description="Returns monthly weather data using either a city ID or station ID, with an optional year filter.",
+    )
 def get_monthly_weather_query(
     city_id: str | None = None,
     station_id: str | None = None,
@@ -108,7 +132,11 @@ def get_monthly_weather_query(
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-@router.get("/weather/historical")
+@router.get(
+    "/weather/historical",
+    summary="Get historical weather",
+    description="Returns historical weather records using city ID or station ID, with optional year, month, and day filters.",
+    )
 def get_historical_weather_query(
     city_id: str | None = None,
     station_id: str | None = None,

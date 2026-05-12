@@ -6,7 +6,13 @@ from models import Base
 from routers import alerts, weather, stations
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+app = FastAPI(
+    title="Weather at Your Fingertips API",
+    description="API documentation for weather data, weather stations, and alert services.",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    )
 scheduler = BackgroundScheduler(timezone="UTC")
 
 app.add_middleware(
