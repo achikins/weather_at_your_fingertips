@@ -12,7 +12,7 @@ async function get(path) {
 async function withMockFallback(apiFn, mockFn) {
   try {
     return await apiFn()
-  } catch {
+  } catch (err) {
     console.warn('[api] falling back to mock', err.message)
     return mockFn()
   }
