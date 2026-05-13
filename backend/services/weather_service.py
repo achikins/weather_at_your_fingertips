@@ -230,6 +230,41 @@ def get_city_weather(
     payload["cityId"] = normalized_city
     return payload
 
+def _aggregate_monthly(monthly: list[dict[str, Any]]) -> dict[str, Any]:
+    """Reduce a list of normalised monthly rows to a single annual summary."""
+    def avg(field: str) -> float | None:
+        values = [row[field] for row in monthly if row.get(field) is not None]
+        if not values:
+            return None
+        return round(sum(values) / len(values), 1)
+
+    return {
+        "tempAvg": avg("tempAvg"),
+        "rainfall": avg("rainfall"),
+        "humidity": avg("humidity"),
+        "windSpeed": avg("windSpeed"),
+    }
+
+def get_cities_summary(
+    db: Session,
+    year: int | None = None,
+) -> list[dict[str, Any]]:
+    """Return aggregated annual summary for every supported city."""
+    summary = []
+    for city_id in sorted(CITY_TO_STATION.keys()):
+        try:
+            payload = get_city_weather(db, city_id, year=year)
+        except ValueError:
+            continue
+        aggregates = _aggregate_monthly(payload["monthly"])
+        summary.append({
+            "cityId": payload["cityId"],
+            "station_id": payload["station_id"],
+            "year": payload["selected_year"],
+            **aggregates,
+        })
+    return summary
+
 def resolve_station_from_params(
     db: Session,
     city_id: str | None = None,

@@ -5,6 +5,7 @@ from services.weather_service import (
     get_historical_weather,
     get_station_weather,
     get_city_weather,
+    get_cities_summary,
     get_supported_cities,
     resolve_station_from_params,
 )
@@ -18,6 +19,21 @@ router = APIRouter(tags=["Weather"])
     )
 def get_cities():
     return {"cities": get_supported_cities()}
+
+@router.get(
+    "/weather/cities/summary",
+    summary="Get aggregated weather summary for all supported cities",
+    description=(
+        "Returns annual averages (temperature, rainfall, humidity, wind speed) "
+        "for every supported city in one batch call. Used by the map view to "
+        "colour station markers."
+    ),
+)
+def get_cities_summary_endpoint(
+    year: int | None = None,
+    db: Session = Depends(get_db),
+):
+    return {"summary": get_cities_summary(db, year=year)}
 
 @router.get(
     "/weather/city/{city_id}",
