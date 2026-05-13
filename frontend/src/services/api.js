@@ -13,6 +13,7 @@ async function withMockFallback(apiFn, mockFn) {
   try {
     return await apiFn()
   } catch {
+    console.warn('[api] falling back to mock', err.message)
     return mockFn()
   }
 }
