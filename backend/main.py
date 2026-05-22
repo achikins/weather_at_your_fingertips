@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
 from database import engine
 from jobs.generate_alerts import run as run_alert_generation
-from jobs.sync_openweather_alerts import run as run_openweather_sync
+from jobs.generate_openweather_alerts import run as run_openweather_alert_generation
 from models import Base
 from routers import alerts, weather, stations
 from fastapi.middleware.cors import CORSMiddleware
@@ -43,10 +43,10 @@ def start_scheduler() -> None:
         max_instances=1,
     )
     scheduler.add_job(
-        run_openweather_sync,
+        run_openweather_alert_generation,
         trigger="cron",
         minute=0,
-        id="sync_openweather_alerts_job",
+        id="generate_openweather_alerts_job",
         replace_existing=True,
         coalesce=True,
         max_instances=1,

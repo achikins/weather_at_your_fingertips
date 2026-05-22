@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import json
 import os
 import re
@@ -8,65 +7,30 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import urlopen
-
 from google import genai
 from sqlalchemy.orm import Session
-
-from models import Alert, Station
+from models import Alert
 from services.alert_catalog import (
-    ALERT_TYPE_LABELS,
     OPENWEATHER_ALERT_PREFIX,
     format_event_label,
     normalize_severity,
 )
+from services.alert_utils import as_utc, clean_text, format_city_name, normalize_string_list
 from services.number_utils import to_float
-from services.weather_service import CITY_TO_STATION, resolve_station_for_city
+from services.weather_service import resolve_city_stations
 
 OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 OPENWEATHER_ONECALL_URL = "https://api.openweathermap.org/data/3.0/onecall"
 OPENWEATHER_LANG = "en"
 OPENWEATHER_TIMEOUT_SECONDS = 6.0
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_MODEL = "gemini-2.5-flash"
 DEFAULT_GEMINI_AFFECTED_AREAS_LIMIT = 6
 DEFAULT_GEMINI_SAFETY_TIPS_LIMIT = 5
-ALERT_TYPE_VALUES = tuple(ALERT_TYPE_LABELS.keys())
-ALERT_TYPE_LOOKUP = {value: value for value in ALERT_TYPE_VALUES}
-ALERT_TYPE_LOOKUP.update({label.lower(): key for key, label in ALERT_TYPE_LABELS.items()})
-
 GEMINI_CLIENT = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 
-
-def _clean_text(text: str | None) -> str:
-    if not text:
-        return ""
-    return re.sub(r"\s+", " ", str(text)).strip()
-
-
-def _format_city_name(name: str | None) -> str | None:
-    if not name:
-        return None
-    trimmed = name.strip()
-    if trimmed.isupper() or trimmed.islower():
-        return trimmed.title()
-    return trimmed
-
-
-def _normalize_string_list(items: Any, max_items: int) -> list[str]:
-    if not isinstance(items, list):
-        return []
-    normalized: list[str] = []
-    for raw in items:
-        clean = _clean_text(str(raw) if raw is not None else "")
-        if clean:
-            normalized.append(clean)
-        if len(normalized) >= max_items:
-            break
-    return normalized
-
-
 def _clean_area_name(area: str) -> str:
-    cleaned = _clean_text(area)
+    cleaned = clean_text(area)
     if not cleaned:
         return ""
     cleaned = re.sub(r"\([^)]*\)", "", cleaned)
@@ -74,9 +38,8 @@ def _clean_area_name(area: str) -> str:
     cleaned = re.sub(r"\s+", " ", cleaned).strip(" ,;:-")
     return cleaned
 
-
 def _clean_title(title: str, city_name: str) -> str:
-    cleaned = _clean_text(title)
+    cleaned = clean_text(title)
     if not cleaned:
         return ""
 
@@ -91,21 +54,18 @@ def _clean_title(title: str, city_name: str) -> str:
         cleaned = re.sub(pattern, "", cleaned, flags=re.IGNORECASE).strip()
     return cleaned
 
-
 def _normalize_alert_type(raw_type: Any) -> str | None:
     if raw_type is None:
         return None
-    normalized = _clean_text(str(raw_type)).lower()
+    normalized = clean_text(str(raw_type))
     if not normalized:
         return None
-    normalized = normalized.replace("-", "_").replace(" ", "_")
-    if normalized in ALERT_TYPE_LOOKUP:
-        return ALERT_TYPE_LOOKUP[normalized]
-    return ALERT_TYPE_LOOKUP.get(normalized.replace("_", " "))
-
+    if normalized.lower().startswith(OPENWEATHER_ALERT_PREFIX):
+        normalized = normalized[len(OPENWEATHER_ALERT_PREFIX) :].strip()
+    return normalized or None
 
 def _parse_gemini_json(text: str | None) -> dict[str, Any] | None:
-    cleaned = _clean_text(text)
+    cleaned = clean_text(text)
     if not cleaned:
         return None
     try:
@@ -121,7 +81,6 @@ def _parse_gemini_json(text: str | None) -> dict[str, Any] | None:
     except json.JSONDecodeError:
         return None
 
-
 def _to_db_datetime(ts: Any) -> datetime | None:
     if ts is None:
         return None
@@ -130,39 +89,6 @@ def _to_db_datetime(ts: Any) -> datetime | None:
     except (TypeError, ValueError):
         return None
     return datetime.fromtimestamp(epoch, tz=timezone.utc)
-
-
-def _as_utc(dt: datetime | None) -> datetime | None:
-    if dt is None:
-        return None
-    if dt.tzinfo is None:
-        return dt.replace(tzinfo=timezone.utc)
-    return dt.astimezone(timezone.utc)
-
-
-def _resolve_city_stations(
-    db: Session,
-    city_id: str | None = None,
-) -> list[tuple[str, Station]]:
-    if city_id is not None:
-        normalized_city_id = city_id.lower().strip()
-        station_id = resolve_station_for_city(db, normalized_city_id)
-        station = db.query(Station).filter(Station.station_id == station_id).first()
-        if station is None:
-            return []
-        return [(normalized_city_id, station)]
-
-    mapped_station_ids = list(CITY_TO_STATION.values())
-    stations = db.query(Station).filter(Station.station_id.in_(mapped_station_ids)).all()
-    station_by_id = {station.station_id: station for station in stations}
-
-    city_stations: list[tuple[str, Station]] = []
-    for mapped_city_id in sorted(CITY_TO_STATION.keys()):
-        station = station_by_id.get(CITY_TO_STATION[mapped_city_id])
-        if station is not None:
-            city_stations.append((mapped_city_id, station))
-    return city_stations
-
 
 def enrich_alert_with_gemini(
     *,
@@ -175,7 +101,6 @@ def enrich_alert_with_gemini(
     if GEMINI_CLIENT is None:
         return None
 
-    allowed_types = ", ".join(ALERT_TYPE_VALUES)
     prompt = f"""
 Convert this weather alert into frontend JSON.
 
@@ -187,7 +112,6 @@ Rules:
 - Safety tips must be practical and conservative.
 - Use Australian English.
 - Severity must be one of: low, moderate, high, extreme.
-- alertType must be one of: {allowed_types}
 - Title must NOT include city suffixes like "- {city_name}" or "( {city_name} )".
 - Affected areas must be plain names only (no brackets or parenthesised qualifiers).
 
@@ -216,35 +140,43 @@ alertType, title, severity, description, affectedAreas, safetyTips
             contents=prompt,
             config={"response_mime_type": "application/json"},
         )
-    except Exception:
+    except Exception as exc:
+        print(f"[openweather_sync] reason=gemini_call_failed model={GEMINI_MODEL} error={exc}")
         return None
 
     raw_text = getattr(response, "text", None)
     payload = _parse_gemini_json(raw_text)
     if not isinstance(payload, dict):
+        preview = clean_text(raw_text)[:240] if raw_text else ""
+        print(f"[openweather_sync] reason=gemini_invalid_json preview={preview!r}")
         return None
 
     alert_type = _normalize_alert_type(payload.get("alertType"))
     title = _clean_title(
-        _clean_text(payload.get("title")) or format_event_label(event),
+        clean_text(payload.get("title")) or format_event_label(event),
         city_name=city_name,
     )
-    cleaned_description = _clean_text(payload.get("description"))
+    cleaned_description = clean_text(payload.get("description"))
     severity = normalize_severity(payload.get("severity"))
     affected_areas = [
         _clean_area_name(area)
-        for area in _normalize_string_list(
+        for area in normalize_string_list(
         payload.get("affectedAreas"),
         max_items=DEFAULT_GEMINI_AFFECTED_AREAS_LIMIT,
     )
     ]
     affected_areas = [area for area in affected_areas if area]
-    safety_tips = _normalize_string_list(
+    safety_tips = normalize_string_list(
         payload.get("safetyTips"),
         max_items=DEFAULT_GEMINI_SAFETY_TIPS_LIMIT,
     )
 
     if alert_type is None or severity is None or not cleaned_description or not title:
+        print(
+            "[openweather_sync] reason=gemini_invalid_fields "
+            f"alert_type={alert_type!r} severity={severity!r} "
+            f"title_present={bool(title)} description_present={bool(cleaned_description)}"
+        )
         return None
 
     return {
@@ -256,17 +188,27 @@ alertType, title, severity, description, affectedAreas, safetyTips
         "safety_tips": json.dumps(safety_tips),
     }
 
-
 def _fetch_openweather_alerts_for_city(
     city_id: str,
     station: Station,
 ) -> list[dict[str, Any]] | None:
     if not OPENWEATHER_API_KEY or GEMINI_CLIENT is None:
+        print(
+            "[openweather_sync] "
+            f"city={city_id} reason=missing_key_or_client "
+            f"openweather_key={'set' if bool(OPENWEATHER_API_KEY) else 'missing'} "
+            f"gemini_client={'set' if GEMINI_CLIENT is not None else 'missing'}"
+        )
         return None
 
     lat = to_float(station.latitude)
     lon = to_float(station.longitude)
     if lat is None or lon is None:
+        print(
+            "[openweather_sync] "
+            f"city={city_id} reason=missing_station_coordinates "
+            f"station_id={station.station_id}"
+        )
         return None
 
     params = {
@@ -281,11 +223,13 @@ def _fetch_openweather_alerts_for_city(
     try:
         with urlopen(url, timeout=OPENWEATHER_TIMEOUT_SECONDS) as response:
             payload = json.loads(response.read().decode("utf-8"))
-    except (HTTPError, URLError, TimeoutError, json.JSONDecodeError):
+    except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
+        print(f"[openweather_sync] city={city_id} reason=openweather_request_failed error={exc}")
         return None
 
     raw_alerts = payload.get("alerts") or []
     if not isinstance(raw_alerts, list):
+        print(f"[openweather_sync] city={city_id} reason=invalid_openweather_alerts_payload")
         return None
 
     mapped_alerts: list[dict[str, Any]] = []
@@ -298,9 +242,10 @@ def _fetch_openweather_alerts_for_city(
 
         start_time = _to_db_datetime(raw_alert.get("start"))
         if start_time is None:
+            print(f"[openweather_sync] city={city_id} reason=missing_alert_start_time event={event!r}")
             continue
         end_time = _to_db_datetime(raw_alert.get("end"))
-        city_name = _format_city_name(station.station_name) or city_id
+        city_name = format_city_name(station.station_name) or city_id
 
         gemini_data = enrich_alert_with_gemini(
             city_name=city_name,
@@ -310,6 +255,7 @@ def _fetch_openweather_alerts_for_city(
             end_time=end_time,
         )
         if gemini_data is None:
+            print(f"[openweather_sync] city={city_id} reason=gemini_enrichment_failed event={event!r}")
             continue
 
         mapped_alerts.append(
@@ -327,9 +273,13 @@ def _fetch_openweather_alerts_for_city(
         )
 
     if raw_alerts and not mapped_alerts:
+        print(
+            "[openweather_sync] "
+            f"city={city_id} reason=no_mappable_alerts "
+            f"raw_alert_count={len(raw_alerts)}"
+        )
         return None
     return mapped_alerts
-
 
 def _deactivate_stale_openweather_alerts(
     db: Session,
@@ -350,8 +300,8 @@ def _deactivate_stale_openweather_alerts(
     )
 
     for alert in active_openweather:
-        start_time = _as_utc(alert.start_time)
-        end_time = _as_utc(alert.end_time)
+        start_time = as_utc(alert.start_time)
+        end_time = as_utc(alert.end_time)
         key = (alert.alert_type, start_time) if start_time is not None else (alert.alert_type, now)
         expired = end_time is not None and end_time <= now
         if key not in keep_keys or expired:
@@ -362,9 +312,8 @@ def _deactivate_stale_openweather_alerts(
 
     return deactivated
 
-
 def sync_openweather_alerts(db: Session, city_id: str | None = None) -> dict[str, int]:
-    city_stations = _resolve_city_stations(db, city_id=city_id)
+    city_stations = resolve_city_stations(db, city_id=city_id)
 
     result = {
         "cities_processed": 0,
@@ -397,7 +346,7 @@ def sync_openweather_alerts(db: Session, city_id: str | None = None) -> dict[str
         keep_keys: set[tuple[str, datetime]] = set()
 
         for incoming in synced:
-            incoming_start_time = _as_utc(incoming["start_time"])
+            incoming_start_time = as_utc(incoming["start_time"])
             if incoming_start_time is None:
                 continue
 
@@ -423,7 +372,7 @@ def sync_openweather_alerts(db: Session, city_id: str | None = None) -> dict[str
                         severity=incoming["severity"],
                         message=incoming["message"],
                         start_time=incoming_start_time,
-                        end_time=_as_utc(incoming["end_time"]),
+                        end_time=as_utc(incoming["end_time"]),
                         affected_areas=incoming["affected_areas"],
                         safety_tips=incoming["safety_tips"],
                         is_active=True,
@@ -438,8 +387,8 @@ def sync_openweather_alerts(db: Session, city_id: str | None = None) -> dict[str
                 if getattr(existing, field) != incoming[field]:
                     setattr(existing, field, incoming[field])
                     changed = True
-            incoming_end_time = _as_utc(incoming["end_time"])
-            existing_end_time = _as_utc(existing.end_time)
+            incoming_end_time = as_utc(incoming["end_time"])
+            existing_end_time = as_utc(existing.end_time)
             if existing_end_time != incoming_end_time:
                 existing.end_time = incoming_end_time
                 changed = True

@@ -3,7 +3,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from sqlalchemy import extract
 from sqlalchemy.orm import Session
-from models import DailyWeather, Forecast, MonthlyAggregate
+from models import DailyWeather, Forecast, MonthlyAggregate, Station
 from services.number_utils import round_one_decimal, to_float
 from services.station_service import get_station_years, station_exists
 
@@ -129,6 +129,29 @@ def resolve_station_for_city(db: Session, city_id: str) -> int:
     if not station_exists(db, station_id):
         raise ValueError(f"Mapped station not found for city: {city_id}")
     return station_id
+
+def resolve_city_stations(
+    db: Session,
+    city_id: str | None = None,
+) -> list[tuple[str, Station]]:
+    if city_id is not None:
+        normalized_city_id = city_id.lower().strip()
+        station_id = resolve_station_for_city(db, normalized_city_id)
+        station = db.query(Station).filter(Station.station_id == station_id).first()
+        if station is None:
+            return []
+        return [(normalized_city_id, station)]
+
+    mapped_station_ids = list(CITY_TO_STATION.values())
+    stations = db.query(Station).filter(Station.station_id.in_(mapped_station_ids)).all()
+    station_by_id = {station.station_id: station for station in stations}
+
+    city_stations: list[tuple[str, Station]] = []
+    for mapped_city_id in sorted(CITY_TO_STATION.keys()):
+        station = station_by_id.get(CITY_TO_STATION[mapped_city_id])
+        if station is not None:
+            city_stations.append((mapped_city_id, station))
+    return city_stations
 
 def normalize_monthly(monthly: list[dict[str, Any]]) -> list[dict[str, Any]]:
     normalized = []
