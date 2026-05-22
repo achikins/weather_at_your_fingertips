@@ -183,7 +183,6 @@ def upsert_alert(db, station_id: int, rule: ThresholdRule, severity: str, metric
                 UPDATE alerts
                 SET severity = :severity,
                     message = :message,
-                    start_time = :now,
                     end_time = NULL,
                     is_active = TRUE
                 WHERE alert_id = :alert_id

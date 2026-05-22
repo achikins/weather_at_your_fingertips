@@ -90,7 +90,7 @@ def run_load_to_db(clean_file):
     # -------------------------
     cur.execute("SELECT station_id, station_name FROM stations")
     station_map = {name: sid for sid, name in cur.fetchall()}
-    # ❌ HARD FILTER: no unknown stations allowed
+    # HARD FILTER: no unknown stations allowed
     df = df[df["station_name"].isin(station_map)]
     df["station_id"] = df["station_name"].map(station_map)
     df = df.dropna(subset=["station_id"])
@@ -102,7 +102,7 @@ def run_load_to_db(clean_file):
     station_df = pd.read_csv(station_file)
     for _, r in station_df.iterrows():
         if r["station_name"] not in station_map:
-            continue  # ❌ skip new stations completely
+            continue  # skip new stations completely
         cur.execute("""
             UPDATE stations
             SET aus_state=%s,

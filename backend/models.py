@@ -11,11 +11,11 @@ class Station(Base):
 
     station_id = Column(Integer, primary_key=True, index=True)
     station_name = Column(String(150), unique=True, nullable=False)
-    state = Column(String(3), nullable=True)
+    state = Column("aus_state", String(3), nullable=True)
     latitude = Column(Numeric(9, 6), nullable=True)
     longitude = Column(Numeric(9, 6), nullable=True)
     elevation_m = Column(Numeric(6, 1), nullable=True)
-    start_date = Column(Date, nullable=True)
+    start_date = Column("starting_date", Date, nullable=True)
     end_date = Column(Date, nullable=True)
     coverage_pct = Column(Numeric(5, 2), nullable=True)
 
@@ -27,14 +27,13 @@ class Station(Base):
 class Alert(Base):
     __tablename__ = "alerts"
 
-    id = Column(Integer, primary_key=True, index=True)
-    alert_id = Column(Integer, primary_key=True)
+    alert_id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("stations.station_id"), nullable=False)
     alert_type = Column(String(200), nullable=False)
     severity = Column(String(20), nullable=False)
     message = Column(Text, nullable=False)
-    start_time = Column(DateTime, nullable=False)
-    end_time = Column(DateTime, nullable=True)
+    start_time = Column(DateTime(timezone=True), nullable=False)
+    end_time = Column(DateTime(timezone=True), nullable=True)
     is_active = Column(Boolean, default=True)
 
     # Relationship back to Station
@@ -50,7 +49,7 @@ class Forecast(Base):
     id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("stations.station_id", ondelete="CASCADE"), nullable=False)
     forecast_date = Column(Date, nullable=False)
-    generated_at = Column(DateTime, nullable=False, server_default=func.now())
+    generated_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     horizon_days = Column(SmallInteger, nullable=False)
     pred_max_temp_c = Column(Numeric(5, 2), nullable=True)
     pred_min_temp_c = Column(Numeric(5, 2), nullable=True)
