@@ -4,7 +4,6 @@
 create table stations (
     station_id serial primary key,
     station_name varchar(150) not null unique,
-    display_name varchar(150),
     aus_state varchar(3),
     latitude numeric(9,6),
     longitude numeric(9,6),
@@ -49,7 +48,7 @@ create table forecasts (
     id bigserial primary key,
     station_id integer not null references stations(station_id) on delete cascade,
     forecast_date date not null,                  --the date being predicted
-    generated_at timestamp not null,             -- when prediction was made
+    generated_at timestamptz not null default now(),             -- when prediction was made (UTC)
     horizon_days smallint not null,              --1–7 days ahead
     pred_max_temp_c numeric(5,2),
     pred_min_temp_c numeric(5,2),
@@ -64,17 +63,20 @@ create table alerts (
     alert_id serial primary key,
     station_id  integer not null references stations(station_id),
     alert_type varchar(200) NOT NULL,                   
+    title varchar(200),
     severity varchar(20) not null,                   
-    message text not null,                          
-    start_time timestamp not null,
-    end_time timestamp,                              --null if still continuing
-    is_active boolean default true
+    message text not null,
+    affected_areas text,
+    safety_tips text,
+    start_time timestamptz not null,
+    end_time timestamptz,                              --null if still continuing
+    is_active boolean not null default true
 );
 
 CREATE TABLE model_stats (
     id serial primary key,
     stats jsonb not null,
-    created_at timestamp default now()
+    created_at timestamptz not null default now()
 );
 
 insert into alerts (station_id, alert_type, severity, message, start_time)

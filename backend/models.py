@@ -1,8 +1,9 @@
 from sqlalchemy import (
     Column, Integer, BigInteger, SmallInteger, String, Float, Date, Numeric,
-    DateTime, Boolean, Text, ForeignKey, UniqueConstraint, func
+    DateTime, Boolean, Text, ForeignKey, UniqueConstraint, CheckConstraint, func, text
 )
 from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy.dialects.postgresql import JSONB
 
 Base = declarative_base()
 
@@ -30,11 +31,14 @@ class Alert(Base):
     alert_id = Column(Integer, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("stations.station_id"), nullable=False)
     alert_type = Column(String(200), nullable=False)
+    title = Column(String(200), nullable=True)
     severity = Column(String(20), nullable=False)
     message = Column(Text, nullable=False)
+    affected_areas = Column(Text, nullable=True)
+    safety_tips = Column(Text, nullable=True)
     start_time = Column(DateTime(timezone=True), nullable=False)
     end_time = Column(DateTime(timezone=True), nullable=True)
-    is_active = Column(Boolean, default=True)
+    is_active = Column(Boolean, nullable=False, default=True, server_default=text("true"))
 
     # Relationship back to Station
     station = relationship("Station", back_populates="alerts")
@@ -46,7 +50,7 @@ class Forecast(Base):
         UniqueConstraint("station_id", "forecast_date", "horizon_days", name="uq_forecast"),
     )
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(BigInteger, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("stations.station_id", ondelete="CASCADE"), nullable=False)
     forecast_date = Column(Date, nullable=False)
     generated_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
@@ -65,6 +69,7 @@ class MonthlyAggregate(Base):
     __tablename__ = "monthly_aggregates"
     __table_args__ = (
         UniqueConstraint("station_id", "station_year", "station_month", name="uq_station_year_month"),
+        CheckConstraint("station_month BETWEEN 1 AND 12", name="ck_station_month_range"),
     )
 
     id = Column(Integer, primary_key=True, index=True)
@@ -88,7 +93,7 @@ class DailyWeather(Base):
         UniqueConstraint("station_id", "obs_date", name="uq_station_obs_date"),
     )
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(BigInteger, primary_key=True, index=True)
     station_id = Column(Integer, ForeignKey("stations.station_id", ondelete="CASCADE"), nullable=False)
     obs_date = Column(Date, nullable=False)
     evapotranspiration_mm = Column(Numeric(7, 2), nullable=True)
@@ -101,3 +106,10 @@ class DailyWeather(Base):
 
     # Relationship back to Station
     station = relationship("Station", back_populates="daily_weather")
+
+class ModelStats(Base):
+    __tablename__ = "model_stats"
+
+    id = Column(Integer, primary_key=True, index=True)
+    stats = Column(JSONB, nullable=False)
+    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
