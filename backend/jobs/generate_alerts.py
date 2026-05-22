@@ -2,9 +2,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
 from collections import defaultdict
+import json
 from sqlalchemy import and_, func, text
 from database import SessionLocal
 from models import Forecast
+from services.alert_catalog import get_alert_safety_tips, get_alert_title
 
 @dataclass(frozen=True)
 class ThresholdRule:
@@ -12,7 +14,6 @@ class ThresholdRule:
     metric: str
     levels: tuple[tuple[float, str], ...]
     comparator: str  # "ge" or "le"
-    title: str
 
 RULES: tuple[ThresholdRule, ...] = (
     ThresholdRule(
@@ -20,28 +21,24 @@ RULES: tuple[ThresholdRule, ...] = (
         metric="pred_max_temp_c",
         levels=((45.0, "extreme"), (40.0, "high"), (35.0, "moderate")),
         comparator="ge",
-        title="Heatwave Alert",
     ),
     ThresholdRule(
         alert_type="heavy_rainfall",
         metric="pred_rain_mm",
         levels=((150.0, "extreme"), (100.0, "high"), (50.0, "moderate")),
         comparator="ge",
-        title="Heavy Rainfall Alert",
     ),
     ThresholdRule(
         alert_type="strong_winds",
         metric="pred_wind_speed_ms",
         levels=((20.0, "extreme"), (15.0, "high"), (10.0, "moderate")),
         comparator="ge",
-        title="Strong Winds Alert",
     ),
     ThresholdRule(
         alert_type="cold_wave",
         metric="pred_min_temp_c",
         levels=((0.0, "high"), (2.0, "moderate")),
         comparator="le",
-        title="Cold Wave Alert",
     ),
 )
 
@@ -56,7 +53,7 @@ def pick_severity(rule: ThresholdRule, value: float | None) -> str | None:
             return severity
     return None
 
-def build_message(rule: ThresholdRule, metric_value: float, severity: str) -> str:
+def build_message(rule: ThresholdRule, metric_value: float) -> str:
     if rule.alert_type == "heatwave":
         return (
             f"Forecast temperature may reach {metric_value:.1f}°C. "
@@ -160,6 +157,8 @@ def deactivate_missing_alerts(db, station_id: int, active_types: set[str]) -> in
 
 def upsert_alert(db, station_id: int, rule: ThresholdRule, severity: str, metric_value: float) -> bool:
     now = datetime.now(timezone.utc)
+    title = get_alert_title(rule.alert_type)
+    safety_tips = json.dumps(get_alert_safety_tips(rule.alert_type))
 
     existing = db.execute(
         text(
@@ -182,7 +181,9 @@ def upsert_alert(db, station_id: int, rule: ThresholdRule, severity: str, metric
                 """
                 UPDATE alerts
                 SET severity = :severity,
+                    title = :title,
                     message = :message,
+                    safety_tips = :safety_tips,
                     end_time = NULL,
                     is_active = TRUE
                 WHERE alert_id = :alert_id
@@ -191,8 +192,9 @@ def upsert_alert(db, station_id: int, rule: ThresholdRule, severity: str, metric
             {
                 "alert_id": existing[0],
                 "severity": severity,
-                "message": build_message(rule, metric_value, severity),
-                "now": now,
+                "title": title,
+                "message": build_message(rule, metric_value),
+                "safety_tips": safety_tips,
             },
         )
         return False
@@ -200,15 +202,17 @@ def upsert_alert(db, station_id: int, rule: ThresholdRule, severity: str, metric
     db.execute(
         text(
             """
-            INSERT INTO alerts (station_id, alert_type, severity, message, start_time, end_time, is_active)
-            VALUES (:station_id, :alert_type, :severity, :message, :start_time, NULL, TRUE)
+            INSERT INTO alerts (station_id, alert_type, title, severity, message, safety_tips, start_time, end_time, is_active)
+            VALUES (:station_id, :alert_type, :title, :severity, :message, :safety_tips, :start_time, NULL, TRUE)
             """
         ),
         {
             "station_id": station_id,
             "alert_type": rule.alert_type,
+            "title": title,
             "severity": severity,
-            "message": build_message(rule, metric_value, severity),
+            "message": build_message(rule, metric_value),
+            "safety_tips": safety_tips,
             "start_time": now,
         },
     )
