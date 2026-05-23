@@ -2,6 +2,7 @@ import argparse
 import os
 import psycopg2
 import pandas as pd
+import json
 import numpy as np
 from pathlib import Path
 from datetime import datetime
@@ -16,6 +17,7 @@ from utils.download_data import run_download_data
 from utils.combine_data import run_combine_data
 from utils.clean_data_wo_imputation import run_clean_data_wo_imputation
 from utils.load_to_db import run_load_to_db
+from huggingface_hub import hf_hub_download
 
 
 load_dotenv()
@@ -93,17 +95,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--model",
-        choices=["encoder_only", "encoder_decoder"],
-        default="encoder_only"
-    )
-    parser.add_argument(
-        "--run",
-        default="12"
+        choices=["encoder_only", "encoder_decoder", "hf"],
+        default="hf"
     )
     parser.add_argument(
         "--type",
         choices=["best", "last"],
-        default="best"
+        default="last"
+    )
+    parser.add_argument(
+        "--run",
+        default="12"
     )
     parser.add_argument(
         "--stats_id",
@@ -126,10 +128,23 @@ def main():
         model_path = Path(f"encoder_only/models/run{args.run}/{args.type}_model.pt")
         model = load_encoder_only(stats, num_features, device, model_path)
         preds = predict_encoder_only(model, loader, device)
-    else:
+    elif args.model == "encoder_decoder":
         model_path = Path(f"encoder_decoder/models/run{args.run}/{args.type}_model.pt")
         model = load_encoder_decoder(stats, num_features, device, model_path)
         preds = predict_encoder_decoder(model, loader, device)
+    elif args.model == "hf":
+        downloaded_path = hf_hub_download(
+            repo_id="theyeehong/weather_forecast_api",
+            filename=f"{args.type}_model.pt"
+        )
+        stats_path = hf_hub_download(
+            repo_id="theyeehong/weather_forecast_api",
+            filename="transformer_stats.json"
+        )
+        with open(stats_path, "r") as f:
+            stats = json.load(f)
+        model = load_encoder_only(stats, num_features, device, Path(downloaded_path))
+        preds = predict_encoder_only(model, loader, device)
     
     reset_predictions_table(conn)
     rows = build_forecast_rows(preds, metadata, station_map, stats)

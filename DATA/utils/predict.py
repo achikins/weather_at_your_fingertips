@@ -17,7 +17,7 @@ def load_encoder_only(stats, num_features, device, model_path):
         num_features=num_features,
         num_stations=stats["num_stations"],
         d_model=64,
-        nhead=4,
+        nhead=8,
         num_layers=3,
         forecast_horizon=7,
         target_dim=len(TARGET_COLS)
