@@ -96,8 +96,8 @@ class EarlyStopping:
 # -----------------------------
 def main():
 
-    run_number          = 13
-    EPOCHS_THIS_SESSION = 15
+    run_number          = 15
+    EPOCHS_THIS_SESSION = 18
     TOTAL_EPOCHS        = 50
     WARMUP_EPOCHS       = 3
 
@@ -152,7 +152,7 @@ def main():
         num_features=len(train_dataset.feature_cols),
         num_stations=stats["num_stations"],
         d_model=64,
-        nhead=4,
+        nhead=8,
         num_layers=3,
         forecast_horizon=7,
         target_dim=len(train_dataset.target_cols),
@@ -187,7 +187,7 @@ def main():
     # -----------------------------
     # Checkpoint
     # -----------------------------
-    run_dir = Path(f"models/encoder_only/models/run{run_number}")
+    run_dir = Path(f"encoder_only/models/run{run_number}")
     run_dir.mkdir(parents=True, exist_ok=True)
 
     best_path = run_dir / "best_model.pt"

@@ -3,10 +3,12 @@ import json
 import sys
 from pathlib import Path
 from torch.utils.data import DataLoader
-sys.path.append(str(Path(__file__).parent.parent))
-from data.encoder_only.encoder_only_transformer import Transformer
-from data.utils.dataset import WeatherDataset
-from data.utils.get_device import get_device
+
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+
+from encoder_only_transformer import Transformer
+from utils.dataset import WeatherDataset
+from utils.get_device import get_device
 
 
 def denormalise(tensor, stats, target_cols):
@@ -94,11 +96,11 @@ def main():
     device = get_device()
 
     # ✅ Use run-based structure (same as encoder-decoder)
-    run_number = 11
+    run_number = 15
     typ = "best"
-    run_dir = Path(f"transformer/encoder_only/models/run{run_number}")
+    run_dir = Path(f"encoder_only/models/run{run_number}")
     model_path = run_dir / f"{typ}_model.pt"
-    stats_path = Path("transformer/transformer_stats.json")
+    stats_path = Path("transformer_stats.json")
     output_file = run_dir / f"output_{run_number}_{typ}.txt"
 
     # ✅ checks
@@ -111,15 +113,11 @@ def main():
         print(f"Stats not found in {stats_path}")
         return
 
-    # ✅ correct config path
-    config_path = Path(__file__).parent.parent.parent / "config.json"
-    with open(config_path) as f:
-        config = json.load(f)
 
     with open(stats_path) as f:
         stats = json.load(f)
 
-    TEST_FILE = config["test_path"]
+    TEST_FILE = Path("test.csv")
 
     # --- dataset ---
     test_dataset = WeatherDataset(
@@ -137,21 +135,11 @@ def main():
         pin_memory=False,
         persistent_workers=True
     )
-    
-    # model = Transformer( #run1-3
-    #     num_features=len(test_dataset.feature_cols),
-    #     num_stations=stats["num_stations"],
-    #     d_model=128,
-    #     nhead=8,
-    #     num_layers=3,
-    #     forecast_horizon=7,
-    #     target_dim=len(test_dataset.target_cols)
-    # ).to(device)
 
-    model = Transformer( #run4
+    model = Transformer(
         num_features=len(test_dataset.feature_cols),
         num_stations=stats["num_stations"],
-        d_model=128,
+        d_model=64,
         nhead=8,
         num_layers=3,
         forecast_horizon=7,
