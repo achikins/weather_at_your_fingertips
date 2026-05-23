@@ -1,5 +1,3 @@
-import os
-
 from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
 from database import engine
@@ -18,15 +16,13 @@ app = FastAPI(
     )
 scheduler = BackgroundScheduler(timezone="UTC")
 
-raw_cors_origins = os.getenv(
-    "CORS_ORIGINS",
-    "http://localhost:5173,http://localhost:3000,https://storage.googleapis.com",
-)
-cors_origins = [origin.strip() for origin in raw_cors_origins.split(",") if origin.strip()]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins,
+    allow_origins=[
+        "https://weather-at-your-fingertips.arjaywonx.workers.dev",
+        "http://localhost:5173",
+        "http://localhost:3000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
