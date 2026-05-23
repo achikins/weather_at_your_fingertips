@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Bell, Calendar, Sun, Moon } from 'lucide-react'
-import { weatherAlerts } from '../../data/mockWeatherData'
 import { useTheme } from '../../context/ThemeContext'
+import { api } from '../../services/api'
 
 const pageTitles = {
   '/':          { title: 'Interactive Map',    subtitle: 'Explore weather across Australia' },
@@ -15,7 +16,15 @@ export default function Navbar() {
   const navigate = useNavigate()
   const { theme, toggleTheme } = useTheme()
   const page = pageTitles[pathname] || pageTitles['/']
-  const activeAlerts = weatherAlerts.filter((a) => a.severity === 'extreme' || a.severity === 'high')
+  const [alerts, setAlerts] = useState([])
+
+  useEffect(() => {
+    api.getAllAlerts()
+      .then((data) => setAlerts(data.alerts || []))
+      .catch(() => setAlerts([]))
+  }, [])
+
+  const activeAlerts = alerts.filter((a) => a.isActive !== false)
 
   const dateStr = new Date().toLocaleDateString('en-AU', {
     weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',

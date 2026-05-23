@@ -1,6 +1,7 @@
+import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Map, LayoutDashboard, GitCompare, Bell, CloudSun, ChevronRight } from 'lucide-react'
-import { weatherAlerts } from '../../data/mockWeatherData'
+import { api } from '../../services/api'
 
 const navItems = [
   { to: '/',          icon: Map,             label: 'Map',       end: true },
@@ -17,7 +18,16 @@ const severityColors = {
 }
 
 export default function Sidebar() {
-  const extremeAlerts = weatherAlerts.filter((a) => a.severity === 'extreme' || a.severity === 'high').length
+  const [alerts, setAlerts] = useState([])
+
+  useEffect(() => {
+    api.getAllAlerts()
+      .then((data) => setAlerts(data.alerts || []))
+      .catch(() => setAlerts([]))
+  }, [])
+
+  const activeAlerts = alerts.filter((a) => a.isActive !== false)
+  const activeAlertCount = activeAlerts.length
 
   return (
     <aside className="w-16 lg:w-60 h-full bg-white dark:bg-[#0f1629] border-r border-gray-200 dark:border-white/5 flex flex-col shrink-0 transition-all duration-300">
@@ -54,12 +64,12 @@ export default function Sidebar() {
                   className={`shrink-0 transition-colors ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 dark:text-slate-500 group-hover:text-gray-600 dark:group-hover:text-slate-300'}`}
                 />
                 <span className="hidden lg:block flex-1">{label}</span>
-                {label === 'Alerts' && extremeAlerts > 0 && (
+                {label === 'Alerts' && activeAlertCount > 0 && (
                   <span className="hidden lg:flex items-center justify-center w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold shrink-0">
-                    {extremeAlerts}
+                    {activeAlertCount}
                   </span>
                 )}
-                {label === 'Alerts' && extremeAlerts > 0 && (
+                {label === 'Alerts' && activeAlertCount > 0 && (
                   <span className="lg:hidden absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white dark:border-[#0f1629]" />
                 )}
                 {isActive && <ChevronRight size={14} className="hidden lg:block text-blue-400/60 shrink-0" />}
@@ -73,12 +83,12 @@ export default function Sidebar() {
       <div className="hidden lg:block px-3 py-4 border-t border-gray-200 dark:border-white/5">
         <p className="text-xs text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wider mb-3 px-1">Active Alerts</p>
         <div className="space-y-2">
-          {weatherAlerts.slice(0, 3).map((alert) => (
+          {activeAlerts.slice(0, 3).map((alert) => (
             <div
               key={alert.id}
               className="flex items-center gap-2.5 px-2 py-2 rounded-lg bg-gray-50 dark:bg-white/[0.03] hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
             >
-              <span className={`w-2 h-2 rounded-full shrink-0 ${severityColors[alert.severity]} animate-pulse`} />
+              <span className={`w-2 h-2 rounded-full shrink-0 ${severityColors[alert.severity] || 'bg-gray-500'} animate-pulse`} />
               <div className="min-w-0">
                 <p className="text-xs text-gray-700 dark:text-slate-300 font-medium truncate">{alert.cityName}</p>
                 <p className="text-[11px] text-gray-400 dark:text-slate-500 truncate">{alert.type}</p>
