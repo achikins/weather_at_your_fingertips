@@ -11,6 +11,9 @@ from google import genai
 from sqlalchemy.orm import Session
 from models import Alert
 from services.alert_catalog import (
+    ALERT_SAFETY_TIPS,
+    ALERT_TITLES,
+    ALERT_TYPE_LABELS,
     OPENWEATHER_ALERT_PREFIX,
     format_event_label,
     normalize_severity,
@@ -28,6 +31,20 @@ GEMINI_MODEL = "gemini-2.5-flash"
 DEFAULT_GEMINI_AFFECTED_AREAS_LIMIT = 6
 DEFAULT_GEMINI_SAFETY_TIPS_LIMIT = 5
 GEMINI_CLIENT = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+
+def _build_alert_catalog_prompt_context() -> str:
+    lines: list[str] = []
+    for alert_type in sorted(ALERT_TYPE_LABELS.keys()):
+        label = ALERT_TYPE_LABELS[alert_type]
+        title = ALERT_TITLES.get(alert_type, label)
+        tips = ALERT_SAFETY_TIPS.get(alert_type, [])
+        tip_preview = " | ".join(tips[:2]) if tips else ""
+        lines.append(
+            f"- {alert_type}: label={label}; title={title}; tips={tip_preview}"
+        )
+    return "\n".join(lines)
+
+ALERT_CATALOG_PROMPT_CONTEXT = _build_alert_catalog_prompt_context()
 
 def _clean_area_name(area: str) -> str:
     cleaned = clean_text(area)
@@ -114,14 +131,12 @@ Rules:
 - Severity must be one of: low, moderate, high, extreme.
 - Title must NOT include city suffixes like "- {city_name}" or "( {city_name} )".
 - Affected areas must be plain names only (no brackets or parenthesised qualifiers).
+- Prefer these alertType keys when relevant, and align title/tips style with this catalog:
+{ALERT_CATALOG_PROMPT_CONTEXT}
 
 Style examples (follow this style):
 Example 1:
 {{"alertType":"coastal_hazard","title":"Coastal Hazard Warning","severity":"high","description":"Damaging surf conditions are expected along exposed beaches, with a risk of coastal erosion and dangerous waves.","affectedAreas":["Gold Coast","Noosa Heads","Rainbow Beach"],"safetyTips":["Stay clear of beaches, rock platforms, and low coastal paths.","Watch for dangerous surf and sudden wave surges.","Follow warnings from marine and emergency authorities."]}}
-Example 2:
-{{"alertType":"thunderstorm","title":"Thunderstorm Warning","severity":"high","description":"Severe thunderstorms may bring damaging winds, heavy rain, and frequent lightning this afternoon.","affectedAreas":["Brisbane","Ipswich","Logan"],"safetyTips":["Shelter indoors and avoid open fields, trees, and metal structures.","Unplug sensitive electronics if lightning is nearby.","Delay outdoor activity until storms pass."]}}
-Example 3:
-{{"alertType":"heatwave","title":"Extreme Heat Advisory","severity":"moderate","description":"Hot conditions are expected over the next two days, increasing heat stress risk.","affectedAreas":["Melbourne","Geelong"],"safetyTips":["Stay hydrated and avoid prolonged outdoor activity during peak heat.","Check on vulnerable people and pets.","Monitor official weather updates."]}}
 
 Input:
 City: {city_name}
