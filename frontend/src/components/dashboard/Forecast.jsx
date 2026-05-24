@@ -81,39 +81,39 @@ export default function Forecast({ forecast = [], currentDate = null, loading = 
   const rows = Array.isArray(forecast) ? [...forecast] : []
   rows.sort((a, b) => (a.forecast_date || '').localeCompare(b.forecast_date || ''))
 
-  const withoutCurrent = currentDate
-    ? rows.filter((row) => row.forecast_date !== currentDate)
-    : rows.length > 6
-      ? rows.slice(1)
-      : rows
+  const futureRows = currentDate
+    ? rows.filter((row) => row?.forecast_date && row.forecast_date !== currentDate)
+    : rows.filter((row) => row?.forecast_date)
 
-  const nextSix = withoutCurrent.slice(0, 6)
+  const nextSeven = futureRows.slice(0, 7)
 
-  if (loading && !nextSix.length) {
+  if (loading && !nextSeven.length) {
     return (
-      <div className="rounded-2xl border border-gray-100 dark:border-white/5 bg-white dark:bg-[#1a2035] p-4 shadow-sm dark:shadow-none animate-pulse">
-        <div className="h-4 w-36 bg-gray-100 dark:bg-white/5 rounded mb-3" />
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <div key={idx} className="h-32 rounded-xl bg-gray-100 dark:bg-white/5" />
-          ))}
-        </div>
+      <div className="flex flex-wrap justify-center gap-3 animate-pulse">
+        {Array.from({ length: 7 }).map((_, idx) => (
+          <div
+            key={idx}
+            className="w-full sm:w-[calc(50%-0.375rem)] md:w-[calc(33.333%-0.5rem)] xl:flex-1 xl:min-w-0"
+          >
+            <div className="h-32 rounded-xl bg-gray-100 dark:bg-white/5" />
+          </div>
+        ))}
       </div>
     )
   }
 
-  if (!nextSix.length) return null
+  if (!nextSeven.length) return null
 
   return (
-    <div className="rounded-2xl border border-gray-100 dark:border-white/5 bg-white dark:bg-[#1a2035] px-4 py-3 shadow-sm dark:shadow-none">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-medium text-gray-900 dark:text-white">Next 6 Days Forecast</h3>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
-        {nextSix.map((row) => (
-          <ForecastCard key={`${row.forecast_date}-${row.horizon_days}`} row={row} />
-        ))}
-      </div>
+    <div className="flex flex-wrap justify-center gap-3">
+      {nextSeven.map((row) => (
+        <div
+          key={`${row.forecast_date}-${row.horizon_days}`}
+          className="w-full sm:w-[calc(50%-0.375rem)] md:w-[calc(33.333%-0.5rem)] xl:flex-1 xl:min-w-0"
+        >
+          <ForecastCard row={row} />
+        </div>
+      ))}
     </div>
   )
 }

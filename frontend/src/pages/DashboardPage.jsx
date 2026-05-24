@@ -84,13 +84,20 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Summary cards */}
-      <WeatherCards monthly={monthly} current={current} loading={loading} />
-
-      <Forecast
-        forecast={forecast}
-        currentDate={current?.obsDate || null}
+      <WeatherCards
+        monthly={monthly}
+        current={current}
         loading={loading}
+        showStats={false}
+      />
+
+      <Forecast forecast={forecast} currentDate={current?.obsDate || null} loading={loading} />
+
+      <WeatherCards
+        monthly={monthly}
+        current={current}
+        loading={loading}
+        showCurrent={false}
       />
 
       {loading && !monthly.length && (
