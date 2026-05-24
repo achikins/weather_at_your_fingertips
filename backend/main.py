@@ -5,6 +5,11 @@ from jobs.generate_alerts import run as run_alert_generation
 from jobs.generate_openweather_alerts import run as run_openweather_alert_generation
 from models import Base
 from routers import alerts, weather, stations
+from services.alert_schedule import (
+    FORECAST_ALERT_JOB_MINUTE_UTC,
+    OPENWEATHER_ALERT_JOB_HOUR_UTC,
+    OPENWEATHER_ALERT_JOB_MINUTE_UTC,
+)
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
@@ -21,7 +26,6 @@ app.add_middleware(
     allow_origins=[
         "https://weather-at-your-fingertips.arjaywonx.workers.dev",
         "http://localhost:5173",
-        "http://localhost:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -39,8 +43,7 @@ def start_scheduler() -> None:
     scheduler.add_job(
         run_alert_generation,
         trigger="cron",
-        hour=3,
-        minute=0,
+        minute=FORECAST_ALERT_JOB_MINUTE_UTC,
         id="generate_alerts_job",
         replace_existing=True,
         coalesce=True,
@@ -49,7 +52,8 @@ def start_scheduler() -> None:
     scheduler.add_job(
         run_openweather_alert_generation,
         trigger="cron",
-        minute=0,
+        hour=OPENWEATHER_ALERT_JOB_HOUR_UTC,
+        minute=OPENWEATHER_ALERT_JOB_MINUTE_UTC,
         id="generate_openweather_alerts_job",
         replace_existing=True,
         coalesce=True,

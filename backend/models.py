@@ -43,7 +43,6 @@ class Alert(Base):
     # Relationship back to Station
     station = relationship("Station", back_populates="alerts")
 
-
 class Forecast(Base):
     __tablename__ = "forecasts"
     __table_args__ = (

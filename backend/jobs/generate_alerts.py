@@ -1,12 +1,13 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from datetime import date, datetime, timezone
+from datetime import datetime, time, timedelta, timezone
 from collections import defaultdict
 import json
 from sqlalchemy import and_, func, text
 from database import SessionLocal
-from models import Forecast
+from models import Forecast, Station
 from services.alert_catalog import get_alert_safety_tips, get_alert_title
+from services.station_timezones import timezone_for_state
 
 @dataclass(frozen=True)
 class ThresholdRule:
@@ -37,10 +38,31 @@ RULES: tuple[ThresholdRule, ...] = (
     ThresholdRule(
         alert_type="cold_wave",
         metric="pred_min_temp_c",
-        levels=((0.0, "high"), (2.0, "moderate")),
+        levels=(
+            (-5.0, "extreme"),
+            (-2.0, "high"),
+            (0.0, "moderate"),
+            (2.0, "low"),
+        ),
         comparator="le",
     ),
 )
+
+def managed_alert_types() -> tuple[str, ...]:
+    return tuple(rule.alert_type for rule in RULES)
+
+def bind_placeholders(
+    *,
+    params: dict[str, object],
+    prefix: str,
+    values: list[str] | tuple[str, ...],
+) -> str:
+    placeholders: list[str] = []
+    for i, value in enumerate(values):
+        key = f"{prefix}{i}"
+        params[key] = value
+        placeholders.append(f":{key}")
+    return ", ".join(placeholders)
 
 def pick_severity(rule: ThresholdRule, value: float | None) -> str | None:
     if value is None:
@@ -78,7 +100,14 @@ def build_message(rule: ThresholdRule, metric_value: float) -> str:
             "Very cold overnight conditions are expected."
         )
 
-def latest_forecast_rows(db) -> list[Forecast]:
+def next_local_midnight_utc(*, station_state: str | None, now_utc: datetime) -> datetime:
+    tz = timezone_for_state(station_state)
+    local_now = now_utc.astimezone(tz)
+    next_day = local_now.date() + timedelta(days=1)
+    next_midnight_local = datetime.combine(next_day, time.min, tzinfo=tz)
+    return next_midnight_local.astimezone(timezone.utc)
+
+def latest_forecast_rows(db) -> list[tuple[Forecast, str | None]]:
     latest_subq = (
         db.query(
             Forecast.station_id.label("station_id"),
@@ -89,7 +118,7 @@ def latest_forecast_rows(db) -> list[Forecast]:
     )
 
     rows = (
-        db.query(Forecast)
+        db.query(Forecast, Station.state)
         .join(  # Latest forecast batch per station
             latest_subq,
             and_(
@@ -97,7 +126,7 @@ def latest_forecast_rows(db) -> list[Forecast]:
                 Forecast.generated_at == latest_subq.c.latest_generated_at,
             ),
         )
-        .filter(Forecast.forecast_date >= date.today())
+        .join(Station, Station.station_id == Forecast.station_id)
         .order_by(Forecast.station_id.asc(), Forecast.forecast_date.asc(), Forecast.horizon_days.asc())
         .all()
     )
@@ -116,7 +145,7 @@ def pick_metric_value(rule: ThresholdRule, rows: list[Forecast]) -> float | None
     return min(values)
 
 def deactivate_missing_alerts(db, station_id: int, active_types: set[str]) -> int:
-    managed_types = tuple(rule.alert_type for rule in RULES)
+    managed_types = managed_alert_types()
     params = {
         "station_id": station_id,
         "now": datetime.now(timezone.utc),
@@ -124,21 +153,15 @@ def deactivate_missing_alerts(db, station_id: int, active_types: set[str]) -> in
 
     type_filter_sql = ""
     if managed_types:
-        placeholders = []
-        for i, alert_type in enumerate(managed_types):
-            key = f"t{i}"
-            params[key] = alert_type
-            placeholders.append(f":{key}")
-        type_filter_sql = f"AND alert_type IN ({', '.join(placeholders)})"
+        type_filter_sql = (
+            f"AND alert_type IN ({bind_placeholders(params=params, prefix='t', values=managed_types)})"
+        )
 
     keep_filter_sql = ""
     if active_types:
-        keep = []
-        for i, alert_type in enumerate(sorted(active_types)):
-            key = f"k{i}"
-            params[key] = alert_type
-            keep.append(f":{key}")
-        keep_filter_sql = f"AND alert_type NOT IN ({', '.join(keep)})"
+        keep_filter_sql = (
+            f"AND alert_type NOT IN ({bind_placeholders(params=params, prefix='k', values=sorted(active_types))})"
+        )
 
     result = db.execute(
         text(
@@ -155,7 +178,14 @@ def deactivate_missing_alerts(db, station_id: int, active_types: set[str]) -> in
     )
     return result.rowcount or 0
 
-def upsert_alert(db, station_id: int, rule: ThresholdRule, severity: str, metric_value: float) -> bool:
+def upsert_alert(
+    db,
+    station_id: int,
+    rule: ThresholdRule,
+    severity: str,
+    metric_value: float,
+    expires_at: datetime,
+) -> bool:
     now = datetime.now(timezone.utc)
     title = get_alert_title(rule.alert_type)
     safety_tips = json.dumps(get_alert_safety_tips(rule.alert_type))
@@ -184,7 +214,7 @@ def upsert_alert(db, station_id: int, rule: ThresholdRule, severity: str, metric
                     title = :title,
                     message = :message,
                     safety_tips = :safety_tips,
-                    end_time = NULL,
+                    end_time = :end_time,
                     is_active = TRUE
                 WHERE alert_id = :alert_id
                 """
@@ -195,6 +225,7 @@ def upsert_alert(db, station_id: int, rule: ThresholdRule, severity: str, metric
                 "title": title,
                 "message": build_message(rule, metric_value),
                 "safety_tips": safety_tips,
+                "end_time": expires_at,
             },
         )
         return False
@@ -203,7 +234,7 @@ def upsert_alert(db, station_id: int, rule: ThresholdRule, severity: str, metric
         text(
             """
             INSERT INTO alerts (station_id, alert_type, title, severity, message, safety_tips, start_time, end_time, is_active)
-            VALUES (:station_id, :alert_type, :title, :severity, :message, :safety_tips, :start_time, NULL, TRUE)
+            VALUES (:station_id, :alert_type, :title, :severity, :message, :safety_tips, :start_time, :end_time, TRUE)
             """
         ),
         {
@@ -214,9 +245,31 @@ def upsert_alert(db, station_id: int, rule: ThresholdRule, severity: str, metric
             "message": build_message(rule, metric_value),
             "safety_tips": safety_tips,
             "start_time": now,
+            "end_time": expires_at,
         },
     )
     return True
+
+def stations_with_active_managed_alerts(db) -> set[int]:
+    managed_types = managed_alert_types()
+    if not managed_types:
+        return set()
+
+    params: dict[str, object] = {}
+    placeholders = bind_placeholders(params=params, prefix="t", values=managed_types)
+
+    rows = db.execute(
+        text(
+            f"""
+            SELECT DISTINCT station_id
+            FROM alerts
+            WHERE is_active = TRUE
+              AND alert_type IN ({placeholders})
+            """
+        ),
+        params,
+    ).fetchall()
+    return {int(row[0]) for row in rows}
 
 def run() -> None:
     db = SessionLocal()
@@ -224,29 +277,54 @@ def run() -> None:
         inserted = 0
         updated = 0
         deactivated = 0
+        now_utc = datetime.now(timezone.utc)
 
         rows = latest_forecast_rows(db)
         rows_by_station: dict[int, list[Forecast]] = defaultdict(list)
-        for row in rows:
+        state_by_station: dict[int, str | None] = {}
+        for row, station_state in rows:
             rows_by_station[row.station_id].append(row)
+            if row.station_id not in state_by_station:
+                state_by_station[row.station_id] = station_state
 
         for station_id, station_rows in rows_by_station.items():
+            station_state = state_by_station.get(station_id)
+            local_today = now_utc.astimezone(timezone_for_state(station_state)).date()
+            today_rows = [row for row in station_rows if row.forecast_date == local_today]
+
+            if not today_rows:
+                deactivated += deactivate_missing_alerts(db, station_id, set())
+                continue
+
             active_types_for_station: set[str] = set()
+            expires_at = next_local_midnight_utc(station_state=station_state, now_utc=now_utc)
 
             for rule in RULES:
-                value = pick_metric_value(rule, station_rows)
+                value = pick_metric_value(rule, today_rows)
                 severity = pick_severity(rule, value)
                 if severity is None:
                     continue
 
                 active_types_for_station.add(rule.alert_type)
-                created = upsert_alert(db, station_id, rule, severity, value)
+                created = upsert_alert(
+                    db,
+                    station_id,
+                    rule,
+                    severity,
+                    value,
+                    expires_at=expires_at,
+                )
                 if created:
                     inserted += 1
                 else:
                     updated += 1
 
             deactivated += deactivate_missing_alerts(db, station_id, active_types_for_station)
+
+        # If a station has no forecast row for today, close any managed alerts for it
+        stations_with_forecast = set(rows_by_station.keys())
+        for station_id in stations_with_active_managed_alerts(db) - stations_with_forecast:
+            deactivated += deactivate_missing_alerts(db, station_id, set())
 
         db.commit()
         print(

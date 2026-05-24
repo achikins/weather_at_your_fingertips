@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from typing import Any
 
 OPENWEATHER_ALERT_PREFIX = "owm_"
@@ -112,16 +111,13 @@ DEFAULT_SAFETY_TIPS = [
     "Prepare for changing weather conditions.",
 ]
 
-
 def base_alert_type(alert_type: str) -> str:
     if alert_type.startswith(OPENWEATHER_ALERT_PREFIX):
         return alert_type[len(OPENWEATHER_ALERT_PREFIX) :]
     return alert_type
 
-
 def is_openweather_alert_type(alert_type: str) -> bool:
     return alert_type.startswith(OPENWEATHER_ALERT_PREFIX)
-
 
 def format_event_label(event: str) -> str:
     normalized = event.replace("_", " ").strip()
@@ -131,19 +127,15 @@ def format_event_label(event: str) -> str:
         return normalized.title()
     return normalized
 
-
 def get_alert_type_label(alert_type: str) -> str:
     return ALERT_TYPE_LABELS.get(alert_type, alert_type.replace("_", " ").title())
-
 
 def get_alert_title(alert_type: str) -> str:
     type_label = get_alert_type_label(alert_type)
     return ALERT_TITLES.get(alert_type, type_label)
 
-
 def get_alert_safety_tips(alert_type: str) -> list[str]:
     return ALERT_SAFETY_TIPS.get(alert_type, DEFAULT_SAFETY_TIPS)
-
 
 def normalize_severity(value: Any) -> str | None:
     if value is None:
