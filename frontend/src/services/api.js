@@ -38,6 +38,12 @@ export const api = {
       () => get(`/api/weather/city/${cityId}/current`),
       () => ({ current: getWeatherForCity(cityId)?.current || null })
     ),
+
+  getCityForecast: (cityId) =>
+    withMockFallback(
+      () => get(`/api/weather/forecast?city_id=${cityId}`),
+      () => ({ forecast: [], generated_at: null })
+    ),
     
   getCitiesSummary: (year) =>
     withMockFallback(

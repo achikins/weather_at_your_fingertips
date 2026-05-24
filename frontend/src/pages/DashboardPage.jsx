@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Thermometer, CloudRain, Droplets, Wind, MapPin, ChevronDown } from 'lucide-react'
 import WeatherCards from '../components/dashboard/WeatherCards'
+import Forecast from '../components/dashboard/Forecast'
 import { TemperatureChart, RainfallChart, HumidityChart, WindChart } from '../components/charts/WeatherChart'
 import ChartCard from '../components/charts/ChartCard'
 import { australianCities, getCityById } from '../data/australianCities'
@@ -13,6 +14,7 @@ export default function DashboardPage() {
   const [filters, setFilters] = useState({ month: 'all', year: 'all' })
   const [monthly, setMonthly] = useState([])
   const [current, setCurrent] = useState(null)
+  const [forecast, setForecast] = useState([])
   const [availableYears, setAvailableYears] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -21,11 +23,15 @@ export default function DashboardPage() {
     if (!selectedCity) return
     setLoading(true)
     setError(null)
-    api.getCityWeather(selectedCity.id, filters.year !== 'all' ? filters.year : undefined)
-      .then((data) => {
-        setMonthly(data.monthly || [])
-        setCurrent(data.current || null)
-        setAvailableYears(data.available_years || [])
+    Promise.all([
+      api.getCityWeather(selectedCity.id, filters.year !== 'all' ? filters.year : undefined),
+      api.getCityForecast(selectedCity.id),
+    ])
+      .then(([weatherData, forecastData]) => {
+        setMonthly(weatherData.monthly || [])
+        setCurrent(weatherData.current || null)
+        setAvailableYears(weatherData.available_years || [])
+        setForecast(forecastData.forecast || [])
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
@@ -80,6 +86,12 @@ export default function DashboardPage() {
 
       {/* Summary cards */}
       <WeatherCards monthly={monthly} current={current} loading={loading} />
+
+      <Forecast
+        forecast={forecast}
+        currentDate={current?.obsDate || null}
+        loading={loading}
+      />
 
       {loading && !monthly.length && (
         <div className="text-sm text-gray-400 dark:text-slate-500 text-center py-6">Loading weather data…</div>

@@ -11,6 +11,14 @@ const conditionEmoji = (condition) => {
   return '🌤'
 }
 
+const formatObsDate = (dateString) => {
+  if (!dateString) return null
+  const date = new Date(`${dateString}T00:00:00`)
+  const weekday = date.toLocaleDateString('en-AU', { weekday: 'short' })
+  const dayMonth = date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })
+  return `${weekday}, ${dayMonth}`
+}
+
 function StatCard({ icon: Icon, label, value, unit, color, bg }) {
   return (
     <div className="rounded-2xl border border-gray-100 dark:border-white/5 p-4 bg-white dark:bg-[#1a2035] hover:border-gray-200 dark:hover:border-white/10 transition-all duration-200 shadow-sm dark:shadow-none flex items-center gap-3">
@@ -64,7 +72,8 @@ export default function WeatherCards({ monthly, current, loading }) {
   const displayHumidity = current?.humidity ?? latest.humidity
   const displayWind = current?.windSpeed ?? latest.windSpeed
   const displayRain = current?.rainfall ?? latest.rainfall
-  const currentLabel = current?.obsDate ? `Current (${current.obsDate})` : `${latest.month} average`
+  const formattedObsDate = formatObsDate(current?.obsDate)
+  const currentLabel = formattedObsDate || `${latest.month} average`
 
   return (
     <div className="space-y-3">
