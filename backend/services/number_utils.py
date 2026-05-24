@@ -9,3 +9,8 @@ def round_one_decimal(value: float | None) -> float | None:
     if value is None:
         return None
     return round(value, 1)
+
+def ms_to_kmh(value: float | None) -> float | None:
+    if value is None:
+        return None
+    return value * 3.6

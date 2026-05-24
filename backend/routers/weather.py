@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from dependencies import get_db
 from services.weather_service import (
+    get_station_next_7_day_forecast,
     get_historical_weather,
     get_station_weather,
     get_city_weather,
@@ -47,6 +48,33 @@ def get_weather_for_city(
 ):
     try:
         return get_city_weather(db, city_id, year=year)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+@router.get(
+    "/weather/forecast",
+    summary="Get 7-day forecast by city or station",
+    description="Returns forecasted weather data for the next 7 days using either a city ID or station ID.",
+    )
+def get_forecast_weather_query(
+    city_id: str | None = None,
+    station_id: str | None = None,
+    db: Session = Depends(get_db),
+):
+    try:
+        resolved_city_id, resolved_station_id = resolve_station_from_params(
+            db,
+            city_id=city_id,
+            station_id=station_id,
+        )
+        payload = get_station_next_7_day_forecast(db, resolved_station_id)
+        payload["cityId"] = resolved_city_id or payload["cityId"]
+        return {
+            "cityId": payload["cityId"],
+            "station_id": payload["station_id"],
+            "generated_at": payload["generated_at"],
+            "forecast": payload["forecast"],
+        }
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 

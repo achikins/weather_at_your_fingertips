@@ -1,10 +1,10 @@
 from typing import Any
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
-from sqlalchemy import extract
+from sqlalchemy import extract, func
 from sqlalchemy.orm import Session
 from models import DailyWeather, Forecast, MonthlyAggregate, Station
-from services.number_utils import round_one_decimal, to_float
+from services.number_utils import ms_to_kmh, round_one_decimal, to_float
 from services.station_service import get_station_years, station_exists
 
 CITY_TO_STATION = {
@@ -35,6 +35,11 @@ MONTH_NAMES = {
     12: "Dec",
 }
 
+def _average_pair(a: float | None, b: float | None) -> float | None:
+    if a is None or b is None:
+        return None
+    return (a + b) / 2
+
 def _serialize_daily_weather(row: DailyWeather) -> dict[str, Any]:
     return {
         "obs_date": row.obs_date.isoformat(),
@@ -62,6 +67,31 @@ def _serialize_monthly_weather(row: MonthlyAggregate) -> dict[str, Any]:
         "avg_max_humidity_pct": to_float(row.avg_max_humidity_pct),
         "avg_wind_speed_ms": to_float(row.avg_wind_speed_ms),
         "days_recorded": row.days_recorded,
+    }
+
+def _serialize_forecast_weather(row: Forecast) -> dict[str, Any]:
+    pred_max_temp_c = to_float(row.pred_max_temp_c)
+    pred_min_temp_c = to_float(row.pred_min_temp_c)
+    pred_max_humidity_pct = to_float(row.pred_max_humidity_pct)
+    pred_min_humidity_pct = to_float(row.pred_min_humidity_pct)
+    pred_rain_mm = to_float(row.pred_rain_mm)
+    wind_speed_ms = to_float(row.pred_wind_speed_ms)
+    wind_speed_kmh = ms_to_kmh(wind_speed_ms)
+    avg_temp_c = _average_pair(pred_max_temp_c, pred_min_temp_c)
+    avg_humidity_pct = _average_pair(pred_max_humidity_pct, pred_min_humidity_pct)
+    return {
+        "forecast_date": row.forecast_date.isoformat(),
+        "horizon_days": row.horizon_days,
+        "pred_max_temp_c": round_one_decimal(pred_max_temp_c),
+        "pred_min_temp_c": round_one_decimal(pred_min_temp_c),
+        "pred_avg_temp_c": round_one_decimal(avg_temp_c),
+        "pred_rain_mm": round_one_decimal(pred_rain_mm),
+        "pred_max_humidity_pct": round_one_decimal(pred_max_humidity_pct),
+        "pred_min_humidity_pct": round_one_decimal(pred_min_humidity_pct),
+        "pred_avg_humidity_pct": round_one_decimal(avg_humidity_pct),
+        # Keep ms field for backwards compatibility; add km/h for frontend display consistency.
+        "pred_wind_speed_ms": round_one_decimal(wind_speed_ms),
+        "pred_wind_speed_kmh": round_one_decimal(wind_speed_kmh),
     }
 
 def get_daily_weather(db: Session, station_id: int) -> list[dict[str, Any]]:
@@ -96,6 +126,43 @@ def get_today_forecast_weather(db: Session, station_id: int) -> dict[str, Any] |
         "pred_max_humidity_pct": to_float(row.pred_max_humidity_pct),
         "pred_min_humidity_pct": to_float(row.pred_min_humidity_pct),
         "pred_wind_speed_ms": to_float(row.pred_wind_speed_ms),
+    }
+
+def get_station_next_7_day_forecast(db: Session, station_id: int) -> dict[str, Any]:
+    today = datetime.now(ZoneInfo("Australia/Melbourne")).date()
+
+    latest_generated_at = (
+        db.query(func.max(Forecast.generated_at))
+        .filter(Forecast.station_id == station_id)
+        .scalar()
+    )
+
+    if latest_generated_at is None:
+        return {
+            "cityId": city_id_for_station_id(station_id),
+            "station_id": station_id,
+            "generated_at": None,
+            "forecast": [],
+        }
+
+    end_date = today + timedelta(days=6)
+    rows = (
+        db.query(Forecast)
+        .filter(
+            Forecast.station_id == station_id,
+            Forecast.generated_at == latest_generated_at,
+            Forecast.forecast_date >= today,
+            Forecast.forecast_date <= end_date,
+        )
+        .order_by(Forecast.forecast_date.asc(), Forecast.horizon_days.asc())
+        .all()
+    )
+
+    return {
+        "cityId": city_id_for_station_id(station_id),
+        "station_id": station_id,
+        "generated_at": latest_generated_at.isoformat(),
+        "forecast": [_serialize_forecast_weather(row) for row in rows],
     }
 
 def get_monthly_weather(
@@ -166,7 +233,7 @@ def normalize_monthly(monthly: list[dict[str, Any]]) -> list[dict[str, Any]]:
             humidity = round((min_h + max_h) / 2, 2)
 
         wind_ms = row.get("avg_wind_speed_ms")
-        wind_kmh = None if wind_ms is None else round(wind_ms * 3.6, 2)
+        wind_kmh = None if wind_ms is None else round(ms_to_kmh(wind_ms), 2)
         date = None
         if year_num is not None and month_num is not None:
             date = f"{year_num}-{month_num:02d}-01"
@@ -193,18 +260,14 @@ def derive_current_from_forecast(today_forecast: dict[str, Any] | None) -> dict[
 
     max_temp = today_forecast.get("pred_max_temp_c")
     min_temp = today_forecast.get("pred_min_temp_c")
-    avg_temp = None
-    if max_temp is not None and min_temp is not None:
-        avg_temp = (max_temp + min_temp) / 2
+    avg_temp = _average_pair(max_temp, min_temp)
 
     min_h = today_forecast.get("pred_min_humidity_pct")
     max_h = today_forecast.get("pred_max_humidity_pct")
-    humidity = None
-    if min_h is not None and max_h is not None:
-        humidity = (min_h + max_h) / 2
+    humidity = _average_pair(min_h, max_h)
 
     wind_ms = today_forecast.get("pred_wind_speed_ms")
-    wind_kmh = None if wind_ms is None else wind_ms * 3.6
+    wind_kmh = ms_to_kmh(wind_ms)
 
     return {
         "obsDate": today_forecast.get("forecast_date"),
