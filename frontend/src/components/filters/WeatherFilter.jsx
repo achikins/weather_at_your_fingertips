@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Calendar, X, MapPin, ChevronDown } from 'lucide-react'
-import { australianCities } from '../../data/australianCities'
+import { Calendar, X, ChevronDown } from 'lucide-react'
 import { MONTHS_LIST } from '../../hooks/useWeatherFilter'
 
 function PopupSelect({ label, value, onChange, options }) {
@@ -25,7 +24,7 @@ function PopupSelect({ label, value, onChange, options }) {
   )
 }
 
-export default function WeatherFilter({ filters, onFilterChange, selectedCity, onCityChange, availableYears = [] }) {
+export default function WeatherFilter({ filters, onFilterChange, availableYears = [] }) {
   const yearOptions = [
     { value: 'all', label: 'All Years' },
     ...availableYears.map((y) => ({ value: String(y), label: String(y) })),
@@ -34,12 +33,10 @@ export default function WeatherFilter({ filters, onFilterChange, selectedCity, o
   const [open, setOpen] = useState(false)
   const popupRef = useRef(null)
 
-  const isFiltered = month !== 'all' || year !== 'all' ||
-    (selectedCity && selectedCity.id !== australianCities[0].id)
+  const isFiltered = month !== 'all' || year !== 'all'
 
   const handleClear = () => {
     onFilterChange({ month: 'all', year: 'all' })
-    onCityChange(australianCities[0].id)
   }
 
   // Close popup on outside click
@@ -50,8 +47,6 @@ export default function WeatherFilter({ filters, onFilterChange, selectedCity, o
     if (open) document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [open])
-
-  const cityOptions = australianCities.map((c) => ({ value: c.id, label: `${c.name} — ${c.stateCode}` }))
 
   const activeLabel = () => {
     const parts = []
@@ -67,12 +62,12 @@ export default function WeatherFilter({ filters, onFilterChange, selectedCity, o
         <button
           onClick={() => setOpen((p) => !p)}
           className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-sm transition-colors shadow-sm dark:shadow-none
-            ${isFiltered && (month !== 'all' || year !== 'all')
+            ${isFiltered
               ? 'bg-blue-50 dark:bg-blue-500/10 border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400'
               : 'bg-white dark:bg-[#1a2035] border-gray-200 dark:border-white/10 text-gray-700 dark:text-slate-300 hover:border-gray-300 dark:hover:border-white/20'
             }`}
         >
-          <Calendar size={14} className={isFiltered && (month !== 'all' || year !== 'all') ? 'text-blue-500' : 'text-blue-400'} />
+          <Calendar size={14} className={isFiltered ? 'text-blue-500' : 'text-blue-400'} />
           <span>{activeLabel()}</span>
           <ChevronDown size={12} className="text-gray-400 dark:text-slate-500" />
         </button>
@@ -105,29 +100,6 @@ export default function WeatherFilter({ filters, onFilterChange, selectedCity, o
               onChange={(v) => onFilterChange({ ...filters, month: v })}
               options={MONTHS_LIST}
             />
-            <div className="h-px bg-gray-100 dark:bg-white/5" />
-
-            {/* City */}
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-medium uppercase tracking-wider text-gray-400 dark:text-slate-500 flex items-center gap-1">
-                <MapPin size={10} className="text-teal-400" /> City
-              </span>
-              <div className="relative">
-                <select
-                  value={selectedCity?.id || ''}
-                  onChange={(e) => onCityChange(e.target.value)}
-                  className="w-full appearance-none bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10
-                             text-gray-700 dark:text-slate-300 text-xs rounded-lg px-3 py-2 pr-7
-                             focus:outline-none focus:border-teal-400 dark:focus:border-teal-500/50 cursor-pointer"
-                >
-                  {cityOptions.map((o) => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
-                  ))}
-                </select>
-                <ChevronDown size={11} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 pointer-events-none" />
-              </div>
-            </div>
-
             {/* Clear button */}
             {isFiltered && (
               <button

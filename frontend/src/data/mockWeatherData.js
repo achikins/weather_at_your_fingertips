@@ -156,7 +156,7 @@ export const weatherAlerts = [
     expires: '2026-03-16T12:00:00Z',
     affectedAreas: ['Darwin CBD', 'Palmerston', 'Litchfield', 'Howard Springs'],
     safetyTips: [
-      'Never drive through floodwater — just 15 cm can sweep a car off the road',
+      'Never drive through floodwater. Just 15 cm can sweep a car off the road.',
       'Move valuables and important documents to higher ground now',
       'Monitor the Bureau of Meteorology and emergency services for updates',
       'Avoid walking through fast-moving or unknown-depth floodwater',
@@ -186,7 +186,7 @@ export const weatherAlerts = [
     cityName: 'Hobart',
     type: 'Strong Winds',
     severity: 'moderate',
-    title: 'Wind Warning — Gales Expected',
+    title: 'Wind Warning: Gales Expected',
     description: 'South-westerly gales of 80–100 km/h expected over highland areas. Secure loose outdoor items and be cautious when driving high-sided vehicles.',
     issued: '2026-03-15T03:00:00Z',
     expires: '2026-03-16T06:00:00Z',
@@ -211,7 +211,7 @@ export const weatherAlerts = [
     affectedAreas: ['Northern Beaches', 'Eastern Suburbs', 'Illawarra Coast'],
     safetyTips: [
       'Avoid beaches, rock platforms, and coastal cliffs during hazardous surf',
-      'Watch for unexpected rogue waves — never turn your back on the ocean',
+      'Watch for unexpected rogue waves. Never turn your back on the ocean.',
       'Follow advice from Surf Life Saving Australia and beach patrol flags',
       'Keep children well away from water edges, storm drains, and rockpools',
     ],

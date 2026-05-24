@@ -18,7 +18,7 @@ export default function CitySelector({ selectedCity, onCityChange }) {
         >
           {australianCities.map((city) => (
             <option key={city.id} value={city.id}>
-              {city.name} — {city.stateCode}
+              {city.name} ({city.stateCode})
             </option>
           ))}
         </select>

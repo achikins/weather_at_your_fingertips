@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Thermometer, CloudRain, Droplets, Wind } from 'lucide-react'
+import { Thermometer, CloudRain, Droplets, Wind, MapPin, ChevronDown } from 'lucide-react'
 import WeatherCards from '../components/dashboard/WeatherCards'
 import { TemperatureChart, RainfallChart, HumidityChart, WindChart } from '../components/charts/WeatherChart'
 import ChartCard from '../components/charts/ChartCard'
@@ -42,15 +42,32 @@ export default function DashboardPage() {
     <div className="h-full overflow-y-auto px-4 lg:px-6 py-5 space-y-4 animate-fade-in">
       {/* Page Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 className="text-gray-900 dark:text-white font-semibold text-lg">{selectedCity?.name}</h2>
-          <p className="text-gray-500 dark:text-slate-400 text-sm">{selectedCity?.state} · {selectedCity?.description}</p>
+        <div className="flex items-center gap-3">
+          {/* City selector */}
+          <div className="relative">
+            <div className="flex items-center gap-1.5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <MapPin size={14} className="text-teal-400" />
+            </div>
+            <select
+              value={selectedCity?.id || ''}
+              onChange={(e) => handleCityChange(e.target.value)}
+              className="appearance-none pl-8 pr-8 py-2 rounded-xl border bg-white dark:bg-[#1a2035]
+                         border-gray-200 dark:border-white/10 text-gray-900 dark:text-white
+                         text-sm font-semibold cursor-pointer focus:outline-none
+                         focus:border-teal-400 dark:focus:border-teal-500/50
+                         hover:border-gray-300 dark:hover:border-white/20 transition-colors"
+            >
+              {australianCities.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+            <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 pointer-events-none" />
+          </div>
+          <p className="text-gray-500 dark:text-slate-400 text-sm hidden sm:block">{selectedCity?.state} · {selectedCity?.description}</p>
         </div>
         <WeatherFilter
           filters={filters}
           onFilterChange={setFilters}
-          selectedCity={selectedCity}
-          onCityChange={handleCityChange}
           availableYears={availableYears}
         />
       </div>
