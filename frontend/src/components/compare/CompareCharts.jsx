@@ -17,8 +17,8 @@ function computeSummary(data) {
   if (!data.length) return {}
   return {
     avgTemp: Math.round(data.reduce((s, m) => s + m.tempAvg, 0) / data.length),
-    maxTemp: Math.max(...data.map((m) => m.tempMax)),
-    minTemp: Math.min(...data.map((m) => m.tempMin)),
+    maxTemp: Math.round(Math.max(...data.map((m) => m.tempMax))),
+    minTemp: Math.round(Math.min(...data.map((m) => m.tempMin))),
     totalRain: Math.round(data.reduce((s, m) => s + m.rainfall, 0)),
     avgHumidity: Math.round(data.reduce((s, m) => s + m.humidity, 0) / data.length),
     avgWind: Math.round(data.reduce((s, m) => s + m.windSpeed, 0) / data.length),

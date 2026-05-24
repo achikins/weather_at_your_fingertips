@@ -39,7 +39,7 @@ function SkeletonCard() {
   )
 }
 
-export default function WeatherCards({ monthly, loading }) {
+export default function WeatherCards({ monthly, current, loading }) {
   if (loading && !monthly?.length) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -51,49 +51,57 @@ export default function WeatherCards({ monthly, loading }) {
   if (!monthly?.length) return null
 
   const latest      = monthly[monthly.length - 1]
-  const avgTemp     = (monthly.reduce((s, m) => s + m.tempAvg, 0) / monthly.length).toFixed(1)
-  const maxTemp     = Math.max(...monthly.map((m) => m.tempMax))
-  const minTemp     = Math.min(...monthly.map((m) => m.tempMin))
+  const avgTemp     = Math.round(monthly.reduce((s, m) => s + m.tempAvg, 0) / monthly.length)
   const totalRain   = Math.round(monthly.reduce((s, m) => s + m.rainfall, 0))
-  const avgHumidity = Math.round(monthly.reduce((s, m) => s + m.humidity, 0) / monthly.length)
+  const avgHumidity = (monthly.reduce((s, m) => s + m.humidity, 0) / monthly.length).toFixed(1)
   const avgWind     = (monthly.reduce((s, m) => s + m.windSpeed, 0) / monthly.length).toFixed(1)
+  const displayTempRaw = current?.temp ?? latest.tempAvg
+  const displayTemp = typeof displayTempRaw === 'number' ? Math.round(displayTempRaw) : displayTempRaw
+  const dailyLowRaw = current?.tempMin ?? latest.tempMin
+  const dailyHighRaw = current?.tempMax ?? latest.tempMax
+  const dailyLow = typeof dailyLowRaw === 'number' ? Math.round(dailyLowRaw) : dailyLowRaw
+  const dailyHigh = typeof dailyHighRaw === 'number' ? Math.round(dailyHighRaw) : dailyHighRaw
+  const displayHumidity = current?.humidity ?? latest.humidity
+  const displayWind = current?.windSpeed ?? latest.windSpeed
+  const displayRain = current?.rainfall ?? latest.rainfall
+  const currentLabel = current?.obsDate ? `Current (${current.obsDate})` : `${latest.month} average`
 
   return (
     <div className="space-y-3">
-      {/* Current conditions hero strip — derived from most recent month */}
+      {/* Current conditions hero strip */}
       <div className="rounded-2xl border border-gray-100 dark:border-white/5 bg-gradient-to-r from-blue-50 dark:from-blue-600/10 to-teal-50 dark:to-teal-600/5 px-5 py-4 shadow-sm dark:shadow-none flex flex-wrap items-center gap-6">
         <div className="flex items-center gap-3">
           <span className="text-4xl leading-none">{conditionEmoji('')}</span>
           <div>
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">{latest.tempAvg}°<span className="text-base font-normal text-gray-400 ml-0.5">C</span></p>
-            <p className="text-sm text-gray-500 dark:text-slate-400">{latest.month} average</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{displayTemp}°<span className="text-base font-normal text-gray-400 ml-0.5">C</span></p>
+            <p className="text-sm text-gray-500 dark:text-slate-400">{currentLabel}</p>
           </div>
         </div>
         <div className="h-10 w-px bg-gray-200 dark:bg-white/10 hidden sm:block" />
         <div className="flex gap-5 text-sm">
           <div>
-            <p className="text-teal-500 dark:text-teal-400 font-semibold">{latest.humidity}%</p>
+            <p className="text-teal-500 dark:text-teal-400 font-semibold">{displayHumidity}%</p>
             <p className="text-xs text-gray-400 dark:text-slate-500">Humidity</p>
           </div>
           <div>
-            <p className="text-purple-500 dark:text-purple-400 font-semibold">{latest.windSpeed} km/h</p>
+            <p className="text-purple-500 dark:text-purple-400 font-semibold">{displayWind} km/h</p>
             <p className="text-xs text-gray-400 dark:text-slate-500">Wind</p>
           </div>
           <div>
-            <p className="text-blue-500 dark:text-blue-400 font-semibold">{latest.rainfall} mm</p>
+            <p className="text-blue-500 dark:text-blue-400 font-semibold">{displayRain} mm</p>
             <p className="text-xs text-gray-400 dark:text-slate-500">Rainfall</p>
           </div>
         </div>
         <div className="ml-auto hidden md:flex items-center gap-4 text-sm">
           <div className="flex items-center gap-1.5">
             <TrendingDown size={14} className="text-blue-400" />
-            <span className="text-blue-500 dark:text-blue-400 font-semibold">{minTemp}°</span>
-            <span className="text-xs text-gray-400 dark:text-slate-500">Period Low</span>
+            <span className="text-blue-500 dark:text-blue-400 font-semibold">{dailyLow}°</span>
+            <span className="text-xs text-gray-400 dark:text-slate-500">Daily Low</span>
           </div>
           <div className="h-1.5 w-16 rounded-full bg-gradient-to-r from-blue-500 via-teal-400 to-orange-500" />
           <div className="flex items-center gap-1.5">
-            <span className="text-xs text-gray-400 dark:text-slate-500">Period High</span>
-            <span className="text-orange-500 dark:text-orange-400 font-semibold">{maxTemp}°</span>
+            <span className="text-xs text-gray-400 dark:text-slate-500">Daily High</span>
+            <span className="text-orange-500 dark:text-orange-400 font-semibold">{dailyHigh}°</span>
             <TrendingUp size={14} className="text-orange-400" />
           </div>
         </div>

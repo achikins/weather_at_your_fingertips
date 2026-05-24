@@ -1,5 +1,4 @@
 import { X, Droplets, Wind, CloudRain } from 'lucide-react'
-import { getWeatherForCity } from '../../data/mockWeatherData'
 
 const conditionIcon = (condition) => {
   if (!condition) return '🌤'
@@ -19,15 +18,12 @@ const severityColors = {
   low:     'bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 border-blue-200 dark:border-blue-500/30',
 }
 
-export default function CityPopup({ city, alerts = [], onClose }) {
+export default function CityPopup({ city, current = null, annualStats = null, alerts = [], onClose }) {
   if (!city) return null
-  const weather = getWeatherForCity(city.id)
-  const current = weather?.current
-  const monthly = weather?.monthly || []
-
-  const avgTemp      = monthly.length ? Math.round(monthly.reduce((s, m) => s + m.tempAvg, 0) / monthly.length) : '--'
-  const totalRainfall = monthly.length ? Math.round(monthly.reduce((s, m) => s + m.rainfall, 0)) : '--'
-  const avgHumidity  = monthly.length ? Math.round(monthly.reduce((s, m) => s + m.humidity, 0) / monthly.length) : '--'
+  const avgTemp = annualStats?.avgTemp ?? '--'
+  const totalRainfall = annualStats?.totalRainfall ?? '--'
+  const avgHumidity = annualStats?.avgHumidity ?? '--'
+  const displayTemp = typeof current?.temp === 'number' ? Math.round(current.temp) : current?.temp
 
   return (
     <div className="absolute bottom-6 left-4 z-10 w-72 animate-fade-in">
@@ -47,7 +43,7 @@ export default function CityPopup({ city, alerts = [], onClose }) {
               <p className="text-gray-500 dark:text-slate-400 text-xs">{city.state}</p>
               {current && (
                 <div className="flex items-baseline gap-1 mt-1">
-                  <span className="text-2xl font-bold text-gray-900 dark:text-white">{current.temp}°</span>
+                  <span className="text-2xl font-bold text-gray-900 dark:text-white">{displayTemp}°</span>
                   <span className="text-sm text-gray-400 dark:text-slate-400">C</span>
                 </div>
               )}

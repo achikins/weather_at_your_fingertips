@@ -20,7 +20,7 @@ export default function AlertsPanel({ compact = false }) {
   const [filterCity, setFilterCity] = useState('all')
 
   useEffect(() => {
-    api.getAllAlerts()
+    api.getAllAlerts({ includeInactive: true })
       .then((data) => setAlerts(data.alerts || []))
       .catch(() => setAlerts([]))
   }, [])

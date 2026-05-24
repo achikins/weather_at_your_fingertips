@@ -56,15 +56,15 @@ export const api = {
     )
   },
 
-  getAllAlerts: () =>
+  getAllAlerts: ({ includeInactive = false } = {}) =>
     withMockFallback(
-      () => get('/api/alerts/'),
+      () => get(`/api/alerts/${includeInactive ? '?include_inactive=true' : ''}`),
       () => ({ alerts: weatherAlerts })
     ),
 
-  getCityAlerts: (cityId) =>
+  getCityAlerts: (cityId, { includeInactive = false } = {}) =>
     withMockFallback(
-      () => get(`/api/alerts/${cityId}`),
+      () => get(`/api/alerts/${cityId}${includeInactive ? '?include_inactive=true' : ''}`),
       () => ({ alerts: getAlertsForCity(cityId) })
     ),
 }

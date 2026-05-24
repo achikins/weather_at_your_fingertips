@@ -79,7 +79,7 @@ export default function DashboardPage() {
       )}
 
       {/* Summary cards */}
-      <WeatherCards monthly={monthly} loading={loading} />
+      <WeatherCards monthly={monthly} current={current} loading={loading} />
 
       {loading && !monthly.length && (
         <div className="text-sm text-gray-400 dark:text-slate-500 text-center py-6">Loading weather data…</div>

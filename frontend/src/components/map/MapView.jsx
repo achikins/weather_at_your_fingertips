@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { australianCities } from "../../data/australianCities";
-import { mockWeatherData } from "../../data/mockWeatherData";
 import { api } from "../../services/api";
 import LayerToggle from "./LayerToggle";
 import CityPopup from "./CityPopup";
@@ -16,26 +15,17 @@ const layerColorScale = {
   wind: { low: "#c4b5fd", mid: "#a78bfa", high: "#7c3aed" },
 };
 
-const getLayerValue = (cityId, layer) => {
-  const monthly = mockWeatherData[cityId]?.monthly || [];
-  if (!monthly.length) return 0;
+const getLayerValue = (current, layer) => {
+  if (!current) return 0;
   switch (layer) {
     case "temperature":
-      return Math.round(
-        monthly.reduce((s, m) => s + m.tempAvg, 0) / monthly.length,
-      );
+      return Math.round(current.temp ?? 0);
     case "rainfall":
-      return Math.round(
-        monthly.reduce((s, m) => s + m.rainfall, 0) / monthly.length,
-      );
+      return Math.round(current.rainfall ?? 0);
     case "humidity":
-      return Math.round(
-        monthly.reduce((s, m) => s + m.humidity, 0) / monthly.length,
-      );
+      return Math.round(current.humidity ?? 0);
     case "wind":
-      return Math.round(
-        monthly.reduce((s, m) => s + m.windSpeed, 0) / monthly.length,
-      );
+      return Math.round(current.windSpeed ?? 0);
     default:
       return 0;
   }
@@ -101,6 +91,29 @@ export default function MapView() {
   const [selectedCity, setSelectedCity] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [cityAlerts, setCityAlerts] = useState([]);
+  const [cityCurrentById, setCityCurrentById] = useState({});
+  const [selectedCityWeather, setSelectedCityWeather] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    Promise.all(
+      australianCities.map(async (city) => {
+        const data = await api.getCityCurrent(city.id);
+        return [city.id, data.current || null];
+      }),
+    )
+      .then((entries) => {
+        if (!mounted) return;
+        setCityCurrentById(Object.fromEntries(entries));
+      })
+      .catch(() => {
+        if (!mounted) return;
+        setCityCurrentById({});
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (mapRef.current) return;
@@ -142,7 +155,8 @@ export default function MapView() {
     markersRef.current = [];
 
     australianCities.forEach((city) => {
-      const value = getLayerValue(city.id, activeLayer);
+      const current = cityCurrentById[city.id];
+      const value = getLayerValue(current, activeLayer);
       const color = getMarkerColor(value, activeLayer);
       const unit = getLayerUnit(activeLayer);
 
@@ -219,13 +233,45 @@ export default function MapView() {
         .addTo(map);
       markersRef.current.push(labelMarker);
     });
-  }, [mapLoaded, activeLayer]);
+  }, [mapLoaded, activeLayer, cityCurrentById]);
 
   useEffect(() => {
-    if (!selectedCity) { setCityAlerts([]); return }
-    api.getCityAlerts(selectedCity.id)
-      .then((data) => setCityAlerts(data.alerts || []))
-      .catch(() => setCityAlerts([]))
+    if (!selectedCity) {
+      setCityAlerts([]);
+      setSelectedCityWeather(null);
+      return;
+    }
+
+    Promise.all([
+      api.getCityAlerts(selectedCity.id),
+      api.getCityWeather(selectedCity.id),
+    ])
+      .then(([alertsData, weatherData]) => {
+        setCityAlerts(alertsData.alerts || []);
+        const monthly = weatherData.monthly || [];
+        const annualStats = monthly.length
+          ? {
+              avgTemp: Math.round(
+                monthly.reduce((sum, row) => sum + (row.tempAvg ?? 0), 0) / monthly.length,
+              ),
+              totalRainfall: Math.round(
+                monthly.reduce((sum, row) => sum + (row.rainfall ?? 0), 0),
+              ),
+              avgHumidity: Math.round(
+                monthly.reduce((sum, row) => sum + (row.humidity ?? 0), 0) / monthly.length,
+              ),
+            }
+          : null;
+
+        setSelectedCityWeather({
+          current: weatherData.current || null,
+          annualStats,
+        });
+      })
+      .catch(() => {
+        setCityAlerts([]);
+        setSelectedCityWeather(null);
+      });
   }, [selectedCity]);
 
   return (
@@ -240,13 +286,15 @@ export default function MapView() {
       {selectedCity && (
         <CityPopup
           city={selectedCity}
+          current={selectedCityWeather?.current || cityCurrentById[selectedCity.id] || null}
+          annualStats={selectedCityWeather?.annualStats || null}
           alerts={cityAlerts}
           onClose={() => setSelectedCity(null)}
         />
       )}
 
       {/* Legend */}
-      <div className="absolute bottom-10 right-4 z-10 bg-[#0f1629]/85 backdrop-blur-md border border-white/10 rounded-xl px-3 py-2.5 text-xs">
+      <div className="absolute bottom-4 right-4 z-10 bg-[#0f1629]/85 backdrop-blur-md border border-white/10 rounded-xl px-3 py-2.5 text-xs">
         <p className="text-slate-400 font-medium mb-1.5 capitalize">
           {activeLayer === "wind" ? "Wind Speed" : activeLayer} Legend
         </p>
@@ -267,7 +315,7 @@ export default function MapView() {
       {/* Map attribution padding fix */}
       <style>{`
         .mapboxgl-ctrl-bottom-left { bottom: 0; left: 0; }
-        .mapboxgl-ctrl-bottom-right { bottom: 0; right: 0; }
+        .mapboxgl-ctrl-bottom-right { bottom: 88px; right: 0; }
         .mapboxgl-ctrl-attrib { background: rgba(15,22,41,0.7) !important; color: #94a3b8 !important; }
         .mapboxgl-ctrl-attrib a { color: #60a5fa !important; }
       `}</style>
