@@ -7,7 +7,7 @@ export const australianCities = [
     coordinates: [151.2093, -33.8688],
     timezone: 'Australia/Sydney',
     population: 5312000,
-    description: 'The Harbour City — iconic beaches, opera house, and vibrant culture.',
+    description: 'The Harbour City. Iconic beaches, opera house, and vibrant culture.',
   },
   {
     id: 'melbourne',
@@ -17,7 +17,7 @@ export const australianCities = [
     coordinates: [144.9631, -37.8136],
     timezone: 'Australia/Melbourne',
     population: 5078000,
-    description: 'The cultural capital — coffee, arts, and four seasons in one day.',
+    description: 'The cultural capital. Coffee, arts, and four seasons in one day.',
   },
   {
     id: 'brisbane',
@@ -27,7 +27,7 @@ export const australianCities = [
     coordinates: [153.0251, -27.4698],
     timezone: 'Australia/Brisbane',
     population: 2514000,
-    description: 'The River City — sunny skies, outdoor lifestyle, and gateway to the Gold Coast.',
+    description: 'The River City. Sunny skies, outdoor lifestyle, and gateway to the Gold Coast.',
   },
   {
     id: 'perth',
@@ -37,7 +37,7 @@ export const australianCities = [
     coordinates: [115.8605, -31.9505],
     timezone: 'Australia/Perth',
     population: 2059000,
-    description: 'The Sunshine City — most isolated major city, pristine beaches.',
+    description: 'The Sunshine City. Most isolated major city with pristine beaches.',
   },
   {
     id: 'adelaide',
@@ -47,7 +47,7 @@ export const australianCities = [
     coordinates: [138.6007, -34.9285],
     timezone: 'Australia/Adelaide',
     population: 1402000,
-    description: 'The Festival City — wine regions, festivals, and relaxed pace.',
+    description: 'The Festival City. Wine regions, festivals, and relaxed pace.',
   },
   {
     id: 'darwin',
@@ -57,7 +57,7 @@ export const australianCities = [
     coordinates: [130.8456, -12.4634],
     timezone: 'Australia/Darwin',
     population: 147000,
-    description: 'Gateway to the Top End — tropical climate and gateway to Kakadu.',
+    description: 'Gateway to the Top End. Tropical climate and access to Kakadu.',
   },
   {
     id: 'hobart',
@@ -67,7 +67,7 @@ export const australianCities = [
     coordinates: [147.3272, -42.8821],
     timezone: 'Australia/Hobart',
     population: 238000,
-    description: 'The Apple Isle capital — cool climate, MONA, and wilderness.',
+    description: 'The Apple Isle capital. Cool climate, MONA, and wilderness.',
   },
   {
     id: 'cairns',
@@ -87,7 +87,7 @@ export const australianCities = [
     coordinates: [153.4000, -28.0167],
     timezone: 'Australia/Brisbane',
     population: 679000,
-    description: 'Sun, surf, and theme parks — Australia\'s holiday playground.',
+    description: 'Sun, surf, and theme parks. Australia\'s holiday playground.',
   },
   {
     id: 'canberra',
@@ -97,7 +97,7 @@ export const australianCities = [
     coordinates: [149.1300, -35.2809],
     timezone: 'Australia/Sydney',
     population: 462000,
-    description: 'The Nation\'s Capital — planned city of museums, politics, and nature.',
+    description: 'The Nation\'s Capital. Planned city of museums, politics, and nature.',
   },
 ]
 
