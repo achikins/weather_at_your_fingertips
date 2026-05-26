@@ -8,15 +8,15 @@ from services.number_utils import ms_to_kmh, round_one_decimal, to_float
 from services.station_service import get_station_years, station_exists
 
 CITY_TO_STATION = {
-    "sydney": 64,
+    "sydney": 423,
     "melbourne": 277,
     "brisbane": 44,
     "perth": 365,
     "adelaide": 1,
-    "darwin": 121,
-    "hobart": 187,
+    "darwin": 122,
+    "hobart": 189,
     "cairns": 57,
-    "goldcoast": 165,
+    "goldcoast": 166,
     "canberra": 63,
 }
 
