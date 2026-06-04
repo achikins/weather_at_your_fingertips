@@ -17,7 +17,7 @@ reset-db:
 
 # Load data into DB
 load:
-	python3 DATA/load_to_db.py
+	python3 DATA/utils/load_to_db.py
 
 # Wait for DB to be ready
 wait-db:
