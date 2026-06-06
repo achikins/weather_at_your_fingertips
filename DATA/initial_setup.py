@@ -1,3 +1,21 @@
+'''
+initial_setup.py
+
+Purpose:
+    Main entry point for the weather data processing pipeline.
+    This script coordinates the complete ETL workflow:
+        1. Download raw weather data.
+        2. Generate station summaries.
+        3. Combine datasets.
+        4. Download detailed station information.
+        5. Clean and optionally impute missing values.
+        6. Load processed data into PostgreSQL.
+
+Software Requirements Satisfied:
+    R-14: System shall download BOM weather data
+'''
+
+# Import pipeline stages from utility modules
 from utils.download_data import run_download_data
 from utils.station_summary import run_station_summary
 from utils.download_station_data import run_download_station_data
@@ -8,6 +26,17 @@ from utils.load_to_db import run_load_to_db
 
 
 def main(imputation=False, verbose=True):
+    '''
+    Execute the complete data processing pipeline in sequence.
+    
+    Parameters:
+        imputation (bool): If True, perform data imputation for missing values. If False, skip imputation.
+        verbose (bool): If True, print status messages during each step of the pipeline.
+    
+    Returns:
+        None
+    '''
+
     print("\n" + "=" * 80)
     print("  STEP 1: Download BOM weather data")
     print("=" * 80)
