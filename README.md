@@ -226,6 +226,11 @@ Run the full initial pipeline:
 python DATA/initial_setup.py
 ```
 
+Forecast and load forecasted value into db:
+```bash
+python DATA/run_prediction.py
+```
+
 Load already-cleaned data into PostgreSQL:
 ```bash
 python DATA/utils/load_to_db.py
